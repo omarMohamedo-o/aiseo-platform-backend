@@ -1,0 +1,63 @@
+[project]
+name = "aiseo-platform"
+version = "0.1.0"
+description = "Enterprise AI SEO + AEO + GEO search-visibility intelligence platform"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.5",
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+    "asyncpg>=0.29",
+    "psycopg[binary]>=3.2",
+    "redis>=5.0",
+    "celery>=5.4",
+    "httpx>=0.27",
+    "structlog>=24.4",
+    "onnxruntime>=1.19",
+    "numpy>=1.26",
+    "opencv-python-headless>=4.10",
+    "scikit-learn>=1.5",
+    "mlflow>=2.16",
+    "beautifulsoup4>=4.12",
+    "trafilatura>=1.9",
+    "lxml>=5.2",
+    "spacy>=3.7",
+    "cryptography>=43.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=5.0",
+    "mypy>=1.11",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aiseo"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+ignore = ["B008", "BLE001"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+mypy_path = "src"

@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+outputs/*
+!outputs/.gitkeep
+.env
+mlflow.db
+mlruns/
+.coverage
+htmlcov/
+dist/
+build/

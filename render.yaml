@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: aiseo-backend
+    env: python
+    buildCommand: "pip install uv && uv pip install --system -e ."
+    startCommand: "PYTHONPATH=src uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: AISEO_LLM__PROVIDER
+        value: gemini
+      - key: AISEO_LLM__GEMINI_API_KEY
+        sync: false
+      - key: AISEO_SERVER__ADMIN_USERNAME
+        value: admin
+      - key: AISEO_SERVER__ADMIN_PASSWORD
+        generateValue: true
