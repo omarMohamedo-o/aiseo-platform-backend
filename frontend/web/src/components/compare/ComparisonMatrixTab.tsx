@@ -114,16 +114,8 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({ curren
       })));
     } catch (err) {
       console.error("Error discovering competitors:", err);
-      // Fallback
-      setDiscoveredCompetitors([
-        { 
-          id: "d1", 
-          url: "https://competitor-alpha.com", 
-          brand: `${targetBrand} Alternative`, 
-          reason: `Provides similar products tailored for the same specific niche as ${targetBrand}, targeting identical customer segments.`, 
-          selected: true 
-        }
-      ]);
+      // Show a toast or error state here instead of hardcoding dummy competitors
+      setDiscoveredCompetitors([]);
     } finally {
       setIsDiscovering(false);
       setDiscoveryDone(true);
@@ -163,35 +155,7 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({ curren
     );
   };
 
-  const calculateDomainMetrics = (urlStr: string, brandStr: string, isTarget: boolean, index: number): DomainMetrics => {
-    const clean = urlStr.toLowerCase();
-    const brand = brandStr || (isTarget ? "Your Brand" : `Competitor ${index + 1}`);
-    const baseVis = isTarget ? 88 : 75 - index * 6;
-    return {
-      url: urlStr,
-      brand: brand,
-      isTarget,
-      visibilityScore: baseVis,
-      opportunityScore: baseVis - 10,
-      searchRank: isTarget ? 1.8 : 3.2 + index * 0.8,
-      aiSearchRank: isTarget ? 2 : 3 + index,
-      monthlySearches: (isTarget ? 35000 : 20000) / (index + 1),
-      uniqueSearchers: ((isTarget ? 35000 : 20000) / (index + 1)) * 0.74,
-      searchAppearances: ((isTarget ? 35000 : 20000) / (index + 1)) * 8,
-      aiAppearances: ((isTarget ? 35000 : 20000) / (index + 1)) * 1.8,
-      schemaScore: isTarget ? 88 : 70 - index * 5,
-      contentDepth: isTarget ? 85 : 72 - index * 4,
-      citationShare: isTarget ? 38.5 : 24.0 / (index + 1),
-      radarScores: {
-        citationReadiness: baseVis,
-        entityAuthority: baseVis - 4,
-        searchDemand: baseVis - 6,
-        contentDepth: baseVis + 2,
-        sentimentScore: baseVis + 5,
-        multiEngineCoverage: baseVis - 2,
-      },
-    };
-  };
+
 
   const handleRunComparison = async () => {
     if (!targetUrl.trim()) return;
@@ -244,7 +208,7 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({ curren
             });
          } catch (e) {
             console.error("Failed to crawl", item.url, e);
-            results.push(calculateDomainMetrics(item.url, item.brand, item.isTarget, item.index));
+            // Do not add dummy metrics if it fails.
          }
       }
       
@@ -316,73 +280,7 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({ curren
       }))
     : [];
 
-  const generateRecommendations = () => {
-    if (!comparedData || comparedData.length < 2) return [];
-    
-    const target = comparedData[0];
-    const competitors = comparedData.slice(1);
-    
-    let recs = [];
-    
-    // Find who has the best schema
-    const bestSchema = [...competitors].sort((a, b) => b.schemaScore - a.schemaScore)[0];
-    if (bestSchema && bestSchema.schemaScore > target.schemaScore) {
-      recs.push({
-        id: 1,
-        title: isRtl ? "سد فجوة المخططات المنظمة" : "Close the Schema Markup Gap",
-        desc: isRtl 
-          ? `المنافس ${bestSchema.brand} يتفوق عليك في المخططات (${bestSchema.schemaScore}% مقابل ${target.schemaScore}%). أضف مخططات FAQ و Product.`
-          : `${bestSchema.brand} outperforms you in Schema Depth (${bestSchema.schemaScore}% vs your ${target.schemaScore}%). Inject JSON-LD Product & Service schema to match their machine-readability.`,
-        icon: <Layers className="w-4 h-4" />,
-        color: "emerald"
-      });
-    }
-
-    // Find who has best content depth
-    const bestDepth = [...competitors].sort((a, b) => b.contentDepth - a.contentDepth)[0];
-    if (bestDepth && bestDepth.contentDepth > target.contentDepth) {
-      recs.push({
-        id: 2,
-        title: isRtl ? "زيادة عمق المحتوى الفني" : "Improve Content Depth & Entities",
-        desc: isRtl 
-          ? `المنافس ${bestDepth.brand} يمتلك عمق محتوى أكبر (${bestDepth.contentDepth}/100). قم بتوسيع مقالاتك للإجابة على الأسئلة المعقدة.`
-          : `${bestDepth.brand} has higher Content Depth (${bestDepth.contentDepth}/100). Expand your core pages with semantic LSI entities and deeper technical explanations to win AI context.`,
-        icon: <Bot className="w-4 h-4" />,
-        color: "blue"
-      });
-    }
-
-    // Overall Visibility
-    const bestVis = [...competitors].sort((a, b) => b.visibilityScore - a.visibilityScore)[0];
-    if (bestVis && bestVis.visibilityScore > target.visibilityScore) {
-      recs.push({
-        id: 3,
-        title: isRtl ? "استهداف فقرات الإجابة المباشرة" : "Capture Direct-Answer Snippets",
-        desc: isRtl 
-          ? `المنافس ${bestVis.brand} يظهر أكثر في محركات الذكاء الاصطناعي. ركز على الإجابات المباشرة (Direct Answers).`
-          : `${bestVis.brand} has higher overall AI Visibility (${bestVis.visibilityScore}%). Position concise 50-word direct answers below H2 headings to steal their citation spots.`,
-        icon: <Zap className="w-4 h-4" />,
-        color: "purple"
-      });
-    }
-
-    // Fallback if target is already #1
-    if (recs.length === 0) {
-      recs.push({
-        id: 4,
-        title: isRtl ? "المحافظة على الصدارة" : "Maintain AI Dominance",
-        desc: isRtl 
-          ? `أنت تتفوق على جميع المنافسين! حافظ على الصدارة عبر تحديث المحتوى بانتظام.`
-          : `You are outperforming all competitors! Maintain your dominant position by frequently refreshing your content and publishing new industry insights.`,
-        icon: <Trophy className="w-4 h-4" />,
-        color: "amber"
-      });
-    }
-
-    return recs;
-  };
-
-  const dynamicRecs = generateRecommendations();
+  const dynamicRecs: any[] = [];
 
   return (
     <div className="space-y-6">
@@ -820,34 +718,36 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({ curren
             </div>
           </div>
 
-          <div className="bg-slate-900 dark:bg-slate-50 dark:bg-slate-800 rounded-xl p-6 shadow-xs space-y-4 text-white dark:text-slate-900 mt-6">
-            <div className="flex items-center justify-between border-b border-slate-700 pb-3">
-              <h3 className="text-sm font-bold flex items-center gap-2">
-                <Lightbulb className="w-4 h-4 text-amber-400" />
-                {isRtl ? "توصيات استراتيجية ديناميكية مبنية على أداء المنافسين" : "Dynamic Strategic Playbook: Learn from Competitors"}
-              </h3>
-              <span className="text-[10px] text-slate-900 dark:text-slate-50 bg-emerald-400 px-2 py-0.5 rounded-md font-semibold">
-                AI Generated
-              </span>
-            </div>
+          {dynamicRecs.length > 0 && (
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-xs border border-slate-200 dark:border-slate-800 space-y-4 mt-6">
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                <h3 className="text-sm font-bold flex items-center gap-2 text-slate-900 dark:text-slate-50">
+                  <Lightbulb className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+                  {isRtl ? "توصيات استراتيجية ديناميكية مبنية على أداء المنافسين" : "Dynamic Strategic Playbook: Learn from Competitors"}
+                </h3>
+                <span className="text-[10px] text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 rounded-md font-semibold">
+                  AI Generated
+                </span>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-              {dynamicRecs.map((rec, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-slate-800 border border-slate-700 space-y-2 relative overflow-hidden">
-                  <div className={`absolute -right-6 -top-6 w-24 h-24 bg-${rec.color}-500/10 rounded-full blur-2xl`}></div>
-                  <div className="flex items-center gap-2 font-bold text-white dark:text-slate-900 relative z-10">
-                    <span className={`w-6 h-6 rounded-md bg-${rec.color}-500/20 text-${rec.color}-400 flex items-center justify-center`}>
-                      {rec.icon}
-                    </span>
-                    <span className="text-sm">{rec.title}</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                {dynamicRecs.map((rec, idx) => (
+                  <div key={idx} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2 relative overflow-hidden">
+                    <div className={`absolute -right-6 -top-6 w-24 h-24 bg-${rec.color}-500/10 rounded-full blur-2xl`}></div>
+                    <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-slate-50 relative z-10">
+                      <span className={`w-6 h-6 rounded-md bg-${rec.color}-50 dark:bg-${rec.color}-500/20 text-${rec.color}-600 dark:text-${rec.color}-400 flex items-center justify-center`}>
+                        {rec.icon}
+                      </span>
+                      <span className="text-sm">{rec.title}</span>
+                    </div>
+                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed relative z-10 text-sm mt-2">
+                      {rec.desc}
+                    </p>
                   </div>
-                  <p className="text-slate-300 leading-relaxed relative z-10 text-sm mt-2">
-                    {rec.desc}
-                  </p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </div>

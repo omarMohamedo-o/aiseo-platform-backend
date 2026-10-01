@@ -134,19 +134,15 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
 
     const currentSlice = rawTrendData.slice(-sliceCount);
 
-    // If Period-over-Period comparison is active, calculate previous period simulation
+    // If Period-over-Period comparison is active, backend must provide prior period data.
+    // We will not fake it if it's missing.
     return currentSlice.map((d, idx) => {
-      // Prior period simulated baseline (offset by 12% to 22% lower to show growth curve)
-      const prevAio = Math.max(5, Math.round(d.aio * 0.76 - 4));
-      const prevGeo = Math.max(5, Math.round(d.geo * 0.78 - 3));
-      const prevAeo = Math.max(5, Math.round(d.aeo * 0.82 - 2));
-
       return {
         ...d,
-        prevAio,
-        prevGeo,
-        prevAeo,
-        netVelocity: d.aio - prevAio,
+        prevAio: d.prevAio || null,
+        prevGeo: d.prevGeo || null,
+        prevAeo: d.prevAeo || null,
+        netVelocity: d.prevAio ? d.aio - d.prevAio : 0,
       };
     });
   }, [rawTrendData, timespan]);
@@ -154,7 +150,7 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
   // Delta calculations for Period-over-Period cards
   const popDeltas = useMemo(() => {
     if (!displayData.length) {
-      return { aio: "+24.2%", geo: "+18.7%", aeo: "+11.4%", llmo: "+8.9%", seo: "-1.8%" };
+      return { aio: "+0.0%", geo: "+0.0%", aeo: "+0.0%", llmo: "+0.0%", seo: "+0.0%" };
     }
     const latest = displayData[displayData.length - 1];
     const first = displayData[0];

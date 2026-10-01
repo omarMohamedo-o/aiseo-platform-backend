@@ -27,24 +27,9 @@ const PROVIDERS = [
 ] as const;
 
 export const QuestionLabTab: React.FC = () => {
-  const [topic, setTopic] = useState("Enterprise AI Search Visibility & GEO");
-  const [brandName, setBrandName] = useState("AISEO Platform");
-  const [questions, setQuestions] = useState<GeneratedQuestion[]>([
-    {
-      id: "q-1",
-      query: "What are the best enterprise tools for Generative Engine Optimization (GEO)?",
-      intent: "commercial",
-      funnel_stage: "consideration",
-      target_audience: "Enterprise CMOs",
-    },
-    {
-      id: "q-2",
-      query: "How does AISEO Platform compare with traditional SEO crawlers in 2026?",
-      intent: "comparison",
-      funnel_stage: "decision",
-      target_audience: "SEO Directors",
-    },
-  ]);
+  const [topic, setTopic] = useState("");
+  const [brandName, setBrandName] = useState("");
+  const [questions, setQuestions] = useState<GeneratedQuestion[]>([]);
 
   const [selectedProviders, setSelectedProviders] = useState<string[]>([
     "chatgpt",

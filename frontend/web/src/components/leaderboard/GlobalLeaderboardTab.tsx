@@ -95,19 +95,19 @@ export const GlobalLeaderboardTab: React.FC<GlobalLeaderboardTabProps> = ({ curr
     );
   }) || [];
 
-  const topScore = data?.leaderboard?.[0] ? Math.round(data.leaderboard[0].visibility_score) : 98;
-  const topBrand = data?.leaderboard?.[0]?.brand_name || "FastAPI";
-  const trackedDomains = data?.total_global_domains_tracked || 8780;
+  const topScore = data?.leaderboard?.[0] ? Math.round(data.leaderboard[0].visibility_score) : 0;
+  const topBrand = data?.leaderboard?.[0]?.brand_name || "...";
+  const trackedDomains = data?.total_global_domains_tracked || 0;
   
   const top10 = data?.leaderboard?.slice(0, 10) || [];
   const top10AvgScore = top10.length > 0 
     ? (top10.reduce((acc, curr) => acc + curr.visibility_score, 0) / top10.length).toFixed(1)
-    : "93.5";
+    : "0.0";
 
-  let topSource = "ChatGPT";
-  let topSourceShare = "38.4";
-  let secondSource = "Perplexity";
-  let secondSourceShare = "31.2";
+  let topSource = "N/A";
+  let topSourceShare = "0.0";
+  let secondSource = "N/A";
+  let secondSourceShare = "0.0";
 
   if (data?.engine_citation_shares && Object.keys(data.engine_citation_shares).length > 0) {
     const entries = Object.entries(data.engine_citation_shares).sort((a, b) => b[1] - a[1]);

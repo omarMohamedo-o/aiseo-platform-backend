@@ -19,12 +19,12 @@ import {
 export const EmailReportsTab: React.FC = () => {
   const [schedules, setSchedules] = useState<ReportSchedule[]>([]);
   const [branding, setBranding] = useState<ReportBranding>({
-    company_name: "AISEO Intelligence",
-    logo_url: "https://aiseo-platform.io/logo.png",
+    company_name: "",
+    logo_url: "",
     primary_color: "#b6f36a",
     accent_color: "#38bdf8",
-    support_email: "reports@aiseo-platform.io",
-    footer_text: "Confidential AI Visibility Report — AISEO Platform Phase 1",
+    support_email: "",
+    footer_text: "",
   });
 
   const [testEmail, setTestEmail] = useState("");
@@ -33,9 +33,9 @@ export const EmailReportsTab: React.FC = () => {
 
   const [isCreatingSchedule, setIsCreatingSchedule] = useState(false);
   const [newSchedule, setNewSchedule] = useState({
-    name: "Executive Weekly AI Visibility Pulse",
+    name: "",
     cron_expression: "0 8 * * 1",
-    recipients: "cmo@company.com, headofseo@company.com",
+    recipients: "",
     report_type: "weekly-digest",
     tone: "executive",
   });

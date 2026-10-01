@@ -11,6 +11,10 @@ export interface TrendSeriesPoint {
   llmo: number;
   aio: number;
   seo: number;
+  prevAio?: number | null;
+  prevGeo?: number | null;
+  prevAeo?: number | null;
+  netVelocity?: number;
 }
 
 export interface GeneratedQuestion {

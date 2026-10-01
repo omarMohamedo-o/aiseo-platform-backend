@@ -72,20 +72,12 @@ export const KeywordIntelTab: React.FC<KeywordIntelTabProps> = ({ currentLang = 
       const res: any = await apiClient.fetchReportSummary(keywords, tone, focusKeyword);
       // Normalize response whether backend returns summary nested or flat
       const normalized: ReportSummaryResponse = {
-        headline: res.headline || res.summary?.headline || "Strategic Keyword Intelligence Analysis",
-        summary: res.summary_text || res.summary?.summary || "Portfolio analysis of strategic keywords indicating high generative citation opportunity.",
-        insights: res.insights || res.summary?.insights || [
-          "Primary search velocity observed on high-intent keywords.",
-          "High SERP feature density presents zero-click answer snippet capture opportunities.",
-          "Index difficulty indicates targeted long-tail gains in key clusters."
-        ],
-        actions: res.actions || res.summary?.actions || [
-          "Implement FAQ schema markup on core landing pages to capture AEO snippets.",
-          "Optimize heading structures and bulleted summaries for answer engine parsing.",
-          "Monitor weekly keyword delta thresholds to protect high-ranking positions."
-        ],
-        confidence: res.confidence || res.summary?.confidence || "high",
-        model: res.model || res.summary?.model || "deterministic",
+        headline: res.headline || res.summary?.headline || "",
+        summary: res.summary_text || res.summary?.summary || "",
+        insights: res.insights || res.summary?.insights || [],
+        actions: res.actions || res.summary?.actions || [],
+        confidence: res.confidence || res.summary?.confidence || "",
+        model: res.model || res.summary?.model || "",
         chart_annotations: res.chart_annotations || [],
         scored_keywords: res.scored_keywords || keywords,
       };
@@ -122,17 +114,9 @@ export const KeywordIntelTab: React.FC<KeywordIntelTabProps> = ({ currentLang = 
     });
   }, [keywords]);
 
-  const insightsList = summaryData?.insights || [
-    "Primary search velocity observed on high-intent queries.",
-    "SERP feature density presents zero-click answer snippet capture opportunities.",
-    "Index difficulty indicates targeted long-tail gains in key clusters."
-  ];
+  const insightsList = summaryData?.insights || [];
 
-  const actionsList = summaryData?.actions || [
-    "Implement FAQ schema markup on core landing pages to capture AEO snippets.",
-    "Optimize heading structures and bulleted summaries for answer engine parsing.",
-    "Monitor weekly keyword delta thresholds to protect high-ranking positions."
-  ];
+  const actionsList = summaryData?.actions || [];
 
   return (
     <div className="space-y-6">

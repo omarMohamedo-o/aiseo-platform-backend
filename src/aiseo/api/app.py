@@ -7,6 +7,9 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
 
 from aiseo.api.routes.auth import router as auth_router
 from aiseo.api.routes.benchmarks import router as benchmarks_router
@@ -61,5 +64,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/health", tags=["health"])
     async def health() -> dict[str, str]:
         return {"status": "ok"}
+
+    # Serve the frontend
+    frontend_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "frontend", "web", "dist")
+    if os.path.exists(frontend_dist):
+        app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
+        
+        @app.get("/{full_path:path}")
+        async def catch_all(full_path: str):
+            if full_path.startswith("api/"):
+                return {"error": "Not found"}
+            return FileResponse(os.path.join(frontend_dist, "index.html"))
 
     return app
