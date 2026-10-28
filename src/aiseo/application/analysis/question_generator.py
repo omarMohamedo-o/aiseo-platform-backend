@@ -36,7 +36,7 @@ class QuestionGeneratorService:
         "and solutions discovered on the target website. Return a JSON object with a 'questions' array."
     )
 
-    def __init__(self, llm_provider: LlmProvider) -> None:
+    def __init__(self, llm_provider: LlmProvider | None = None) -> None:
         self._llm = llm_provider
 
     def _extract_contextual_fallback_entities(

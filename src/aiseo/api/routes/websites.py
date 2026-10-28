@@ -603,42 +603,19 @@ async def autocomplete_search(q: str):
     q = q.lower().strip()
     suggestions = []
     
-    # 1. Search the Global Leaderboard entries (top websites)
-    try:
-        from aiseo.api.routes.benchmarks import GLOBAL_LEADERBOARD_SEED
-        for entry in GLOBAL_LEADERBOARD_SEED:
-            if (q in entry.domain.lower() or 
-                q in entry.brand_name.lower() or 
-                q in entry.category.lower() or
-                q in entry.top_query.lower()) and not any(s.get("domain") == entry.domain for s in suggestions):
-                suggestions.append({
-                        "url": f"https://{entry.domain}",
-                        "domain": entry.domain,
-                        "brand_name": entry.brand_name,
-                        "category": entry.category,
-                        "type": "leaderboard",
-                        "visibility_score": entry.visibility_score,
-                        "opportunity_score": entry.opportunity_score,
-                        "rank": entry.rank,
-                        "country": entry.country,
-                    })
-    except Exception as e:
-        print(f"Error reading leaderboard for autocomplete: {e}")
-
-    # 2. Search DB history
+    # 1. Search authentic DB audit history
     try:
         history = get_history()
         for item in history:
             url = item.get("url", "")
             brand = item.get("brand_name", "")
             if (q in url.lower() or q in brand.lower()) and not any(s.get("url") == url for s in suggestions):
-                # Avoid duplicates
                 suggestions.append({
-                        "url": url,
-                        "brand_name": brand,
-                        "type": "history",
-                        "visibility_score": item.get("visibility_score")
-                    })
+                    "url": url,
+                    "brand_name": brand,
+                    "type": "history",
+                    "visibility_score": item.get("visibility_score")
+                })
     except Exception as e:
         print(f"Error reading history for autocomplete: {e}")
         
@@ -686,20 +663,30 @@ async def get_engine_presence():
     brand = latest.get("brand_name", "") or latest.get("url", "")
     vis_score = latest.get("visibility_score", 0)
     
-    # Use real deterministic logic based on the visibility score
+    payload = latest.get("result_payload", {}) or {}
+    engine_presence = payload.get("engine_presence")
+    if isinstance(engine_presence, dict) and engine_presence:
+        return {
+            "target": brand,
+            "chatgpt": int(engine_presence.get("chatgpt", vis_score)),
+            "gemini": int(engine_presence.get("gemini", vis_score)),
+            "claude": int(engine_presence.get("claude", vis_score)),
+            "perplexity": int(engine_presence.get("perplexity", vis_score)),
+        }
+
     return {
         "target": brand,
-        "chatgpt": min(100, int(vis_score * 0.98)),
-        "gemini": min(100, int(vis_score * 1.05)),
-        "claude": min(100, int(vis_score * 0.92)),
-        "perplexity": min(100, int(vis_score * 1.1))
+        "chatgpt": int(vis_score),
+        "gemini": int(vis_score),
+        "claude": int(vis_score),
+        "perplexity": int(vis_score),
     }
 
 from datetime import UTC
 
 from fastapi import Request
 
-from aiseo.api.routes.benchmarks import GlobalBenchmarkResponse, IndustryAverage, LeaderboardEntry
+from aiseo.api.routes.benchmarks import GlobalBenchmarkResponse, get_global_leaderboard
 
 
 @router.get("/history-leaderboard", response_model=GlobalBenchmarkResponse)
@@ -707,92 +694,8 @@ async def get_history_leaderboard(
     request: Request,
     category: str | None = None,
 ) -> GlobalBenchmarkResponse:
-    history = history_repo.get_history()
-    
-    leaderboard_data = []
-    category_stats = {}
-    
-    for i, item in enumerate(history):
-        vis_score = item.get("visibility_score", 0)
-        opp_score = item.get("opportunity_score", 0)
-        brand = item.get("brand_name", "") or "Unknown"
-        raw_url = item.get("url", "")
-        domain = raw_url.replace("https://", "").replace("http://", "").replace("www.", "").split("/")[0].lower()
-        
-        payload = item.get("result_payload", {})
-        discovered_pages = len(payload.get("discovered_pages", []))
-        signals = payload.get("site_technical_signals", {})
-        word_count = signals.get("total_word_count", 0)
-        schema_pages = signals.get("pages_with_schema", 0)
-        
-        # Real category mapping based on content
-        cat = "E-Commerce"
-        if "ai" in domain: cat = "AI"
-        elif "docs" in domain or "api" in domain: cat = "Developer Tools"
-        elif "cloud" in domain: cat = "Cloud & Security"
-            
-        entry = LeaderboardEntry(
-            rank=0,
-            domain=domain,
-            brand_name=brand,
-            category=cat,
-            country="Global",
-            visibility_score=vis_score,
-            opportunity_score=opp_score,
-            seo_score=int(item.get("seo_score", 0)),
-            aeo_score=int(item.get("aeo_score", 0)),
-            geo_score=int(item.get("geo_score", 0)),
-            glmm_score=int(item.get("glmm_score", 0)),
-            citation_share=round(max(0.0, vis_score / 2.0), 1),
-            schema_score=int((schema_pages / max(1, discovered_pages)) * 100),
-            direct_answer_score=min(100, vis_score),
-            total_pages_indexed=discovered_pages,
-            top_query="",
-            growth_trend="+0.0%",
-            search_rank=0.0,
-            ai_search_rank=0,
-            monthly_search_volume=0,
-            monthly_unique_searchers=0,
-            search_appearances=0,
-            ai_answer_appearances=0,
-            avg_cpc=0.0,
-            keyword_difficulty=0,
-            organic_ctr=0.0,
-            estimated_monthly_traffic=0,
-        )
-        leaderboard_data.append(entry)
-        
-        if cat not in category_stats:
-            category_stats[cat] = {"vis": 0, "opp": 0, "count": 0}
-        category_stats[cat]["vis"] += vis_score
-        category_stats[cat]["opp"] += opp_score
-        category_stats[cat]["count"] += 1
-
-    leaderboard_data.sort(key=lambda x: x.visibility_score, reverse=True)
-    for i, entry in enumerate(leaderboard_data):
-        entry.rank = i + 1
-
-    filtered = leaderboard_data
-    if category and category.lower() != "all":
-        filtered = [e for e in leaderboard_data if e.category.lower() == category.lower()]
-        
-    dynamic_averages = []
-    for cat, stats in category_stats.items():
-        dynamic_averages.append(IndustryAverage(
-            category=cat,
-            avg_visibility=round(stats["vis"] / stats["count"]),
-            avg_opportunity=round(stats["opp"] / stats["count"]),
-            total_audited_domains=stats["count"],
-        ))
-
-    from datetime import datetime
-    return GlobalBenchmarkResponse(
-        last_updated=datetime.now(UTC).isoformat(),
-        total_global_domains_tracked=len(leaderboard_data),
-        leaderboard=filtered,
-        industry_averages=dynamic_averages,
-        engine_citation_shares=request.app.state.container.settings.scoring.engine_citation_shares,
-    )
+    """Delegates to the unified dynamic Global Benchmark Leaderboard."""
+    return await get_global_leaderboard(category=category)
 
 class DiscoverCompetitorsRequest(BaseModel):
     url: str

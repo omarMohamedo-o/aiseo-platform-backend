@@ -13,6 +13,10 @@ from aiseo.application.reporting.scheduled_reports import ScheduledReportsServic
 from aiseo.application.websites.register_website import RegisterWebsiteService
 from aiseo.infrastructure.configuration.composition_root import ApplicationContainer
 from aiseo.ports.crawler.crawler_port import CrawlerPort
+from aiseo.ports.evaluation.grounding_guard_port import GroundingGuardPort
+from aiseo.ports.retrieval.reranker_port import RerankerPort
+from aiseo.ports.cache.cache_port import CachePort
+from aiseo.ports.evaluation.ground_truth_port import GroundTruthPort
 from aiseo.ports.scraper.scraper_port import ScraperPort
 from aiseo.ports.security.vault_port import VaultPort
 from aiseo.ports.semantic.chunker_port import ChunkerPort
@@ -49,6 +53,22 @@ def get_recommendation_generator_service(request: Request) -> RecommendationGene
 
 def get_answer_analyzer_service(request: Request) -> AnswerAnalyzerService:
     return get_container(request).answer_analyzer
+
+
+def get_grounding_guard(request: Request) -> GroundingGuardPort:
+    return get_container(request).grounding_guard
+
+
+def get_reranker(request: Request) -> RerankerPort:
+    return get_container(request).reranker
+
+
+def get_cache(request: Request) -> CachePort:
+    return get_container(request).cache
+
+
+def get_ground_truth_validator(request: Request) -> GroundTruthPort:
+    return get_container(request).ground_truth_validator
 
 
 def get_prompt_executor_service(request: Request) -> PromptExecutorService:

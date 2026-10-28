@@ -7,7 +7,10 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 
-from pytrends.request import TrendReq
+try:
+    from pytrends.request import TrendReq
+except ImportError:
+    TrendReq = None  # type: ignore[assignment,misc]
 
 from aiseo.ports.trends.trends_port import TrendPoint, TrendSeriesResult, TrendsPort
 
@@ -19,6 +22,8 @@ class MultiTrendsAdapter(TrendsPort):
         self.executor = ThreadPoolExecutor(max_workers=3)
 
     def _fetch_pytrends(self, terms: list[str]) -> list[TrendPoint]:
+        if TrendReq is None:
+            return []
         pytrends = TrendReq(hl='en-US', tz=360)
         pytrends.build_payload(terms, cat=0, timeframe='today 1-m', geo='', gprop='')
         df = pytrends.interest_over_time()

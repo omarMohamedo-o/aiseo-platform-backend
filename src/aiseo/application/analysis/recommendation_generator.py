@@ -20,49 +20,70 @@ class _RecommendationSetSchema(BaseModel):
     recommendations: list[_RecommendationItemSchema] = Field(default_factory=list)
 
 
-# ------------------------------------------------------------------
 # Benchmark data from the global leaderboard — what top websites do
-# ------------------------------------------------------------------
+COMMON_BENCHMARK_TRAITS = [
+    "Schema.org JSON-LD on every page (Organization, Product, Service, FAQ, HowTo, BreadcrumbList)",
+    "OpenGraph + Twitter Card meta tags on every single page",
+    "Unique meta descriptions (150-160 chars) on every page",
+    "H1 heading on every page with clear, descriptive text",
+    "Proper heading hierarchy (H1 → H2 → H3) on every page",
+    "FAQ/Q&A sections with direct-answer snippets on service/product pages",
+    "Brand name mentioned in first 100 characters of every page",
+    "Rich content depth: 800-2000+ words per service/product page",
+    "Internal linking structure with 5-10+ contextual cross-links per page",
+    "Canonical URLs on every page to prevent duplicate content",
+    "Mobile-responsive viewport meta tag",
+    "HTML lang attribute set correctly",
+    "Image alt text on every image (descriptive, keyword-rich)",
+    "sitemap.xml with all pages listed and up-to-date",
+    "robots.txt properly configured",
+    "Page load time under 3 seconds",
+    "Breadcrumb navigation with BreadcrumbList schema",
+    "Author/expertise signals (About page, team bios, credentials)",
+    "Structured comparison tables and specification sheets",
+    "Case studies, testimonials, and social proof content",
+    "Regular content updates (freshness signals)",
+    "Multi-language/hreflang support where applicable",
+]
+
+
+def get_benchmark_reference() -> dict:
+    """Dynamically compile top performer benchmarks from authentic crawl history."""
+    try:
+        from aiseo.infrastructure.database.history_repo import get_history
+
+        history = get_history()
+    except Exception:
+        history = []
+
+    top_performers = []
+    seen_domains: set[str] = set()
+    for item in sorted(history, key=lambda x: x.get("visibility_score") or 0, reverse=True):
+        raw_url = item.get("url", "")
+        domain = raw_url.replace("https://", "").replace("http://", "").replace("www.", "").split("/")[0].lower()
+        if domain and domain not in seen_domains:
+            seen_domains.add(domain)
+            res_payload = item.get("result_payload") or {}
+            top_performers.append({
+                "name": item.get("brand_name") or domain,
+                "domain": domain,
+                "visibility": int(item.get("visibility_score") or 0),
+                "schema_score": int(res_payload.get("schema_score") or item.get("visibility_score") or 0),
+                "direct_answer_score": int(res_payload.get("direct_answer_score") or item.get("visibility_score") or 0),
+            })
+        if len(top_performers) >= 5:
+            break
+
+    return {
+        "common_traits": COMMON_BENCHMARK_TRAITS,
+        "top_performers": top_performers,
+    }
+
+
 TOP_WEBSITE_BENCHMARKS = {
-    "common_traits": [
-        "Schema.org JSON-LD on every page (Organization, Product, Service, FAQ, HowTo, BreadcrumbList)",
-        "OpenGraph + Twitter Card meta tags on every single page",
-        "Unique meta descriptions (150-160 chars) on every page",
-        "H1 heading on every page with clear, descriptive text",
-        "Proper heading hierarchy (H1 → H2 → H3) on every page",
-        "FAQ/Q&A sections with direct-answer snippets on service/product pages",
-        "Brand name mentioned in first 100 characters of every page",
-        "Rich content depth: 800-2000+ words per service/product page",
-        "Internal linking structure with 5-10+ contextual cross-links per page",
-        "Canonical URLs on every page to prevent duplicate content",
-        "Mobile-responsive viewport meta tag",
-        "HTML lang attribute set correctly",
-        "Image alt text on every image (descriptive, keyword-rich)",
-        "sitemap.xml with all pages listed and up-to-date",
-        "robots.txt properly configured",
-        "Page load time under 3 seconds",
-        "Breadcrumb navigation with BreadcrumbList schema",
-        "Author/expertise signals (About page, team bios, credentials)",
-        "Structured comparison tables and specification sheets",
-        "Case studies, testimonials, and social proof content",
-        "Regular content updates (freshness signals)",
-        "Multi-language/hreflang support where applicable",
-    ],
-    "top_performers": [
-        {"name": "FastAPI", "domain": "fastapi.tiangolo.com", "visibility": 98, "schema_score": 99, "direct_answer_score": 97},
-        {"name": "Stripe Docs", "domain": "docs.stripe.com", "visibility": 97, "schema_score": 98, "direct_answer_score": 96},
-        {"name": "MDN Web Docs", "domain": "developer.mozilla.org", "visibility": 96, "schema_score": 96, "direct_answer_score": 95},
-        {"name": "Cloudflare", "domain": "cloudflare.com", "visibility": 94, "schema_score": 95, "direct_answer_score": 93},
-        {"name": "AWS", "domain": "aws.amazon.com", "visibility": 92, "schema_score": 90, "direct_answer_score": 91},
-    ],
-    "industry_averages": {
-        "Developer Tools": {"avg_visibility": 92, "avg_schema": 94, "avg_direct_answer": 93},
-        "FinTech": {"avg_visibility": 84, "avg_schema": 90, "avg_direct_answer": 88},
-        "E-Commerce": {"avg_visibility": 79, "avg_schema": 87, "avg_direct_answer": 82},
-        "Cloud & Security": {"avg_visibility": 88, "avg_schema": 92, "avg_direct_answer": 90},
-        "Engineering & Industry": {"avg_visibility": 76, "avg_schema": 80, "avg_direct_answer": 78},
-        "Healthcare & Biotech": {"avg_visibility": 68, "avg_schema": 75, "avg_direct_answer": 72},
-    },
+    "common_traits": COMMON_BENCHMARK_TRAITS,
+    "top_performers": [],
+    "industry_averages": {},
 }
 
 
@@ -81,7 +102,7 @@ class RecommendationGeneratorService:
         "compared to top performers. Do NOT limit yourself to just 2-3 recommendations."
     )
 
-    def __init__(self, llm_provider: LlmProvider) -> None:
+    def __init__(self, llm_provider: LlmProvider | None = None) -> None:
         self._llm = llm_provider
 
     async def generate_recommendations(
@@ -110,9 +131,15 @@ class RecommendationGeneratorService:
         """
         lang_normalized = language.lower().strip()
 
+        if self._llm is None:
+            return self._build_signal_based_fallback(
+                brand, technical_signals, page_summaries, lang_normalized
+            )
+
         # Build a rich context from crawled data
         signal_summary = self._format_signals(technical_signals)
         pages_context = self._format_pages(page_summaries[:8])
+        dynamic_benchmarks = get_benchmark_reference()
 
         prompt_payload = {
             "task": (
@@ -130,8 +157,8 @@ class RecommendationGeneratorService:
             "targetLanguage": lang_normalized,
             "topWebsiteBenchmarks": {
                 "description": "What the top-performing websites in our global leaderboard all do well",
-                "common_traits": TOP_WEBSITE_BENCHMARKS["common_traits"],
-                "top_performers": TOP_WEBSITE_BENCHMARKS["top_performers"],
+                "common_traits": dynamic_benchmarks["common_traits"],
+                "top_performers": dynamic_benchmarks["top_performers"],
             },
             "rules": [
                 "Return ALL critical and high-priority recommendations. You MUST generate at least 6-12 recommendations covering EVERY gap found.",
@@ -255,9 +282,7 @@ class RecommendationGeneratorService:
                 return zh
             return en
 
-        # =====================================================================
         # 1. Missing Schema.org JSON-LD
-        # =====================================================================
         if not signals.get("has_schema_org"):
             pages_missing = [p.get("path", "/") for p in pages if not p.get("has_schema_org", False)]
             paths_text = ", ".join(pages_missing[:5]) if pages_missing else "all pages"
@@ -322,9 +347,7 @@ class RecommendationGeneratorService:
                 except (ValueError, IndexError):
                     pass
 
-        # =====================================================================
         # 2. Missing OpenGraph Meta Tags
-        # =====================================================================
         if not signals.get("has_opengraph"):
             recs.append({
                 "category": t("Social Meta Tags", "البيانات الوصفية الاجتماعية", "社交元数据"),
@@ -352,9 +375,7 @@ class RecommendationGeneratorService:
                 ],
             })
 
-        # =====================================================================
         # 3. Missing FAQ Content
-        # =====================================================================
         if not signals.get("has_faq_content"):
             recs.append({
                 "category": t("FAQ & Direct Answers", "الأسئلة الشائعة والإجابات المباشرة", "FAQ 常见问题"),
@@ -385,9 +406,7 @@ class RecommendationGeneratorService:
                 ],
             })
 
-        # =====================================================================
         # 4. Brand Not Mentioned (Entity Identity)
-        # =====================================================================
         if not signals.get("brand_in_first_100_chars"):
             pages_missing_brand = [p.get("path", "/") for p in pages if not p.get("brand_mentioned", False)]
             if pages_missing_brand:
@@ -418,9 +437,7 @@ class RecommendationGeneratorService:
                     ],
                 })
 
-        # =====================================================================
         # 5. Missing Meta Descriptions
-        # =====================================================================
         if not signals.get("has_meta_description"):
             recs.append({
                 "category": t("Core SEO", "SEO الأساسي", "核心 SEO"),
@@ -476,9 +493,7 @@ class RecommendationGeneratorService:
                 except (ValueError, IndexError):
                     pass
 
-        # =====================================================================
         # 6. Missing H1 or Heading Hierarchy
-        # =====================================================================
         if not signals.get("has_h1"):
             recs.append({
                 "category": t("Content Structure", "هيكل المحتوى", "内容结构"),
@@ -530,9 +545,7 @@ class RecommendationGeneratorService:
                 ],
             })
 
-        # =====================================================================
         # 7. Thin Content Pages
-        # =====================================================================
         thin_pages = [p for p in pages if p.get("characters_count", 0) < 400]
         if thin_pages:
             paths_text = ", ".join(p.get("path", "/") for p in thin_pages[:5])
@@ -562,9 +575,7 @@ class RecommendationGeneratorService:
                 ],
             })
 
-        # =====================================================================
         # 8. Missing Canonical URLs
-        # =====================================================================
         if not signals.get("has_canonical"):
             recs.append({
                 "category": t("Technical SEO", "SEO التقني", "技术 SEO"),
@@ -589,9 +600,7 @@ class RecommendationGeneratorService:
                 ],
             })
 
-        # =====================================================================
         # 9. Missing Sitemap
-        # =====================================================================
         if not signals.get("has_sitemap"):
             recs.append({
                 "category": t("Technical SEO", "SEO التقني", "技术 SEO"),
@@ -619,9 +628,7 @@ class RecommendationGeneratorService:
                 ],
             })
 
-        # =====================================================================
         # 10. Missing robots.txt
-        # =====================================================================
         if not signals.get("has_robots_txt"):
             recs.append({
                 "category": t("Technical SEO", "SEO التقني", "技术 SEO"),
@@ -646,9 +653,7 @@ class RecommendationGeneratorService:
                 ],
             })
 
-        # =====================================================================
         # 11. Missing Alt Text on Images
-        # =====================================================================
         if not signals.get("has_alt_text"):
             recs.append({
                 "category": t("Accessibility & GLMM", "إمكانية الوصول", "可访问性与 GLMM"),
@@ -673,9 +678,7 @@ class RecommendationGeneratorService:
                 ],
             })
 
-        # =====================================================================
         # 12. Missing lang Attribute
-        # =====================================================================
         if not signals.get("has_lang_attr"):
             recs.append({
                 "category": t("Accessibility & GLMM", "إمكانية الوصول", "可访问性与 GLMM"),
@@ -697,9 +700,7 @@ class RecommendationGeneratorService:
                 ],
             })
 
-        # =====================================================================
         # 13. Content Strategy (always recommend)
-        # =====================================================================
         word_count = signals.get("total_word_count", 0)
         recs.append({
             "category": t("Content Strategy", "استراتيجية المحتوى", "内容策略"),
@@ -730,9 +731,7 @@ class RecommendationGeneratorService:
             ],
         })
 
-        # =====================================================================
         # 14. Authority Signals (always recommend)
-        # =====================================================================
         recs.append({
             "category": t("Entity Authority", "سلطة الكيان", "实体权威"),
             "title": t(
@@ -762,9 +761,7 @@ class RecommendationGeneratorService:
             ],
         })
 
-        # =====================================================================
         # 15. Internal Linking Strategy (always recommend)
-        # =====================================================================
         recs.append({
             "category": t("Internal Linking", "الروابط الداخلية", "内部链接"),
             "title": t(
@@ -794,9 +791,7 @@ class RecommendationGeneratorService:
             ],
         })
 
-        # =====================================================================
         # 16. Twitter Cards (if missing and OG also missing)
-        # =====================================================================
         if not signals.get("has_twitter_cards") and signals.get("has_opengraph"):
             recs.append({
                 "category": t("Social Meta Tags", "البيانات الوصفية الاجتماعية", "社交元数据"),
@@ -818,9 +813,7 @@ class RecommendationGeneratorService:
                 ],
             })
 
-        # =====================================================================
         # 17. Mobile Viewport (if missing)
-        # =====================================================================
         if not signals.get("has_viewport"):
             recs.append({
                 "category": t("Technical SEO", "SEO التقني", "技术 SEO"),

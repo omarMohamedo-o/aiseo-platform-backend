@@ -51,3 +51,8 @@ class AnswerAnalysisResult(BaseModel):
     visibility_score: int = Field(ge=0, le=100)
     summary: str
     analysis_model: str = "deterministic"
+    # Factual grounding & hallucination metrics (Stage A)
+    hallucination_score: float = Field(default=0.0, ge=0.0, le=1.0)
+    faithfulness_ratio: float = Field(default=1.0, ge=0.0, le=1.0)
+    grounding_status: str = "GROUNDED"
+    unverified_claims: list[str] = Field(default_factory=list)

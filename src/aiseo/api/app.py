@@ -1,15 +1,18 @@
 """FastAPI application factory. This is where the composition root meets
-the web framework -- the only place infrastructure is constructed at startup."""
+the web framework -- the only place infrastructure is constructed at startup.
+
+Copyright (c) 2026 Omar Mohamed (@omarMohamedo-o). All Rights Reserved.
+"""
 from __future__ import annotations
 
+import os
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-import os
 
 from aiseo.api.routes.auth import router as auth_router
 from aiseo.api.routes.benchmarks import router as benchmarks_router
@@ -21,6 +24,7 @@ from aiseo.api.routes.visibility import router as visibility_router
 from aiseo.api.routes.websites import router as websites_router
 from aiseo.infrastructure.configuration.composition_root import build_container
 from aiseo.infrastructure.configuration.settings import Settings
+from aiseo.infrastructure.monitoring.metrics import metrics_registry
 from aiseo.infrastructure.observability.logging import configure_logging, get_logger
 
 
@@ -65,11 +69,24 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def health() -> dict[str, str]:
         return {"status": "ok"}
 
+    @app.get("/metrics", tags=["telemetry"])
+    async def get_metrics() -> PlainTextResponse:
+        """Prometheus / OpenMetrics text scrape endpoint."""
+        return PlainTextResponse(
+            content=metrics_registry.export_prometheus_text(),
+            media_type="text/plain; version=0.0.4; charset=utf-8",
+        )
+
     # Serve the frontend
-    frontend_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "frontend", "web", "dist")
+    frontend_dist = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
+        "frontend",
+        "web",
+        "dist",
+    )
     if os.path.exists(frontend_dist):
         app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
-        
+
         @app.get("/{full_path:path}")
         async def catch_all(full_path: str):
             if full_path.startswith("api/"):

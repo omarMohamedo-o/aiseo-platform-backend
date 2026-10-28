@@ -1,0 +1,28 @@
+# Heavy binaries
+cloudflared.exe
+
+# Python environment
+.venv/
+__pycache__/
+*.pyc
+
+# Node modules (frontend already built)
+frontend/web/node_modules/
+
+# Dev/test artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+mlflow.db
+mlruns/
+outputs/
+notebooks/
+dataset/
+docs/
+tests/
+.git/
+
+# Other
+*.egg-info/
+.coverage
+htmlcov/

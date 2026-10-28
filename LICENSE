@@ -1,0 +1,41 @@
+PROPRIETARY AND COMMERCIAL SOFTWARE LICENSE
+
+Copyright (c) 2026 Omar Mohamed (@omarMohamedo-o).
+All Rights Reserved.
+
+NOTICE: This codebase, architecture, proprietary algorithms, scoring methodologies,
+and documentation ("Software") are the exclusive intellectual property of Omar Mohamed.
+
+1. PROPRIETARY RIGHTS
+The Software contains valuable trade secrets, proprietary algorithms, and copyright-protected
+intellectual property, including but not limited to:
+- The 6-Pillar Generative Engine Optimization (GEO) Visibility Scoring Engine.
+- The RAG Faithfulness & Citation Grounding Engine (GEO Truth Engine).
+- The Hybrid BM25 + Dense Semantic Reranking and AEO Snippet Predictor.
+- Multilingual & Arabic NLP Normalization Pipelines.
+- Tiered Semantic Response Caching & Rate-Limit Shield.
+
+2. GRANT OF LICENSE
+Permission is hereby granted only to authorized enterprise licensees and clients of
+Omar Mohamed to access, execute, and utilize the Software strictly in accordance with
+their agreed commercial contract or enterprise service agreement.
+
+3. RESTRICTIONS
+Except as expressly authorized in writing by the copyright holder, you may not:
+a. Copy, reproduce, redistribute, sell, lease, sublicense, or rent the Software.
+b. Reverse engineer, decompile, disassemble, or derive the source code of proprietary components.
+c. Remove, obscure, or alter any copyright notices, trademarks, or author attributions.
+d. Claim authorship, co-authorship, or AI tool attribution over the codebase or its algorithms.
+
+4. DISCLAIMER OF WARRANTY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+For enterprise licensing, commercial deployment, or white-label partnerships, contact:
+Lead Architect: Omar Mohamed (@omarMohamedo-o)
+GitHub: https://github.com/omarMohamedo-o
+

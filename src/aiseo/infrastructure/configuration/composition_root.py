@@ -14,6 +14,10 @@ from aiseo.adapters.scraper.trafilatura_scraper import TrafilaturaScraper
 from aiseo.adapters.semantic.in_memory_vector_store import InMemoryVectorStore
 from aiseo.adapters.semantic.recursive_chunker import RecursiveChunker
 from aiseo.adapters.trends.multi_trends_adapter import MultiTrendsAdapter
+from aiseo.adapters.evaluation.grounding_guard_adapter import GroundingGuardAdapter
+from aiseo.adapters.retrieval.hybrid_reranker_adapter import HybridRerankerAdapter
+from aiseo.adapters.cache.tiered_semantic_cache import TieredSemanticCacheAdapter
+from aiseo.adapters.evaluation.free_ground_truth_adapter import FreeGroundTruthAdapter
 from aiseo.application.analysis.answer_analyzer import AnswerAnalyzerService
 from aiseo.application.analysis.prompt_executor import PromptExecutorService
 from aiseo.application.analysis.question_generator import QuestionGeneratorService
@@ -28,14 +32,18 @@ from aiseo.infrastructure.configuration.settings import Settings, load_settings
 from aiseo.infrastructure.security.vault import EncryptedVaultAdapter
 from aiseo.ports.clustering.clustering_algorithm import ClusteringAlgorithm
 from aiseo.ports.crawler.crawler_port import CrawlerPort
+from aiseo.ports.evaluation.grounding_guard_port import GroundingGuardPort
+from aiseo.ports.evaluation.ground_truth_port import GroundTruthPort
 from aiseo.ports.llm.llm_provider import LlmProvider
 from aiseo.ports.notifications.email_port import EmailPort
 from aiseo.ports.persistence.website_repository import WebsiteRepository
+from aiseo.ports.retrieval.reranker_port import RerankerPort
 from aiseo.ports.scraper.scraper_port import ScraperPort
 from aiseo.ports.security.vault_port import VaultPort
 from aiseo.ports.semantic.chunker_port import ChunkerPort
 from aiseo.ports.semantic.vector_store_port import VectorStorePort
 from aiseo.ports.trends.trends_port import TrendsPort
+from aiseo.ports.cache.cache_port import CachePort
 
 
 @dataclass(frozen=True)
@@ -62,6 +70,10 @@ class ApplicationContainer:
     question_generator: QuestionGeneratorService
     recommendation_generator: RecommendationGeneratorService
     answer_analyzer: AnswerAnalyzerService
+    grounding_guard: GroundingGuardPort
+    reranker: RerankerPort
+    cache: CachePort
+    ground_truth_validator: GroundTruthPort
     prompt_executor: PromptExecutorService
     opportunity_scorer: OpportunityScorerService
     report_generator: ReportGeneratorService
@@ -123,19 +135,26 @@ def build_container(settings: Settings | None = None) -> ApplicationContainer:
         master_secret=resolved_settings.vault.master_secret
     )
     email_adapter: EmailPort = ResendEmailAdapter(
-        api_key=resolved_settings.email.api_key or resolved_settings.llm.api_key or "mock-resend-key",
+        api_key=resolved_settings.email.api_key or resolved_settings.llm.api_key or "",
         api_url=resolved_settings.email.api_url,
     )
     trends_adapter: TrendsPort = MultiTrendsAdapter()
 
     question_generator = QuestionGeneratorService(
-        llm_provider=default_llm or OpenAiProvider(api_key="mock-key")
+        llm_provider=default_llm
     )
     recommendation_generator = RecommendationGeneratorService(
-        llm_provider=default_llm or OpenAiProvider(api_key="mock-key")
+        llm_provider=default_llm
     )
-    answer_analyzer = AnswerAnalyzerService(llm_provider=default_llm)
-    prompt_executor = PromptExecutorService(llm_registry=llm_registry)
+    grounding_guard: GroundingGuardPort = GroundingGuardAdapter()
+    reranker: RerankerPort = HybridRerankerAdapter()
+    cache: CachePort = TieredSemanticCacheAdapter(default_ttl=3600)
+    ground_truth_validator: GroundTruthPort = FreeGroundTruthAdapter()
+    answer_analyzer = AnswerAnalyzerService(
+        llm_provider=default_llm,
+        grounding_guard=grounding_guard,
+    )
+    prompt_executor = PromptExecutorService(llm_registry=llm_registry, cache=cache)
     opportunity_scorer = OpportunityScorerService(
         config=resolved_settings.scoring.opportunity
     )
@@ -146,7 +165,7 @@ def build_container(settings: Settings | None = None) -> ApplicationContainer:
         opportunity_scorer=opportunity_scorer,
     )
     from aiseo.application.analysis.competitor_discovery import CompetitorDiscoveryService
-    competitor_discovery = CompetitorDiscoveryService(llm_provider=default_llm or OpenAiProvider(api_key="mock-key"))
+    competitor_discovery = CompetitorDiscoveryService(llm_provider=default_llm)
 
     crawler = HttpxCrawler(timeout=resolved_settings.crawler.timeout_seconds)
     scraper = TrafilaturaScraper(timeout=resolved_settings.extractor.timeout_seconds)
@@ -170,6 +189,10 @@ def build_container(settings: Settings | None = None) -> ApplicationContainer:
         question_generator=question_generator,
         recommendation_generator=recommendation_generator,
         answer_analyzer=answer_analyzer,
+        grounding_guard=grounding_guard,
+        reranker=reranker,
+        cache=cache,
+        ground_truth_validator=ground_truth_validator,
         prompt_executor=prompt_executor,
         opportunity_scorer=opportunity_scorer,
         report_generator=report_generator,

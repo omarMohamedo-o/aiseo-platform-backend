@@ -7,7 +7,9 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from aiseo.adapters.evaluation.grounding_guard_adapter import GroundingGuardAdapter
 from aiseo.domain.geo.answer_analysis import AnswerAnalysisResult, SentimentType
+from aiseo.ports.evaluation.grounding_guard_port import GroundingGuardPort
 from aiseo.ports.llm.llm_provider import LlmProvider, LlmRequest
 
 _URL_REGEX = re.compile(r"https?://[^\s)\]}>,]+")
@@ -27,6 +29,8 @@ def analyze_deterministic(
     answer: str,
     brand: str,
     provider_citations: list[str] | None = None,
+    source_context: str | list[str] | None = None,
+    grounding_guard: GroundingGuardPort | None = None,
 ) -> AnswerAnalysisResult:
     """Fast deterministic rule-based analysis used as baseline and fallback."""
     answer_clean = answer or ""
@@ -44,6 +48,14 @@ def analyze_deterministic(
         dict.fromkeys((provider_citations or []) + extract_urls_from_text(answer_clean))
     )[:20]
 
+    # Evaluate factual grounding and hallucination metrics via GroundingGuard
+    guard = grounding_guard or GroundingGuardAdapter()
+    metrics = guard.verify_grounding(
+        answer=answer_clean,
+        source_context=source_context or "",
+        brand=brand,
+    )
+
     # Deterministic visibility score (0-100)
     score = 0
     if brand_mentioned:
@@ -51,6 +63,9 @@ def analyze_deterministic(
     score += min(25, len(extracted_citations) * 5)
     if brand_mentioned and brand_index < 120:
         score += 20
+    # Penalty if hallucinated claims detected
+    if metrics.is_hallucinated:
+        score = max(0, score - 25)
     score = max(0, min(100, score))
 
     # Basic sentiment heuristic
@@ -86,6 +101,10 @@ def analyze_deterministic(
         visibility_score=score,
         summary=summary,
         analysis_model="deterministic",
+        hallucination_score=metrics.hallucination_score,
+        faithfulness_ratio=metrics.grounding_ratio,
+        grounding_status=metrics.status,
+        unverified_claims=metrics.unverified_claims,
     )
 
 
@@ -113,8 +132,13 @@ class AnswerAnalyzerService:
         "Return a JSON object containing an 'analyses' array."
     )
 
-    def __init__(self, llm_provider: LlmProvider | None = None) -> None:
+    def __init__(
+        self,
+        llm_provider: LlmProvider | None = None,
+        grounding_guard: GroundingGuardPort | None = None,
+    ) -> None:
         self._llm = llm_provider
+        self._guard = grounding_guard or GroundingGuardAdapter()
 
     async def analyze_answers(
         self,
@@ -123,12 +147,13 @@ class AnswerAnalyzerService:
     ) -> list[AnswerAnalysisResult]:
         """Analyze a batch of model responses for a given brand.
 
-        Items format: [{'prompt_run_id': str, 'provider': str, 'question': str, 'answer': str, 'citations': list[str]}]
+        Items format: [{'prompt_run_id': str, 'provider': str, 'question': str, 'answer': str, 'citations': list[str], 'source_context': str | list[str]}]
         """
         results: list[AnswerAnalysisResult] = []
         deterministic_map: dict[int, AnswerAnalysisResult] = {}
 
         for idx, item in enumerate(items):
+            context = item.get("source_context") or item.get("context")
             det = analyze_deterministic(
                 prompt_run_id=str(item.get("prompt_run_id", idx)),
                 provider=item.get("provider", "unknown"),
@@ -136,6 +161,8 @@ class AnswerAnalyzerService:
                 answer=item.get("answer", ""),
                 brand=brand,
                 provider_citations=item.get("citations", []),
+                source_context=context,
+                grounding_guard=self._guard,
             )
             deterministic_map[idx] = det
 
@@ -193,6 +220,10 @@ class AnswerAnalyzerService:
                         visibility_score=llm_analysis.visibility_score,
                         summary=llm_analysis.summary or base.summary,
                         analysis_model="llm-verified",
+                        hallucination_score=base.hallucination_score,
+                        faithfulness_ratio=base.faithfulness_ratio,
+                        grounding_status=base.grounding_status,
+                        unverified_claims=base.unverified_claims,
                     )
                 )
 

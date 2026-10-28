@@ -5,7 +5,10 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 
-from pytrends.request import TrendReq
+try:
+    from pytrends.request import TrendReq
+except ImportError:
+    TrendReq = None  # type: ignore[assignment,misc]
 
 from aiseo.ports.trends.trends_port import TrendPoint, TrendSeriesResult, TrendsPort
 
@@ -17,6 +20,8 @@ class GoogleTrendsAdapter(TrendsPort):
         self.executor = ThreadPoolExecutor(max_workers=3)
 
     def _fetch_sync(self, terms: list[str]) -> list[TrendPoint]:
+        if TrendReq is None:
+            return []
         pytrends = TrendReq(hl='en-US', tz=360)
         # timeframe='today 3-m' or 'today 12-m'
         pytrends.build_payload(terms, cat=0, timeframe='today 3-m', geo='', gprop='')

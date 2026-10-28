@@ -3,7 +3,10 @@ import json
 import os
 
 import httpx
-from playwright.async_api import async_playwright  # type: ignore
+try:
+    from playwright.async_api import async_playwright  # type: ignore
+except ImportError:
+    async_playwright = None  # type: ignore[assignment]
 
 
 async def get_google_pagespeed_score(url: str, api_key: str | None = None) -> dict:
@@ -11,7 +14,7 @@ async def get_google_pagespeed_score(url: str, api_key: str | None = None) -> di
     if api_key:
         api_url += f"&key={api_key}"
     
-    async with httpx.AsyncClient(timeout=30.0) as client:
+    async with httpx.AsyncClient(timeout=4.0) as client:
         try:
             response = await client.get(api_url)
             if response.status_code == 429:
@@ -59,7 +62,7 @@ async def analyze_with_gemini_vision(screenshot_base64: str, gemini_api_key: str
         }
     }
     
-    async with httpx.AsyncClient(timeout=60.0) as client:
+    async with httpx.AsyncClient(timeout=4.0) as client:
         try:
             response = await client.post(url, headers={"Content-Type": "application/json"}, json=payload)
             response.raise_for_status()
@@ -85,7 +88,7 @@ async def analyze_with_ollama_vision(screenshot_base64: str) -> dict | None:
         "format": "json"
     }
     
-    async with httpx.AsyncClient(timeout=60.0) as client:
+    async with httpx.AsyncClient(timeout=1.5) as client:
         try:
             response = await client.post(url, json=payload)
             response.raise_for_status()
@@ -106,6 +109,8 @@ async def run_visual_audit(url: str, google_api_key_override: str | None = None)
     vision_scores = {"aeo_score": 0, "geo_score": 0, "glmm_score": 0, "visual_insights": []}
     
     try:
+        if async_playwright is None:
+            raise ImportError("playwright not installed")
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=True)
             # Use a smaller viewport and disable full_page to drastically save Gemini vision quota

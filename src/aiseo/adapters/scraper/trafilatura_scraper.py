@@ -9,6 +9,7 @@ import structlog
 import trafilatura
 from bs4 import BeautifulSoup
 
+from aiseo.application.nlp.arabic_normalizer import ArabicNormalizer
 from aiseo.domain.value_objects import Url
 from aiseo.domain.websites.page import ContentSection, StructuredContent
 from aiseo.ports.scraper.scraper_port import ScraperPort
@@ -109,6 +110,13 @@ class TrafilaturaScraper(ScraperPort):
                 parts.append("Key Offerings: " + "; ".join(list_items[:8]))
 
             extracted_text = "\n\n".join(parts)
+
+        # Normalize Arabic text and numerals if present (preserves clean English text untouched)
+        if extracted_text and ArabicNormalizer.is_arabic(extracted_text):
+            extracted_text = ArabicNormalizer.normalize(extracted_text)
+
+        if title and ArabicNormalizer.is_arabic(title):
+            title = ArabicNormalizer.normalize(title)
 
         # 3. Create structured content sections
         sections: list[ContentSection] = []
