@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Globe2, RefreshCw, ArrowRight, History, X, Sparkles } from "lucide-react";
 import { brandColors } from "@/config/designSystem";
+import { uiStrings } from "@/config/uiStrings";
 
 export interface RecentSearchItem {
   domain: string;
@@ -72,14 +73,14 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
       {/* Editorial Headline */}
       <div className="space-y-4">
         <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-serif tracking-tight text-slate-900 leading-[1.12]">
-          Humans don't visit your website anymore—
+          {uiStrings.landing.hero.titlePrefix}
           <span className="italic block font-normal text-slate-800 mt-1">
-            AI does.
+            {uiStrings.landing.hero.titleEmphasis}
           </span>
         </h1>
 
         <p className="text-base sm:text-lg text-slate-600 max-w-xl mx-auto leading-relaxed font-sans">
-          EsooAI gets your site AI-ready so you show up in answers, get cited, and grow revenue.
+          {uiStrings.landing.hero.subtitle}
         </p>
       </div>
 
@@ -108,7 +109,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             autoComplete="off"
             autoCorrect="off"
             spellCheck={false}
-            placeholder="Enter your website URL"
+            placeholder={uiStrings.landing.hero.inputPlaceholder}
             className="flex-1 bg-transparent border-none text-sm font-sans text-slate-900 placeholder:text-slate-400 px-2 py-2 focus:outline-none"
           />
           <button
@@ -122,11 +123,11 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             {isAuditing ? (
               <>
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                <span>Auditing...</span>
+                <span>{uiStrings.landing.hero.auditingButton}</span>
               </>
             ) : (
               <>
-                <span>Run AI visibility audit</span>
+                <span>{uiStrings.landing.hero.auditButton}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </>
             )}
@@ -142,13 +143,13 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             <div className="px-4 py-2 border-b border-[#E8E6E1] flex items-center justify-between text-xs text-slate-400 font-medium">
               <span className="flex items-center gap-1.5 font-semibold text-slate-600">
                 <History className="w-3.5 h-3.5 text-blue-600" />
-                Recent Websites Audited
+                {uiStrings.landing.hero.recentSearches.title}
               </span>
               <button
                 onClick={handleClearRecent}
                 className="text-[11px] text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
               >
-                Clear all
+                {uiStrings.landing.hero.recentSearches.clearAll}
               </button>
             </div>
 

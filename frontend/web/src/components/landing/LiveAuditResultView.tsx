@@ -4,6 +4,7 @@ import { CompetitorMatrixResponse, CompetitorMatrixItem } from "@/api/client";
 import { PlatformBrandLogo } from "../brand/PlatformBrandLogo";
 import { appConfig } from "@/config/appConfig";
 import { brandColors } from "@/config/designSystem";
+import { uiStrings } from "@/config/uiStrings";
 
 interface LiveAuditResultViewProps {
   auditResult: CompetitorMatrixResponse;
@@ -122,8 +123,8 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
         <button
           onClick={onNavigateHome}
           className="absolute right-6 top-6 sm:right-8 sm:top-8 p-2 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#EFECE4] transition-all cursor-pointer group"
-          aria-label="Close audit results"
-          title="Close and return to search"
+          aria-label={uiStrings.landing.auditModal.closeTooltip}
+          title={uiStrings.landing.auditModal.closeTooltip}
         >
           <X className="w-5 h-5 transition-transform group-hover:scale-110" />
         </button>
@@ -141,11 +142,11 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
               {auditResult.target.brand}
             </h1>
             <p className="text-sm text-slate-500 mt-1 font-sans">
-              Here are a few prompts{" "}
+              {uiStrings.landing.auditModal.promptsPrefix}{" "}
               <span className="font-mono text-slate-700">
                 {auditResult.target.domain}
               </span>{" "}
-              may be cited in:
+              {uiStrings.landing.auditModal.promptsSuffix}
             </p>
           </div>
         </div>
@@ -192,7 +193,7 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
           <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
             <div>
               <h2 className="text-lg font-bold text-slate-900 mb-4 font-sans">
-                Estimated Mention Rate
+                {uiStrings.landing.auditModal.estimatedMentionRate}
               </h2>
 
               <div className="space-y-3">
@@ -249,14 +250,14 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
                 className="w-full py-3.5 px-6 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 <LogIn className="w-4 h-4" />
-                <span>Sign In to Access Dashboard</span>
+                <span>{uiStrings.landing.auditModal.signInButton}</span>
               </button>
 
               <button
                 onClick={() => onOpenAuth("signup")}
                 className="w-full py-3.5 px-6 rounded-full bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-300 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Create Enterprise Account</span>
+                <span>{uiStrings.landing.auditModal.createAccountButton}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>

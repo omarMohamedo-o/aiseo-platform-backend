@@ -4,6 +4,7 @@ import { apiClient } from "@/api/client";
 import { PlatformBrandLogo } from "../brand/PlatformBrandLogo";
 import { appConfig } from "@/config/appConfig";
 import { brandColors } from "@/config/designSystem";
+import { uiStrings } from "@/config/uiStrings";
 
 export type AuthMode = "login" | "signup";
 
@@ -80,12 +81,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             />
           </div>
           <h2 className="text-xl font-bold tracking-tight text-slate-900">
-            {mode === "login" ? "Sign In to Workspace" : "Create Enterprise Account"}
+            {mode === "login" ? uiStrings.auth.loginTitle : uiStrings.auth.signupTitle}
           </h2>
           <p className="text-xs text-slate-500">
             {mode === "login"
-              ? "Access live audits, competitor matrix, and GEO rankings."
-              : "Get instant access to multi-engine citation analytics."}
+              ? uiStrings.auth.loginSubtitle
+              : uiStrings.auth.signupSubtitle}
           </p>
         </div>
 
@@ -132,7 +133,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {mode === "signup" && (
             <>
               <div className="space-y-1">
-                <label className="block text-xs font-semibold text-slate-700">Full Name</label>
+                <label className="block text-xs font-semibold text-slate-700">{uiStrings.auth.labels.fullName}</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <User className="w-4 h-4" />
@@ -141,7 +142,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     type="text"
                     value={fullName}
                     onChange={(event) => setFullName(event.target.value)}
-                    placeholder="Jane Doe"
+                    placeholder={uiStrings.auth.placeholders.fullName}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all font-sans"
                     required
                   />
@@ -149,7 +150,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-semibold text-slate-700">Company Website</label>
+                <label className="block text-xs font-semibold text-slate-700">{uiStrings.auth.labels.companyWebsite}</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <Globe2 className="w-4 h-4" />
@@ -158,7 +159,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     type="url"
                     value={companyUrl}
                     onChange={(event) => setCompanyUrl(event.target.value)}
-                    placeholder="https://company.com"
+                    placeholder={uiStrings.auth.placeholders.companyWebsite}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all font-sans"
                   />
                 </div>
@@ -168,7 +169,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
           <div className="space-y-1">
             <label className="block text-xs font-semibold text-slate-700">
-              Work Email or Username
+              {uiStrings.auth.labels.workEmail}
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -178,7 +179,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 type="text"
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
-                placeholder="name@company.com"
+                placeholder={uiStrings.auth.placeholders.workEmail}
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all font-sans"
                 required
                 autoFocus
@@ -187,7 +188,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
 
           <div className="space-y-1">
-            <label className="block text-xs font-semibold text-slate-700">Password</label>
+            <label className="block text-xs font-semibold text-slate-700">{uiStrings.auth.labels.password}</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                 <Lock className="w-4 h-4" />
@@ -196,7 +197,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 type="password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                placeholder="••••••••"
+                placeholder={uiStrings.auth.placeholders.password}
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all font-sans"
                 required
               />
@@ -210,15 +211,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all shadow-xs disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {authLoading ? (
-                <span>Processing...</span>
+                <span>{uiStrings.auth.buttons.submitting}</span>
               ) : mode === "login" ? (
                 <>
                   <LogIn className="w-4 h-4" />
-                  <span>Sign In</span>
+                  <span>{uiStrings.auth.buttons.signIn}</span>
                 </>
               ) : (
                 <>
-                  <span>Create Account</span>
+                  <span>{uiStrings.auth.buttons.signUp}</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
