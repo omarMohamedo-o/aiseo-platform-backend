@@ -97,7 +97,8 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
 
   const [targetUrl, setTargetUrl] = useState("");
   const [targetBrand, setTargetBrand] = useState("");
-  const [selectedRegion, setSelectedRegion] = useState("Egypt");
+  const [selectedRegion, setSelectedRegion] = useState("auto");
+  const [detectedRegion, setDetectedRegion] = useState<string | null>(null);
   const [scopeFilter, setScopeFilter] = useState<"all" | "local" | "global">("all");
 
   const [matrixData, setMatrixData] = useState<CompetitorMatrixResponse | null>(null);
@@ -114,6 +115,32 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
     { id: string; url: string; brand: string; reason: string; selected: boolean }[]
   >([]);
 
+  // Auto-sync from recent audits on landing/main page
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("aiseo_recent_searches");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.length > 0 && !targetUrl) {
+          const latest = parsed[0];
+          const url = latest.url || `https://${latest.domain}`;
+          setTargetUrl(url);
+          setTargetBrand(latest.brand || "");
+          if (latest.snapshot?.detected_region) {
+            setDetectedRegion(latest.snapshot.detected_region);
+          }
+          if (latest.snapshot) {
+            setMatrixData(latest.snapshot);
+          } else {
+            handleFetchMatrix(url, "auto");
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Failed to auto-load recent search into matrix:", err);
+    }
+  }, []);
+
   const handleFetchMatrix = async (urlToFetch: string, regionOverride?: string) => {
     const cleanUrl = urlToFetch.trim();
     if (!cleanUrl) return;
@@ -121,15 +148,18 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
     setMatrixLoading(true);
     setMatrixError(null);
 
+    const effectiveRegion = regionOverride !== undefined ? regionOverride : selectedRegion;
+    const regionParam = effectiveRegion === "auto" ? undefined : effectiveRegion;
+
     try {
       const response = await apiClient.fetchCompetitorMatrix(
         cleanUrl,
         targetBrand.trim() || undefined,
-        regionOverride || selectedRegion
+        regionParam
       );
       setMatrixData(response);
-      if (response.detected_region && (!regionOverride || regionOverride === selectedRegion)) {
-        setSelectedRegion(response.detected_region);
+      if (response.detected_region) {
+        setDetectedRegion(response.detected_region);
       }
       if (response.target.brand && !targetBrand) {
         setTargetBrand(response.target.brand);
@@ -353,14 +383,25 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
                   onChange={(event) => handleRegionChange(event.target.value)}
                   className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs rounded-md px-2.5 py-1 font-medium focus:outline-none focus:border-blue-500"
                 >
+                  <option value="auto">
+                    {isRtl
+                      ? `تحديد تلقائي ${detectedRegion ? `(${detectedRegion})` : "حسب النطاق"}`
+                      : `Auto-Detect ${detectedRegion ? `(${detectedRegion})` : "(From Domain)"}`}
+                  </option>
                   <option value="Egypt">Egypt (مصر)</option>
-                  <option value="Thailand">Thailand (ประเทศไทย)</option>
                   <option value="Saudi Arabia">Saudi Arabia (المملكة العربية السعودية)</option>
                   <option value="United Arab Emirates">United Arab Emirates (الإمارات)</option>
                   <option value="United States">United States</option>
                   <option value="United Kingdom">United Kingdom</option>
+                  <option value="Thailand">Thailand (ประเทศไทย)</option>
                   <option value="Global">Global / Worldwide</option>
                 </select>
+
+                {selectedRegion === "auto" && detectedRegion && (
+                  <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                    Auto: {detectedRegion}
+                  </span>
+                )}
               </div>
             </div>
 

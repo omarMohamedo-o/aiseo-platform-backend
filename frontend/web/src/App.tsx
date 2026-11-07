@@ -127,18 +127,6 @@ export default function App() {
           </button>
 
           <button
-            onClick={() => setActiveTab("leaderboard")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
-              activeTab === "leaderboard"
-                ? uiStyles.navTab.active
-                : uiStyles.navTab.inactive
-            }`}
-          >
-            <Trophy className="w-3.5 h-3.5 text-amber-500" />
-            <span>{t.nav.leaderboard}</span>
-          </button>
-
-          <button
             onClick={() => setActiveTab("compare")}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
               activeTab === "compare"
@@ -148,6 +136,18 @@ export default function App() {
           >
             <Scale className="w-3.5 h-3.5 text-blue-500" />
             <span>{t.nav.compare}</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("leaderboard")}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
+              activeTab === "leaderboard"
+                ? uiStyles.navTab.active
+                : uiStyles.navTab.inactive
+            }`}
+          >
+            <Trophy className="w-3.5 h-3.5 text-amber-500" />
+            <span>{t.nav.leaderboard}</span>
           </button>
 
           <button
@@ -328,18 +328,6 @@ export default function App() {
                 </button>
 
                 <button
-                  onClick={() => { setActiveTab("leaderboard"); setMobileMenuOpen(false); }}
-                  className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2.5 transition-all text-left ${
-                    activeTab === "leaderboard"
-                      ? uiStyles.navTab.active
-                      : "text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100"
-                  }`}
-                >
-                  <Trophy className="w-4 h-4 text-amber-500 shrink-0" />
-                  <span className="truncate">{t.nav.leaderboard}</span>
-                </button>
-
-                <button
                   onClick={() => { setActiveTab("compare"); setMobileMenuOpen(false); }}
                   className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2.5 transition-all text-left ${
                     activeTab === "compare"
@@ -349,6 +337,18 @@ export default function App() {
                 >
                   <Scale className="w-4 h-4 text-blue-500 shrink-0" />
                   <span className="truncate">{t.nav.compare}</span>
+                </button>
+
+                <button
+                  onClick={() => { setActiveTab("leaderboard"); setMobileMenuOpen(false); }}
+                  className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2.5 transition-all text-left ${
+                    activeTab === "leaderboard"
+                      ? uiStyles.navTab.active
+                      : "text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100"
+                  }`}
+                >
+                  <Trophy className="w-4 h-4 text-amber-500 shrink-0" />
+                  <span className="truncate">{t.nav.leaderboard}</span>
                 </button>
 
                 <button
