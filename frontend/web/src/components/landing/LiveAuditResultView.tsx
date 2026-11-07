@@ -1,5 +1,5 @@
 import React from "react";
-import { Lock, LogIn, ArrowRight } from "lucide-react";
+import { LogIn, ArrowRight } from "lucide-react";
 import { CompetitorMatrixResponse, CompetitorMatrixItem } from "@/api/client";
 import { PlatformBrandLogo } from "../brand/PlatformBrandLogo";
 import { appConfig } from "@/config/appConfig";
@@ -8,6 +8,53 @@ interface LiveAuditResultViewProps {
   auditResult: CompetitorMatrixResponse;
   onOpenAuth: (mode?: "login" | "signup") => void;
 }
+
+interface BrandLogoBadgeProps {
+  logoUrl?: string;
+  brand: string;
+  sizeClassName?: string;
+  badgeClassName?: string;
+}
+
+const BrandLogoBadge: React.FC<BrandLogoBadgeProps> = ({
+  logoUrl,
+  brand,
+  sizeClassName = "w-5 h-5",
+  badgeClassName = "text-[10px]",
+}) => {
+  const [hasError, setHasError] = React.useState(false);
+  const initial = brand ? brand.trim().charAt(0).toUpperCase() : "?";
+
+  const charCode = initial.charCodeAt(0) || 0;
+  const gradients = [
+    "from-slate-700 to-slate-900",
+    "from-blue-600 to-indigo-800",
+    "from-emerald-600 to-teal-800",
+    "from-violet-600 to-purple-800",
+    "from-amber-600 to-orange-800",
+    "from-cyan-600 to-blue-800",
+  ];
+  const bgGradient = gradients[charCode % gradients.length];
+
+  if (!logoUrl || hasError) {
+    return (
+      <div
+        className={`${sizeClassName} rounded-full bg-gradient-to-br ${bgGradient} text-white font-bold flex items-center justify-center shrink-0 shadow-2xs ${badgeClassName} select-none`}
+      >
+        {initial}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={logoUrl}
+      alt={brand}
+      onError={() => setHasError(true)}
+      className={`${sizeClassName} rounded-full bg-white object-contain p-0.5 border border-slate-200 shrink-0`}
+    />
+  );
+};
 
 export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
   auditResult,
@@ -28,20 +75,22 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
       <div className="w-full rounded-3xl bg-white border border-slate-200/80 p-8 sm:p-12 shadow-sm space-y-8">
         {/* Brand Header */}
         <div className="flex items-center gap-4">
-          <img
-            src={auditResult.target.logo_url}
-            alt={auditResult.target.brand}
-            onError={(event) => {
-              (event.target as HTMLElement).style.display = "none";
-            }}
-            className="w-14 h-14 rounded-2xl border border-slate-200 object-contain p-2 bg-white shadow-2xs"
+          <BrandLogoBadge
+            logoUrl={auditResult.target.logo_url}
+            brand={auditResult.target.brand}
+            sizeClassName="w-14 h-14"
+            badgeClassName="text-2xl font-bold rounded-2xl"
           />
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 font-sans">
               {auditResult.target.brand}
             </h1>
             <p className="text-sm text-slate-500 mt-1 font-sans">
-              Here are a few prompts <span className="font-mono text-slate-700">{auditResult.target.domain}</span> may be cited in:
+              Here are a few prompts{" "}
+              <span className="font-mono text-slate-700">
+                {auditResult.target.domain}
+              </span>{" "}
+              may be cited in:
             </p>
           </div>
         </div>
@@ -113,13 +162,11 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
                         >
                           {compItem.rank}
                         </span>
-                        <img
-                          src={compItem.logo_url}
-                          alt={compItem.brand}
-                          onError={(event) => {
-                            (event.target as HTMLElement).style.display = "none";
-                          }}
-                          className="w-5 h-5 rounded-full bg-white object-contain p-0.5 border border-slate-200"
+                        <BrandLogoBadge
+                          logoUrl={compItem.logo_url}
+                          brand={compItem.brand}
+                          sizeClassName="w-5 h-5"
+                          badgeClassName="text-[10px]"
                         />
                         <span
                           className={`text-sm truncate max-w-[170px] ${
@@ -140,11 +187,11 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
               </div>
             </div>
 
-            {/* TWO Distinct Buttons (as requested) */}
+            {/* TWO Distinct Buttons */}
             <div className="space-y-2.5 pt-2">
               <button
                 onClick={() => onOpenAuth("login")}
-                className="w-full py-3.5 px-6 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-xs flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-6 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 <LogIn className="w-4 h-4" />
                 <span>Sign In to Access Dashboard</span>
@@ -152,7 +199,7 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
 
               <button
                 onClick={() => onOpenAuth("signup")}
-                className="w-full py-3.5 px-6 rounded-full bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-300 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-6 rounded-full bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-300 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Create Enterprise Account</span>
                 <ArrowRight className="w-4 h-4" />

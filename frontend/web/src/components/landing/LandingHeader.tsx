@@ -46,15 +46,13 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
         <div className="relative">
           <button
             onClick={() => setActiveMenu(activeMenu === "product" ? null : "product")}
-            className={`flex items-center gap-1 hover:text-slate-900 transition-colors py-1 ${
-              activeMenu === "product" ? "text-slate-950 font-semibold" : ""
-            }`}
+            className={`flex items-center gap-1 hover:text-slate-900 transition-colors py-1 ${activeMenu === "product" ? "text-slate-950 font-semibold" : ""
+              }`}
           >
             <span>Product</span>
             <ChevronDown
-              className={`w-3.5 h-3.5 transition-transform duration-200 text-slate-400 ${
-                activeMenu === "product" ? "rotate-180 text-slate-800" : ""
-              }`}
+              className={`w-3.5 h-3.5 transition-transform duration-200 text-slate-400 ${activeMenu === "product" ? "rotate-180 text-slate-800" : ""
+                }`}
             />
           </button>
 
@@ -101,15 +99,13 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
         <div className="relative">
           <button
             onClick={() => setActiveMenu(activeMenu === "usecases" ? null : "usecases")}
-            className={`flex items-center gap-1 hover:text-slate-900 transition-colors py-1 ${
-              activeMenu === "usecases" ? "text-slate-950 font-semibold" : ""
-            }`}
+            className={`flex items-center gap-1 hover:text-slate-900 transition-colors py-1 ${activeMenu === "usecases" ? "text-slate-950 font-semibold" : ""
+              }`}
           >
             <span>Use cases</span>
             <ChevronDown
-              className={`w-3.5 h-3.5 transition-transform duration-200 text-slate-400 ${
-                activeMenu === "usecases" ? "rotate-180 text-slate-800" : ""
-              }`}
+              className={`w-3.5 h-3.5 transition-transform duration-200 text-slate-400 ${activeMenu === "usecases" ? "rotate-180 text-slate-800" : ""
+                }`}
             />
           </button>
 
@@ -156,15 +152,13 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
         <div className="relative">
           <button
             onClick={() => setActiveMenu(activeMenu === "resources" ? null : "resources")}
-            className={`flex items-center gap-1 hover:text-slate-900 transition-colors py-1 ${
-              activeMenu === "resources" ? "text-slate-950 font-semibold" : ""
-            }`}
+            className={`flex items-center gap-1 hover:text-slate-900 transition-colors py-1 ${activeMenu === "resources" ? "text-slate-950 font-semibold" : ""
+              }`}
           >
             <span>Resources</span>
             <ChevronDown
-              className={`w-3.5 h-3.5 transition-transform duration-200 text-slate-400 ${
-                activeMenu === "resources" ? "rotate-180 text-slate-800" : ""
-              }`}
+              className={`w-3.5 h-3.5 transition-transform duration-200 text-slate-400 ${activeMenu === "resources" ? "rotate-180 text-slate-800" : ""
+                }`}
             />
           </button>
 
@@ -267,7 +261,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
                     tier.highlight
                       ? "bg-slate-50/70 border-blue-500 shadow-md relative ring-1 ring-blue-500"
                       : "bg-white border-slate-200"
-                  }`}
+                    }`}
                 >
                   {tier.highlight && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-blue-600 text-white font-bold text-[10px] uppercase tracking-wider shadow-xs">
@@ -306,7 +300,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
                         tier.highlight
                           ? "bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
                           : "bg-slate-900 hover:bg-slate-800 text-white"
-                      }`}
+                        }`}
                     >
                       {tier.name === "Enterprise" ? "Contact Architecture Team" : "Get Started"}
                     </button>
