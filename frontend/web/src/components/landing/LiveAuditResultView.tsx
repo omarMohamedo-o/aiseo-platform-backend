@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { LogIn, ArrowRight } from "lucide-react";
+import { LogIn, ArrowRight, X } from "lucide-react";
 import { CompetitorMatrixResponse, CompetitorMatrixItem } from "@/api/client";
 import { PlatformBrandLogo } from "../brand/PlatformBrandLogo";
 import { appConfig } from "@/config/appConfig";
@@ -116,8 +116,18 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
       <div
         ref={cardRef}
         style={{ backgroundColor: brandColors.windowBg }}
-        className="w-full rounded-3xl bg-[#FAF9F5] border border-[#E8E6E1] p-8 sm:p-12 shadow-sm space-y-8"
+        className="w-full rounded-3xl bg-[#FAF9F5] border border-[#E8E6E1] p-8 sm:p-12 shadow-sm space-y-8 relative animate-in fade-in duration-200"
       >
+        {/* Top-Right Dismiss Button */}
+        <button
+          onClick={onNavigateHome}
+          className="absolute right-6 top-6 sm:right-8 sm:top-8 p-2 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#EFECE4] transition-all cursor-pointer group"
+          aria-label="Close audit results"
+          title="Close and return to search"
+        >
+          <X className="w-5 h-5 transition-transform group-hover:scale-110" />
+        </button>
+
         {/* Brand Header */}
         <div className="flex items-center gap-4">
           <BrandLogoBadge
