@@ -70,18 +70,6 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         {auditError && (
           <p className="text-xs text-rose-600 font-medium px-4">{auditError}</p>
         )}
-
-        {/* Trust Badges */}
-        <div className="flex flex-wrap items-center gap-6 text-xs text-slate-500 font-medium px-4 pt-1">
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-slate-400" />
-            <span>See results in 30 seconds</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-slate-400" />
-            <span>No credit card required</span>
-          </span>
-        </div>
       </div>
     </div>
   );

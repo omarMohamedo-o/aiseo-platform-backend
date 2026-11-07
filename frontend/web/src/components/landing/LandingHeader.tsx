@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronDown, LogIn, CheckCircle2, X } from "lucide-react";
+import { ChevronDown, CheckCircle2, X } from "lucide-react";
 import { PlatformBrandLogo } from "../brand/PlatformBrandLogo";
 import { appConfig } from "@/config/appConfig";
 import {
@@ -32,7 +32,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
   }, []);
 
   return (
-    <header className="border-b border-[#E8E6E1] bg-[#FAF9F5]/90 backdrop-blur-md sticky top-0 z-40 px-6 lg:px-14 py-4 flex items-center justify-between">
+    <header className="border-b border-[#E8E6E1] bg-[#FAF9F5]/90 backdrop-blur-md sticky top-0 z-40 px-6 lg:px-14 py-3.5 flex items-center justify-between">
       {/* Brand Identity */}
       <PlatformBrandLogo
         size={30}
@@ -42,7 +42,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
 
       {/* Center Interactive Navigation */}
       <nav ref={navRef} className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 relative">
-        {/* Product Dropdown */}
+        {/* Product Dropdown (Wide 2-Column Mega Menu) */}
         <div className="relative">
           <button
             onClick={() => setActiveMenu(activeMenu === "product" ? null : "product")}
@@ -59,40 +59,45 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
           </button>
 
           {activeMenu === "product" && (
-            <div className="absolute top-full left-0 w-84 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 space-y-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-              <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
-                Platform Capabilities
+            <div className="absolute top-full -left-20 sm:-left-32 w-[600px] bg-white/98 backdrop-blur-xl border border-slate-200 rounded-3xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+              <div className="px-3 pb-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold border-b border-slate-100 flex items-center justify-between">
+                <span>Platform Capabilities</span>
+                <span className="text-blue-600 font-sans font-semibold text-[11px] normal-case">
+                  4 AI Engines Supported
+                </span>
               </div>
-              {platformProductItems.map((item) => {
-                const IconComponent = item.icon;
-                return (
-                  <button
-                    key={item.title}
-                    onClick={() => {
-                      setActiveMenu(null);
-                      setActiveDetailModal(item);
-                    }}
-                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-start gap-3 group"
-                  >
-                    <div className="p-2 rounded-lg bg-slate-100 text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                      <IconComponent className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-semibold text-slate-900 group-hover:text-blue-600 block transition-colors">
-                        {item.title}
-                      </span>
-                      <span className="text-[11px] text-slate-500 leading-snug block mt-0.5 line-clamp-2">
-                        {item.description}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
+              <div className="grid grid-cols-2 gap-2 pt-2.5">
+                {platformProductItems.map((item) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <button
+                      key={item.title}
+                      onClick={() => {
+                        setActiveMenu(null);
+                        setActiveDetailModal(item);
+                      }}
+                      className="w-full text-left p-3 rounded-2xl hover:bg-slate-50 transition-all flex items-start gap-3 group border border-transparent hover:border-slate-100"
+                    >
+                      <div className="p-2 rounded-xl bg-slate-100 text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                        <IconComponent className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-xs font-bold text-slate-900 group-hover:text-blue-600 block transition-colors truncate">
+                          {item.title}
+                        </span>
+                        <span className="text-[11px] text-slate-500 leading-snug block mt-0.5 line-clamp-2">
+                          {item.description}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Use cases Dropdown */}
+        {/* Use cases Dropdown (Wide 2-Column Mega Menu) */}
         <div className="relative">
           <button
             onClick={() => setActiveMenu(activeMenu === "usecases" ? null : "usecases")}
@@ -109,40 +114,45 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
           </button>
 
           {activeMenu === "usecases" && (
-            <div className="absolute top-full left-0 w-84 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 space-y-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-              <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
-                Industry Solutions
+            <div className="absolute top-full -left-28 sm:-left-44 w-[600px] bg-white/98 backdrop-blur-xl border border-slate-200 rounded-3xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+              <div className="px-3 pb-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold border-b border-slate-100 flex items-center justify-between">
+                <span>Industry Solutions</span>
+                <span className="text-blue-600 font-sans font-semibold text-[11px] normal-case">
+                  Enterprise Ready
+                </span>
               </div>
-              {platformUseCaseItems.map((item) => {
-                const IconComponent = item.icon;
-                return (
-                  <button
-                    key={item.title}
-                    onClick={() => {
-                      setActiveMenu(null);
-                      setActiveDetailModal(item);
-                    }}
-                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-start gap-3 group"
-                  >
-                    <div className="p-2 rounded-lg bg-slate-100 text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                      <IconComponent className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-semibold text-slate-900 group-hover:text-blue-600 block transition-colors">
-                        {item.title}
-                      </span>
-                      <span className="text-[11px] text-slate-500 leading-snug block mt-0.5 line-clamp-2">
-                        {item.description}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
+              <div className="grid grid-cols-2 gap-2 pt-2.5">
+                {platformUseCaseItems.map((item) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <button
+                      key={item.title}
+                      onClick={() => {
+                        setActiveMenu(null);
+                        setActiveDetailModal(item);
+                      }}
+                      className="w-full text-left p-3 rounded-2xl hover:bg-slate-50 transition-all flex items-start gap-3 group border border-transparent hover:border-slate-100"
+                    >
+                      <div className="p-2 rounded-xl bg-slate-100 text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                        <IconComponent className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-xs font-bold text-slate-900 group-hover:text-blue-600 block transition-colors truncate">
+                          {item.title}
+                        </span>
+                        <span className="text-[11px] text-slate-500 leading-snug block mt-0.5 line-clamp-2">
+                          {item.description}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Resources Dropdown */}
+        {/* Resources Dropdown (Wide 2-Column Mega Menu) */}
         <div className="relative">
           <button
             onClick={() => setActiveMenu(activeMenu === "resources" ? null : "resources")}
@@ -159,35 +169,40 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
           </button>
 
           {activeMenu === "resources" && (
-            <div className="absolute top-full left-0 w-84 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 space-y-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-              <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
-                Documentation & Guides
+            <div className="absolute top-full -left-36 sm:-left-56 w-[560px] bg-white/98 backdrop-blur-xl border border-slate-200 rounded-3xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+              <div className="px-3 pb-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold border-b border-slate-100 flex items-center justify-between">
+                <span>Documentation & Research</span>
+                <span className="text-blue-600 font-sans font-semibold text-[11px] normal-case">
+                  v1.0 Specifications
+                </span>
               </div>
-              {platformResourceItems.map((item) => {
-                const IconComponent = item.icon;
-                return (
-                  <button
-                    key={item.title}
-                    onClick={() => {
-                      setActiveMenu(null);
-                      setActiveDetailModal(item);
-                    }}
-                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-50 transition-colors flex items-start gap-3 group"
-                  >
-                    <div className="p-2 rounded-lg bg-slate-100 text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                      <IconComponent className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-semibold text-slate-900 group-hover:text-blue-600 block transition-colors">
-                        {item.title}
-                      </span>
-                      <span className="text-[11px] text-slate-500 leading-snug block mt-0.5 line-clamp-2">
-                        {item.description}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
+              <div className="grid grid-cols-2 gap-2 pt-2.5">
+                {platformResourceItems.map((item) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <button
+                      key={item.title}
+                      onClick={() => {
+                        setActiveMenu(null);
+                        setActiveDetailModal(item);
+                      }}
+                      className="w-full text-left p-3 rounded-2xl hover:bg-slate-50 transition-all flex items-start gap-3 group border border-transparent hover:border-slate-100"
+                    >
+                      <div className="p-2 rounded-xl bg-slate-100 text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                        <IconComponent className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-xs font-bold text-slate-900 group-hover:text-blue-600 block transition-colors truncate">
+                          {item.title}
+                        </span>
+                        <span className="text-[11px] text-slate-500 leading-snug block mt-0.5 line-clamp-2">
+                          {item.description}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
@@ -198,13 +213,13 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
             setActiveMenu(null);
             setShowPricingModal(true);
           }}
-          className="hover:text-slate-900 transition-colors py-1"
+          className="hover:text-slate-900 transition-colors py-1 font-medium"
         >
           <span>Pricing</span>
         </button>
       </nav>
 
-      {/* Right: TWO Distinct Buttons (Sign In + Sign Up) */}
+      {/* Right: TWO Distinct Buttons (Sign In + Get Started) */}
       <div className="flex items-center gap-2.5">
         <button
           onClick={() => onOpenAuth("login")}
@@ -220,36 +235,37 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
         </button>
       </div>
 
-      {/* Pricing Modal */}
+      {/* Pricing Modal (Perfect Viewport Fit with Scroll Container) */}
       {showPricingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 backdrop-blur-sm p-4">
-          <div className="bg-white border border-slate-200 rounded-3xl p-8 max-w-4xl w-full relative shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto">
+          <div className="relative my-auto bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 max-w-4xl w-full shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto animate-in fade-in duration-200">
             <button
               onClick={() => setShowPricingModal(false)}
-              className="absolute right-5 top-5 text-slate-400 hover:text-slate-700 transition-colors"
+              className="absolute right-5 top-5 p-1 rounded-full text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-all"
+              aria-label="Close pricing"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="text-center space-y-1.5">
-              <span className="text-xs font-mono text-blue-600 uppercase tracking-wider font-semibold">
+            <div className="text-center space-y-1.5 max-w-xl mx-auto pt-2">
+              <span className="text-xs font-mono text-blue-600 uppercase tracking-wider font-bold">
                 Transparent Plans
               </span>
-              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                 Generative Dominance for Every Stage
               </h2>
-              <p className="text-sm text-slate-500 max-w-lg mx-auto">
+              <p className="text-xs sm:text-sm text-slate-500">
                 Deterministic LLM auditing, competitor displacement, and citation acquisition.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
               {platformPricingTiers.map((tier) => (
                 <div
                   key={tier.name}
-                  className={`rounded-2xl p-6 flex flex-col justify-between border ${
+                  className={`rounded-2xl p-5 sm:p-6 flex flex-col justify-between border ${
                     tier.highlight
-                      ? "bg-slate-50/50 border-blue-500 shadow-lg shadow-blue-500/5 relative ring-1 ring-blue-500"
+                      ? "bg-slate-50/70 border-blue-500 shadow-md relative ring-1 ring-blue-500"
                       : "bg-white border-slate-200"
                   }`}
                 >
@@ -280,16 +296,16 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
                     </div>
                   </div>
 
-                  <div className="pt-6">
+                  <div className="pt-5">
                     <button
                       onClick={() => {
                         setShowPricingModal(false);
-                        onOpenAuth();
+                        onOpenAuth("signup");
                       }}
-                      className={`w-full py-2.5 rounded-xl font-bold text-xs transition-all ${
+                      className={`w-full py-2.5 rounded-full font-bold text-xs transition-all ${
                         tier.highlight
                           ? "bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
-                          : "bg-slate-100 hover:bg-slate-200 text-slate-900"
+                          : "bg-slate-900 hover:bg-slate-800 text-white"
                       }`}
                     >
                       {tier.name === "Enterprise" ? "Contact Architecture Team" : "Get Started"}
@@ -305,7 +321,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
       {/* Feature Detail Modal */}
       {activeDetailModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 backdrop-blur-sm p-4">
-          <div className="bg-white border border-slate-200 rounded-3xl p-7 max-w-lg w-full relative shadow-2xl space-y-5">
+          <div className="bg-white border border-slate-200 rounded-3xl p-7 max-w-lg w-full relative shadow-2xl space-y-5 animate-in fade-in duration-150">
             <button
               onClick={() => setActiveDetailModal(null)}
               className="absolute right-5 top-5 text-slate-400 hover:text-slate-700 transition-colors"
@@ -341,9 +357,9 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
               <button
                 onClick={() => {
                   setActiveDetailModal(null);
-                  onOpenAuth();
+                  onOpenAuth("signup");
                 }}
-                className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-all shadow-xs"
+                className="w-full py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-all shadow-xs"
               >
                 Sign In to Test {activeDetailModal.title}
               </button>
