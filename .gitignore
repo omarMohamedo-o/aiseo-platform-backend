@@ -12,8 +12,8 @@ mlflow.db
 mlruns/
 .coverage
 htmlcov/
-dist/
-build/
+/dist/
+/build/
 node_modules/
 **/node_modules/
 *.exe

@@ -39,6 +39,22 @@ import {
 } from "@/api/client";
 import { Language } from "@/i18n/translations";
 
+export function extractBrandFromUrl(rawUrl: string): string {
+  if (!rawUrl || !rawUrl.trim()) return "";
+  try {
+    let clean = rawUrl.trim();
+    if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
+      clean = "https://" + clean;
+    }
+    const parsed = new URL(clean);
+    let host = parsed.hostname.replace(/^www\./i, "");
+    const parts = host.split(".");
+    return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+  } catch {
+    return rawUrl.replace(/^https?:\/\//i, "").replace(/^www\./i, "").split(/[/?#.]/)[0] || "";
+  }
+}
+
 interface CompetitorTarget {
   id: string;
   url: string;
