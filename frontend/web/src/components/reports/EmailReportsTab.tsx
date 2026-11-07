@@ -139,12 +139,12 @@ export const EmailReportsTab: React.FC = () => {
             value={testEmail}
             onChange={(e) => setTestEmail(e.target.value)}
             placeholder="stakeholder@company.com"
-            className="bg-slate-900 dark:bg-slate-50 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-slate-50 placeholder-slate-400 focus:outline-none focus:border-primary w-64"
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-blue-500 w-64"
           />
           <button
             onClick={handleSendTestEmail}
             disabled={sendingTest || !testEmail}
-            className="px-4 py-2 rounded-xl bg-primary hover:bg-lime-400 text-slate-950 text-xs font-bold flex items-center gap-2 transition-all disabled:opacity-50"
+            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-2 transition-all disabled:opacity-50"
           >
             <Send className="w-3.5 h-3.5" />
             {sendingTest ? "Sending..." : "Send Test Report"}
@@ -232,7 +232,7 @@ export const EmailReportsTab: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-1.5 rounded-lg bg-primary text-slate-950 text-xs font-bold"
+                    className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors"
                   >
                     Create Distribution Schedule
                   </button>
@@ -291,7 +291,7 @@ export const EmailReportsTab: React.FC = () => {
                   type="text"
                   value={branding.company_name}
                   onChange={(e) => setBranding({ ...branding, company_name: e.target.value })}
-                  className="w-full bg-slate-900 dark:bg-slate-50 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-slate-50"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-slate-50"
                 />
               </div>
 
@@ -303,7 +303,7 @@ export const EmailReportsTab: React.FC = () => {
                   type="text"
                   value={branding.logo_url}
                   onChange={(e) => setBranding({ ...branding, logo_url: e.target.value })}
-                  className="w-full bg-slate-900 dark:bg-slate-50 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-slate-50"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-slate-50"
                 />
               </div>
 
@@ -346,14 +346,14 @@ export const EmailReportsTab: React.FC = () => {
                   type="email"
                   value={branding.support_email}
                   onChange={(e) => setBranding({ ...branding, support_email: e.target.value })}
-                  className="w-full bg-slate-900 dark:bg-slate-50 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-slate-50"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-slate-50"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={savingBranding}
-                className="w-full py-2.5 mt-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all disabled:opacity-50"
+                className="w-full py-2.5 mt-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all disabled:opacity-50"
               >
                 {savingBranding ? "Saving..." : "Save Branding Configuration"}
               </button>

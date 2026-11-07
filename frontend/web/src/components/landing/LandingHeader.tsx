@@ -259,10 +259,9 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth, onNavi
               {platformPricingTiers.map((tier) => (
                 <div
                   key={tier.name}
-                  className={`rounded-2xl p-5 sm:p-6 flex flex-col justify-between border ${
-                    tier.highlight
-                      ? "bg-slate-50/70 border-blue-500 shadow-md relative ring-1 ring-blue-500"
-                      : "bg-white border-slate-200"
+                  className={`rounded-2xl p-5 sm:p-6 flex flex-col justify-between border ${tier.highlight
+                    ? "bg-slate-50/70 border-blue-500 shadow-md relative ring-1 ring-blue-500"
+                    : "bg-white border-slate-200"
                     }`}
                 >
                   {tier.highlight && (
@@ -298,10 +297,9 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth, onNavi
                         setShowPricingModal(false);
                         onOpenAuth("signup");
                       }}
-                      className={`w-full py-2.5 rounded-full font-bold text-xs transition-all ${
-                        tier.highlight
-                          ? "bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
-                          : "bg-slate-900 hover:bg-slate-800 text-white"
+                      className={`w-full py-2.5 rounded-full font-bold text-xs transition-all ${tier.highlight
+                        ? "bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+                        : "bg-slate-900 hover:bg-slate-800 text-white"
                         }`}
                     >
                       {tier.name === "Enterprise" ? "Contact Architecture Team" : "Get Started"}

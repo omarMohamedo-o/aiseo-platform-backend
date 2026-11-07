@@ -614,7 +614,7 @@ export const LiveWebsiteCrawlTab: React.FC<LiveWebsiteCrawlTabProps> = ({
                       href={inspectedPage.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-50 text-xs font-medium flex items-center gap-1.5 transition-colors shadow-xs"
+                      className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
                     >
                       <ExternalLink className="w-3 h-3" />
                       <span>Visit Page</span>

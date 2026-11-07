@@ -22,6 +22,7 @@ import {
   YAxis,
 } from "recharts";
 import { apiClient, TrendSeriesPoint } from "@/api/client";
+import { uiStyles } from "@/config/designSystem";
 
 interface OverviewTabProps {
   auditTarget?: {url: string, brand: string} | null;
@@ -134,7 +135,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ auditTarget, setAuditT
                 <button
                   onClick={() => setActiveFilter("all")}
                   className={`px-3 py-1 rounded-lg transition-all ${
-                    activeFilter === "all" ? "bg-primary text-slate-950 font-bold" : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                    activeFilter === "all" ? uiStyles.segmented.active : uiStyles.segmented.inactive
                   }`}
                 >
                   All (5)
@@ -142,7 +143,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ auditTarget, setAuditT
                 <button
                   onClick={() => setActiveFilter("ai")}
                   className={`px-3 py-1 rounded-lg transition-all ${
-                    activeFilter === "ai" ? "bg-primary text-slate-950 font-bold" : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                    activeFilter === "ai" ? uiStyles.segmented.active : uiStyles.segmented.inactive
                   }`}
                 >
                   AI Only
@@ -150,7 +151,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ auditTarget, setAuditT
                 <button
                   onClick={() => setActiveFilter("geo")}
                   className={`px-3 py-1 rounded-lg transition-all ${
-                    activeFilter === "geo" ? "bg-primary text-slate-950 font-bold" : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                    activeFilter === "geo" ? uiStyles.segmented.active : uiStyles.segmented.inactive
                   }`}
                 >
                   GEO / AEO

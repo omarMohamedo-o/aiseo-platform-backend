@@ -1,0 +1,70 @@
+/**
+ * Standardized Design System & Semantic UI Tokens
+ * Centralized theme definitions across the entire application.
+ * Eliminates hardcoded, conflicting or low-contrast styles.
+ *
+ * Copyright (c) 2026 Omar Mohamed (@omarMohamedo-o). All Rights Reserved.
+ */
+
+export const uiStyles = {
+  // Pill / Segmented Controls & Multi-option Switchers
+  segmented: {
+    container:
+      "bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-1 rounded-xl flex items-center gap-1 text-xs",
+    active:
+      "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-semibold shadow-xs border border-slate-200/80 dark:border-slate-700",
+    inactive:
+      "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 font-medium transition-colors",
+    primaryActive:
+      "bg-blue-600 text-white font-semibold shadow-xs",
+  },
+
+  // Buttons
+  button: {
+    primary:
+      "bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl px-4 py-2 text-xs transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50",
+    dark:
+      "bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl px-4 py-2 text-xs transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50",
+    secondary:
+      "bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium rounded-xl px-4 py-2 text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50",
+    ghost:
+      "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50",
+  },
+
+  // Input Fields & Selects
+  input: {
+    base:
+      "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors",
+    select:
+      "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors cursor-pointer",
+  },
+
+  // Panels & Cards
+  card: {
+    base:
+      "bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-xs transition-colors",
+    subtle:
+      "bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 rounded-xl p-4",
+    header:
+      "flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4",
+  },
+
+  // Status Badges & Pills
+  badge: {
+    blue:
+      "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 font-semibold px-2 py-0.5 rounded-md text-[10px] font-mono",
+    emerald:
+      "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 font-semibold px-2 py-0.5 rounded-md text-[10px] font-mono",
+    amber:
+      "text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 font-semibold px-2 py-0.5 rounded-md text-[10px] font-mono",
+    slate:
+      "text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-medium px-2 py-0.5 rounded-md text-[10px] font-mono",
+  },
+
+  // Typography
+  text: {
+    heading: "text-slate-900 dark:text-slate-50 font-bold tracking-tight",
+    subheading: "text-slate-600 dark:text-slate-400 text-xs mt-1",
+    label: "text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 block mb-1 font-semibold",
+  },
+} as const;

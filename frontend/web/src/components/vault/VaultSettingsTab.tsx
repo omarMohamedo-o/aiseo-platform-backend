@@ -166,7 +166,7 @@ export const VaultSettingsTab: React.FC = () => {
                 <select
                   value={selectedProvider}
                   onChange={(e) => setSelectedProvider(e.target.value)}
-                  className="w-full bg-slate-900 dark:bg-slate-50 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-slate-50"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-slate-100"
                 >
                   <option value="openai">OpenAI (GPT-4o, ChatGPT)</option>
                   <option value="gemini">Google Gemini (1.5 Pro)</option>
@@ -187,7 +187,7 @@ export const VaultSettingsTab: React.FC = () => {
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
                     placeholder="sk-..."
-                    className="w-full bg-slate-900 dark:bg-slate-50 border border-slate-200 dark:border-slate-700 rounded-lg pl-3 pr-9 py-2 text-xs text-slate-900 dark:text-slate-50"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg pl-3 pr-9 py-2 text-xs text-slate-900 dark:text-slate-100"
                     required
                   />
                   <button
@@ -209,14 +209,14 @@ export const VaultSettingsTab: React.FC = () => {
                   value={apiUrl}
                   onChange={(e) => setApiUrl(e.target.value)}
                   placeholder="https://api.openai.com/v1"
-                  className="w-full bg-slate-900 dark:bg-slate-50 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-slate-50"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-slate-100"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={saving || !apiKey}
-                className="w-full py-2.5 mt-2 rounded-xl bg-primary hover:bg-lime-400 text-slate-950 text-xs font-bold transition-all disabled:opacity-50"
+                className="w-full py-2.5 mt-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all disabled:opacity-50"
               >
                 {saving ? "Sealing..." : "Seal in AES-256-GCM Vault"}
               </button>

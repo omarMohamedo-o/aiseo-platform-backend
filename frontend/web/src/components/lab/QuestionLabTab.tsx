@@ -103,7 +103,7 @@ export const QuestionLabTab: React.FC = () => {
             <button
               onClick={handleGenerateQuestions}
               disabled={isGenerating}
-              className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-2 transition-all disabled:opacity-50"
+              className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-2 transition-all disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isGenerating ? "animate-spin" : ""}`} />
               {isGenerating ? "Generating..." : "Generate AI Questions"}
@@ -111,7 +111,7 @@ export const QuestionLabTab: React.FC = () => {
             <button
               onClick={handleRunSimulation}
               disabled={isExecuting || questions.length === 0}
-              className="px-5 py-2.5 rounded-xl bg-primary hover:bg-lime-400 text-slate-950 text-xs font-bold flex items-center gap-2 transition-all shadow-lg shadow-lime-500/20 disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md shadow-blue-500/20 disabled:opacity-50"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               {isExecuting ? "Executing Simulation..." : "Run Multi-Engine Simulation"}

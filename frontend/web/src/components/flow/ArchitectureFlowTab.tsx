@@ -31,6 +31,7 @@ import {
   Workflow,
   Zap,
 } from "lucide-react";
+import { uiStyles } from "@/config/designSystem";
 
 type FlowId = "pipeline" | "hexagonal" | "formula" | "security" | "timespan";
 
@@ -212,8 +213,8 @@ export const ArchitectureFlowTab: React.FC = () => {
             onClick={() => setSelectedFlow("pipeline")}
             className={`px-3 py-1.5 rounded-lg transition-all ${
               selectedFlow === "pipeline"
-                ? "bg-primary text-slate-950 font-bold"
-                : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                ? uiStyles.segmented.active
+                : uiStyles.segmented.inactive
             }`}
           >
             1. Pipeline Lineage
@@ -222,8 +223,8 @@ export const ArchitectureFlowTab: React.FC = () => {
             onClick={() => setSelectedFlow("hexagonal")}
             className={`px-3 py-1.5 rounded-lg transition-all ${
               selectedFlow === "hexagonal"
-                ? "bg-primary text-slate-950 font-bold"
-                : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                ? uiStyles.segmented.active
+                : uiStyles.segmented.inactive
             }`}
           >
             2. Hexagonal Clean Arch
@@ -232,8 +233,8 @@ export const ArchitectureFlowTab: React.FC = () => {
             onClick={() => setSelectedFlow("formula")}
             className={`px-3 py-1.5 rounded-lg transition-all ${
               selectedFlow === "formula"
-                ? "bg-primary text-slate-950 font-bold"
-                : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                ? uiStyles.segmented.active
+                : uiStyles.segmented.inactive
             }`}
           >
             3. Opportunity Math Flow
@@ -242,8 +243,8 @@ export const ArchitectureFlowTab: React.FC = () => {
             onClick={() => setSelectedFlow("security")}
             className={`px-3 py-1.5 rounded-lg transition-all ${
               selectedFlow === "security"
-                ? "bg-primary text-slate-950 font-bold"
-                : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                ? uiStyles.segmented.active
+                : uiStyles.segmented.inactive
             }`}
           >
             4. AES-256 Vault Lifecycle
@@ -252,8 +253,8 @@ export const ArchitectureFlowTab: React.FC = () => {
             onClick={() => setSelectedFlow("timespan")}
             className={`px-3 py-1.5 rounded-lg transition-all ${
               selectedFlow === "timespan"
-                ? "bg-primary text-slate-950 font-bold"
-                : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                ? uiStyles.segmented.active
+                : uiStyles.segmented.inactive
             }`}
           >
             5. Timespan Analytics Flow

@@ -34,6 +34,7 @@ import {
   TrendingUp,
   Zap,
 } from "lucide-react";
+import { uiStyles } from "@/config/designSystem";
 import { apiClient, TrendSeriesPoint } from "@/api/client";
 
 type TimespanOption = "7d" | "30d" | "90d" | "12m" | "5y";
@@ -194,8 +195,8 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
               onClick={() => setCompareMode("single")}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
                 compareMode === "single"
-                  ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-bold shadow-sm"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                  ? uiStyles.segmented.active
+                  : uiStyles.segmented.inactive
               }`}
             >
               Single Horizon
@@ -204,8 +205,8 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
               onClick={() => setCompareMode("pop")}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
                 compareMode === "pop"
-                  ? "bg-primary text-slate-950 font-bold shadow-sm"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                  ? uiStyles.segmented.active
+                  : uiStyles.segmented.inactive
               }`}
             >
               <Split className="w-3.5 h-3.5" />
@@ -229,8 +230,8 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
                 onClick={() => setTimespan(opt.id)}
                 className={`px-2.5 py-1.5 rounded-lg font-mono text-[11px] transition-all ${
                   timespan === opt.id
-                    ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-bold shadow-sm"
-                    : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                    ? uiStyles.segmented.active
+                    : uiStyles.segmented.inactive
                 }`}
               >
                 {opt.label}
@@ -244,8 +245,8 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
               onClick={() => setChartType("line")}
               className={`px-2.5 py-1.5 rounded-lg transition-all ${
                 chartType === "line"
-                  ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-bold shadow-sm"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                  ? uiStyles.segmented.active
+                  : uiStyles.segmented.inactive
               }`}
             >
               Line
@@ -254,8 +255,8 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
               onClick={() => setChartType("area")}
               className={`px-2.5 py-1.5 rounded-lg transition-all ${
                 chartType === "area"
-                  ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-bold shadow-sm"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                  ? uiStyles.segmented.active
+                  : uiStyles.segmented.inactive
               }`}
             >
               Area
@@ -264,8 +265,8 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
               onClick={() => setChartType("velocity")}
               className={`px-2.5 py-1.5 rounded-lg transition-all ${
                 chartType === "velocity"
-                  ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-bold shadow-sm"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                  ? uiStyles.segmented.active
+                  : uiStyles.segmented.inactive
               }`}
             >
               Bar
@@ -274,8 +275,8 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
               onClick={() => setChartType("composed")}
               className={`px-2.5 py-1.5 rounded-lg transition-all ${
                 chartType === "composed"
-                  ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-bold shadow-sm"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50"
+                  ? uiStyles.segmented.active
+                  : uiStyles.segmented.inactive
               }`}
             >
               Composed

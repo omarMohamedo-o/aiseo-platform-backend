@@ -28,6 +28,7 @@ import {
   Target,
   TrendingUp,
 } from "lucide-react";
+import { uiStyles } from "@/config/designSystem";
 import {
   apiClient,
   ReportKeyword,
@@ -149,8 +150,8 @@ export const KeywordIntelTab: React.FC<KeywordIntelTabProps> = ({ currentLang = 
                 onClick={() => setTone(t)}
                 className={`px-3 py-1.5 rounded-md capitalize font-medium transition-all ${
                   tone === t
-                    ? "bg-slate-900 dark:bg-slate-50 text-slate-900 dark:text-slate-50 font-semibold shadow-xs"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50 hover:bg-slate-100 dark:bg-slate-800"
+                    ? uiStyles.segmented.active
+                    : uiStyles.segmented.inactive
                 }`}
               >
                 {t === "executive" ? (isRtl ? "تنفيذي" : "Executive") : t === "technical" ? (isRtl ? "تقني" : "Technical") : (isRtl ? "استراتيجية المحتوى" : "Content Strategy")}
@@ -196,8 +197,8 @@ export const KeywordIntelTab: React.FC<KeywordIntelTabProps> = ({ currentLang = 
               onClick={() => setChartView("composed")}
               className={`px-3 py-1 rounded-md transition-colors font-medium ${
                 chartView === "composed"
-                  ? "bg-slate-900 dark:bg-slate-50 text-slate-900 dark:text-slate-50 font-semibold shadow-xs"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50 hover:bg-slate-100 dark:bg-slate-800"
+                  ? uiStyles.segmented.active
+                  : uiStyles.segmented.inactive
               }`}
             >
               {isRtl ? "مخطط بياني مدمج" : "Composed Chart"}
@@ -206,8 +207,8 @@ export const KeywordIntelTab: React.FC<KeywordIntelTabProps> = ({ currentLang = 
               onClick={() => setChartView("scatter")}
               className={`px-3 py-1 rounded-md transition-colors font-medium ${
                 chartView === "scatter"
-                  ? "bg-slate-900 dark:bg-slate-50 text-slate-900 dark:text-slate-50 font-semibold shadow-xs"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50 hover:bg-slate-100 dark:bg-slate-800"
+                  ? uiStyles.segmented.active
+                  : uiStyles.segmented.inactive
               }`}
             >
               {isRtl ? "مخطط التشتت" : "Scatter Quadrant"}
