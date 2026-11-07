@@ -34,13 +34,25 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     } catch {}
   };
 
-  const handleRunAudit = useCallback(async (overrideUrl?: string) => {
+  const handleRunAudit = useCallback(async (overrideUrl?: string, cachedSnapshot?: CompetitorMatrixResponse) => {
     const rawUrl = overrideUrl || urlInput;
     const targetUrl = rawUrl.trim();
     if (!targetUrl) return;
 
     if (overrideUrl) {
       setUrlInput(overrideUrl);
+    }
+
+    // Instant replay if full dashboard snapshot is already cached
+    if (cachedSnapshot) {
+      setAuditResult(cachedSnapshot);
+      const domain = cachedSnapshot.target?.domain || targetUrl.replace(/^https?:\/\//i, "").split("/")[0];
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set("domain", domain);
+        window.history.replaceState({}, "", url.toString());
+      } catch {}
+      return;
     }
 
     setIsAuditing(true);
@@ -58,17 +70,42 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         window.history.replaceState({}, "", url.toString());
       } catch {}
 
-      // Save to recent searches for history and quick-fill
+      // Save full result snapshot and dashboard state in recent searches
       try {
         const saved = JSON.parse(localStorage.getItem("aiseo_recent_searches") || "[]");
         const brand = response.target?.brand || domain;
         const logoUrl = response.target?.logo_url;
         const filtered = saved.filter((item: any) => item.domain.toLowerCase() !== domain.toLowerCase());
         const updated = [
-          { domain, brand, logoUrl, timestamp: new Date().toISOString(), url: targetUrl },
+          {
+            domain,
+            brand,
+            logoUrl,
+            timestamp: new Date().toISOString(),
+            url: targetUrl,
+            snapshot: response, // Full dashboard result snapshot
+          },
           ...filtered,
-        ].slice(0, 10);
+        ].slice(0, 15);
         localStorage.setItem("aiseo_recent_searches", JSON.stringify(updated));
+
+        // Archive into comprehensive audit history store
+        const historyStore = JSON.parse(localStorage.getItem("aiseo_audit_history_records") || "[]");
+        const updatedHistory = [
+          {
+            id: `audit-${Date.now()}`,
+            domain,
+            brand,
+            url: targetUrl,
+            logoUrl,
+            timestamp: new Date().toISOString(),
+            visibilityScore: response.target_mention_rate || 50,
+            opportunityScore: response.gap_to_leader || 25,
+            snapshot: response,
+          },
+          ...historyStore,
+        ].slice(0, 50);
+        localStorage.setItem("aiseo_audit_history_records", JSON.stringify(updatedHistory));
       } catch (storageErr) {
         console.error("Failed to update recent searches", storageErr);
       }

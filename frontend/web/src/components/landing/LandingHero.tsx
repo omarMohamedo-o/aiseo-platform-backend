@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Globe2, RefreshCw, ArrowRight, History, X, Sparkles } from "lucide-react";
 import { brandColors } from "@/config/designSystem";
 import { uiStrings } from "@/config/uiStrings";
+import { CompetitorMatrixResponse } from "@/api/client";
 
 export interface RecentSearchItem {
   domain: string;
@@ -9,6 +10,7 @@ export interface RecentSearchItem {
   logoUrl?: string;
   timestamp: string;
   url: string;
+  snapshot?: CompetitorMatrixResponse;
 }
 
 interface LandingHeroProps {
@@ -16,7 +18,7 @@ interface LandingHeroProps {
   setUrlInput: (val: string) => void;
   isAuditing: boolean;
   auditError: string | null;
-  onRunAudit: (overrideUrl?: string) => void;
+  onRunAudit: (overrideUrl?: string, cachedSnapshot?: CompetitorMatrixResponse) => void;
 }
 
 export const LandingHero: React.FC<LandingHeroProps> = ({
@@ -65,7 +67,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
   const handleSelectRecent = (item: RecentSearchItem) => {
     setUrlInput(item.url || `https://${item.domain}`);
     setShowRecentMenu(false);
-    onRunAudit(item.url || `https://${item.domain}`);
+    onRunAudit(item.url || `https://${item.domain}`, item.snapshot);
   };
 
   return (

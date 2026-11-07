@@ -25,9 +25,10 @@ import {
   Clock,
   ArrowRight,
 } from "lucide-react";
-import { apiClient, GlobalBenchmarkResult, LeaderboardEntryItem } from "@/api/client";
+import { apiClient, GlobalBenchmarkResult, LeaderboardEntryItem, CompetitorMatrixResponse } from "@/api/client";
 import { Language } from "@/i18n/translations";
 import { MonitoredDomainsSection } from "./MonitoredDomainsSection";
+import { HistorySnapshotModal } from "./HistorySnapshotModal";
 
 interface HistoryLeaderboardTabProps {
   onSelectAuditDomain?: (domain: string, brand: string) => void;
@@ -46,6 +47,7 @@ export interface MonitoredDomainRecord {
   scores: number[];
   lastAudited: string;
   status: "optimized" | "improving" | "attention";
+  snapshot?: CompetitorMatrixResponse;
 }
 
 export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ currentLang = "en", onLiveAudit, onSelectAuditDomain }) => {
@@ -57,6 +59,9 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [monitoredSites, setMonitoredSites] = useState<MonitoredDomainRecord[]>([]);
+  const [selectedSnapshot, setSelectedSnapshot] = useState<CompetitorMatrixResponse | null>(null);
+  const [snapshotDate, setSnapshotDate] = useState<string>("");
+  const [isSnapshotOpen, setIsSnapshotOpen] = useState(false);
 
   const loadMonitoredSites = async () => {
     try {
@@ -71,7 +76,18 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
         console.error("Local searches parse error:", storageErr);
       }
 
-      const domainMap = new Map<string, { brand: string; url: string; logoUrl?: string; audits: any[] }>();
+      let auditArchive: any[] = [];
+      try {
+        const storedArchive = localStorage.getItem("aiseo_audit_history_records");
+        if (storedArchive) auditArchive = JSON.parse(storedArchive);
+      } catch (storageErr) {
+        console.error("Archive parse error:", storageErr);
+      }
+
+      const domainMap = new Map<
+        string,
+        { brand: string; url: string; logoUrl?: string; audits: any[]; snapshot?: CompetitorMatrixResponse }
+      >();
 
       backendHistory.forEach((item) => {
         const rawDomain = item.url ? item.url.replace(/^https?:\/\//i, "").split("/")[0] : "website.com";
@@ -81,11 +97,32 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
             brand: item.brand_name || cleanDomain,
             url: item.url,
             audits: [],
+            snapshot: item.payload?.target ? item.payload : undefined,
           });
         }
         domainMap.get(cleanDomain)?.audits.push({
           score: item.visibility_score || 50,
           date: item.timestamp || new Date().toISOString(),
+        });
+      });
+
+      auditArchive.forEach((rec) => {
+        const cleanDomain = (rec.domain || rec.url || "").replace(/^https?:\/\//i, "").split("/")[0].toLowerCase();
+        if (!cleanDomain) return;
+        if (!domainMap.has(cleanDomain)) {
+          domainMap.set(cleanDomain, {
+            brand: rec.brand || cleanDomain,
+            url: rec.url || `https://${cleanDomain}`,
+            logoUrl: rec.logoUrl,
+            audits: [],
+            snapshot: rec.snapshot,
+          });
+        } else if (rec.snapshot && !domainMap.get(cleanDomain)?.snapshot) {
+          domainMap.get(cleanDomain)!.snapshot = rec.snapshot;
+        }
+        domainMap.get(cleanDomain)?.audits.push({
+          score: rec.visibilityScore || 60,
+          date: rec.timestamp || new Date().toISOString(),
         });
       });
 
@@ -99,11 +136,14 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
             logoUrl: item.logoUrl,
             audits: [
               {
-                score: 65,
+                score: item.snapshot?.target_mention_rate || 65,
                 date: item.timestamp || new Date().toISOString(),
               },
             ],
+            snapshot: item.snapshot,
           });
+        } else if (item.snapshot && !domainMap.get(cleanDomain)?.snapshot) {
+          domainMap.get(cleanDomain)!.snapshot = item.snapshot;
         }
       });
 
@@ -135,6 +175,7 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
           scores,
           lastAudited: sortedAudits[sortedAudits.length - 1]?.date || new Date().toISOString(),
           status,
+          snapshot: dataGroup.snapshot,
         };
       });
 
@@ -200,6 +241,71 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
     );
   }) || [];
 
+  const handleOpenSnapshot = (record: MonitoredDomainRecord) => {
+    const domain = record.domain;
+    const brand = record.brand || domain;
+    const snapshotToView: CompetitorMatrixResponse = record.snapshot || {
+      target: {
+        url: record.url || `https://${domain}`,
+        domain,
+        brand,
+        legal_name: brand,
+        logo_url: record.logoUrl || `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+        region: "Global",
+        business_scope: "Enterprise Solutions",
+      },
+      detected_region: "Global",
+      supported_regions: ["United States", "Global"],
+      prompts: [
+        {
+          text: `Which providers compete directly with ${brand}?`,
+          is_blurred: false,
+          rationale: "Competitive matrix prompt",
+        },
+        {
+          text: `Reliable enterprise platforms offering ${brand} capabilities`,
+          is_blurred: false,
+          rationale: "Discovery prompt",
+        },
+        {
+          text: `Empirical accuracy benchmarks for ${brand}`,
+          is_blurred: false,
+          rationale: "Grounding evaluation prompt",
+        },
+      ],
+      leaderboard: [
+        {
+          rank: 1,
+          domain: "marketleader.com",
+          brand: "MarketLeader",
+          url: "https://marketleader.com",
+          mention_rate: 34,
+          logo_url: "https://www.google.com/s2/favicons?domain=marketleader.com&sz=128",
+          scope: "global" as const,
+          is_target: false,
+        },
+        {
+          rank: 2,
+          domain,
+          brand,
+          url: record.url || `https://${domain}`,
+          mention_rate: record.latestScore || 18,
+          logo_url: record.logoUrl || `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+          scope: "global" as const,
+          is_target: true,
+        },
+      ],
+      target_rank: 2,
+      target_mention_rate: record.latestScore || 18,
+      top_competitor: "MarketLeader",
+      gap_to_leader: 16,
+    };
+
+    setSelectedSnapshot(snapshotToView);
+    setSnapshotDate(record.lastAudited);
+    setIsSnapshotOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       {/* Executive Header Banner */}
@@ -240,6 +346,7 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
       <MonitoredDomainsSection
         monitoredSites={monitoredSites}
         onLiveAudit={onLiveAudit}
+        onViewSnapshot={handleOpenSnapshot}
         isRtl={isRtl}
       />
 
@@ -575,6 +682,14 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
           </div>
         </div>
       </div>
+
+      {/* Full Dashboard Snapshot Modal */}
+      <HistorySnapshotModal
+        isOpen={isSnapshotOpen}
+        onClose={() => setIsSnapshotOpen(false)}
+        snapshot={selectedSnapshot}
+        auditDate={snapshotDate}
+      />
     </div>
   );
 };

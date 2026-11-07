@@ -5,12 +5,14 @@ import {
   RefreshCw,
   TrendingUp,
   TrendingDown,
+  Eye,
 } from "lucide-react";
 import { MonitoredDomainRecord } from "./HistoryLeaderboardTab";
 
 interface MonitoredDomainsSectionProps {
   monitoredSites: MonitoredDomainRecord[];
   onLiveAudit?: (url: string, brand: string) => void;
+  onViewSnapshot?: (record: MonitoredDomainRecord) => void;
   isRtl?: boolean;
 }
 
@@ -66,6 +68,7 @@ export const ScoreSparkline: React.FC<{ points: number[]; color?: string }> = ({
 export const MonitoredDomainsSection: React.FC<MonitoredDomainsSectionProps> = ({
   monitoredSites,
   onLiveAudit,
+  onViewSnapshot,
   isRtl = false,
 }) => {
   return (
@@ -188,13 +191,25 @@ export const MonitoredDomainsSection: React.FC<MonitoredDomainsSectionProps> = (
                   </td>
 
                   <td className="px-5 py-3.5 text-right">
-                    <button
-                      onClick={() => onLiveAudit?.(item.url, item.brand)}
-                      className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-[11px] inline-flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
-                    >
-                      <RefreshCw className="w-3 h-3" />
-                      <span>Re-scan</span>
-                    </button>
+                    <div className="flex items-center justify-end gap-1.5">
+                      <button
+                        onClick={() => onViewSnapshot?.(item)}
+                        className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-[11px] inline-flex items-center gap-1 shadow-2xs transition-colors cursor-pointer group"
+                        title="View Full Preserved Dashboard Snapshot"
+                      >
+                        <Eye className="w-3 h-3 text-slate-300 group-hover:scale-110 transition-transform" />
+                        <span>Dashboard</span>
+                      </button>
+
+                      <button
+                        onClick={() => onLiveAudit?.(item.url, item.brand)}
+                        className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-[11px] inline-flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
+                        title="Re-run Live Audit"
+                      >
+                        <RefreshCw className="w-3 h-3" />
+                        <span>Re-scan</span>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               );
