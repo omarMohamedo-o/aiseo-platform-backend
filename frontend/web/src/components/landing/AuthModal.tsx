@@ -141,7 +141,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     type="text"
                     value={fullName}
                     onChange={(event) => setFullName(event.target.value)}
-                    placeholder="Omar Mohamed"
+                    placeholder="Jane Doe"
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all font-sans"
                     required
                   />
