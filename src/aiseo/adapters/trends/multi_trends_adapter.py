@@ -21,11 +21,20 @@ class MultiTrendsAdapter(TrendsPort):
     def __init__(self, *args, **kwargs) -> None:
         self.executor = ThreadPoolExecutor(max_workers=3)
 
-    def _fetch_pytrends(self, terms: list[str]) -> list[TrendPoint]:
+    def _fetch_pytrends(self, terms: list[str], geo: str = "WORLDWIDE") -> list[TrendPoint]:
         if TrendReq is None:
             return []
+        geo_map = {
+            "WORLDWIDE": "",
+            "EUROPE": "GB",
+            "AFRICA_MENA": "EG",
+            "NORTH_AMERICA": "US",
+            "APAC": "JP",
+            "LATAM": "BR",
+        }
+        geo_code = geo_map.get(geo.upper(), "")
         pytrends = TrendReq(hl='en-US', tz=360)
-        pytrends.build_payload(terms, cat=0, timeframe='today 1-m', geo='', gprop='')
+        pytrends.build_payload(terms, cat=0, timeframe='today 1-m', geo=geo_code, gprop='')
         df = pytrends.interest_over_time()
         
         if df.empty:
@@ -89,10 +98,10 @@ class MultiTrendsAdapter(TrendsPort):
             
         return points
 
-    def _fetch_sync(self, terms: list[str]) -> tuple[str, list[TrendPoint]]:
+    def _fetch_sync(self, terms: list[str], geo: str = "WORLDWIDE") -> tuple[str, list[TrendPoint]]:
         # 1. Try PyTrends first
         try:
-            pts = self._fetch_pytrends(terms)
+            pts = self._fetch_pytrends(terms, geo)
             if pts:
                 return "Google Trends", pts
         except Exception as e:
@@ -120,7 +129,7 @@ class MultiTrendsAdapter(TrendsPort):
 
         try:
             loop = asyncio.get_running_loop()
-            provider_name, points = await loop.run_in_executor(self.executor, self._fetch_sync, terms)
+            provider_name, points = await loop.run_in_executor(self.executor, self._fetch_sync, terms, geo)
             
             return TrendSeriesResult(
                 configured=True,

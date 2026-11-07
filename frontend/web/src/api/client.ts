@@ -152,10 +152,13 @@ export const apiClient = {
   fetchEnginePresence: (): Promise<any> => request("/websites/engine-presence"),
 
   // Trends
-  fetchTrendsSeries: (keywords: string[] = ["generative engine optimization", "answer engine optimization", "llm optimization", "ai optimization", "search engine optimization"]): Promise<{ points: TrendSeriesPoint[] }> =>
+  fetchTrendsSeries: (
+    keywords: string[] = ["generative engine optimization", "answer engine optimization", "llm optimization", "ai optimization", "search engine optimization"],
+    geo: string = "WORLDWIDE"
+  ): Promise<{ points: TrendSeriesPoint[] }> =>
     request("/trends/series", {
       method: "POST",
-      body: JSON.stringify({ terms: keywords }),
+      body: JSON.stringify({ terms: keywords, geo }),
     }),
 
   fetchLiveBreakouts: (): Promise<{ breakouts: Array<{ term: string, type: string }> }> =>

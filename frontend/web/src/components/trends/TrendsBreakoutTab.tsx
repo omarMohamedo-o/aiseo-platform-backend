@@ -35,6 +35,7 @@ import {
   Zap,
 } from "lucide-react";
 import { uiStyles } from "@/config/designSystem";
+import { uiStrings } from "@/config/uiStrings";
 import { apiClient, TrendSeriesPoint } from "@/api/client";
 
 type TimespanOption = "7d" | "30d" | "90d" | "12m" | "5y";
@@ -53,6 +54,7 @@ interface GrowthComparison {
 export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang="en"}) => {
   const isRtl = currentLang === "ar";
   const [rawTrendData, setRawTrendData] = useState<TrendSeriesPoint[]>([]);
+  const [selectedRegion, setSelectedRegion] = useState<string>("WORLDWIDE");
   const [timespan, setTimespan] = useState<TimespanOption>("30d");
   const [compareMode, setCompareMode] = useState<CompareMode>("pop");
   const [variant, setVariant] = useState<"demand" | "breakout" | "market">("breakout");
@@ -63,9 +65,14 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
 
   const [liveBreakouts, setLiveBreakouts] = useState<Array<{term: string, type: string, colorClass: string}>>([]);
 
-  const loadTrends = async () => {
+  const activeRegionObj = useMemo(() => {
+    return uiStrings.trends.regions.find((r) => r.id === selectedRegion) || uiStrings.trends.regions[0];
+  }, [selectedRegion]);
+
+  const loadTrends = async (regionOverride?: string) => {
     setLoading(true);
     try {
+      const activeGeo = regionOverride ?? selectedRegion;
       // Load real breakouts
       const breakoutsRes = await apiClient.fetchLiveBreakouts();
       const mappedBreakouts = breakoutsRes.breakouts.map((b, idx) => {
@@ -86,7 +93,7 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
       setLiveBreakouts(mappedBreakouts);
 
       const terms = searchTerm.split(',').map(t => t.trim()).filter(Boolean);
-      const res = await apiClient.fetchTrendsSeries(terms.length > 0 ? terms : undefined);
+      const res = await apiClient.fetchTrendsSeries(terms.length > 0 ? terms : undefined, activeGeo);
       
       const points = res.points || [];
       
@@ -121,7 +128,7 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
 
   useEffect(() => {
     loadTrends();
-  }, []);
+  }, [selectedRegion]);
 
   // Filter or scale trend points based on selected timespan
   const displayData = useMemo(() => {
@@ -199,7 +206,7 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
                   : uiStyles.segmented.inactive
               }`}
             >
-              Single Horizon
+              {uiStrings.trends.modes.single}
             </button>
             <button
               onClick={() => setCompareMode("pop")}
@@ -210,8 +217,28 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
               }`}
             >
               <Split className="w-3.5 h-3.5" />
-              Period-over-Period (PoP)
+              {uiStrings.trends.modes.pop}
             </button>
+          </div>
+
+          {/* Geographic Region Selector */}
+          <div className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-1 rounded-xl flex items-center gap-1.5 text-xs">
+            <Globe2 className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+            <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 shrink-0">
+              {uiStrings.trends.regionLabel}:
+            </span>
+            <select
+              value={selectedRegion}
+              aria-label={uiStrings.trends.regionLabel}
+              onChange={(e) => setSelectedRegion(e.target.value)}
+              className="bg-transparent text-xs font-semibold text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer pr-1"
+            >
+              {uiStrings.trends.regions.map((r) => (
+                <option key={r.id} value={r.id} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200">
+                  {r.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Timespan Selector ("Time Spain Comparison") */}
@@ -284,7 +311,7 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
           </div>
 
           <button
-            onClick={loadTrends}
+            onClick={() => loadTrends()}
             disabled={loading}
             className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50 transition-all disabled:opacity-50"
             title="Refresh Trends"
@@ -421,17 +448,17 @@ export const TrendsBreakoutTab: React.FC<{currentLang?: string}> = ({currentLang
               <div>
                 <h3 className="text-base font-bold font-display text-slate-900 dark:text-slate-50">
                   {compareMode === "pop"
-                    ? `Period-over-Period Comparison: Current vs Prior (${timespan.toUpperCase()} Horizon)`
+                    ? `Period-over-Period Comparison: Current vs Prior (${timespan.toUpperCase()} Horizon • ${activeRegionObj.shortLabel})`
                     : chartType === "velocity"
-                    ? "YoY Growth Velocity & Share of Search Volume"
+                    ? `YoY Growth Velocity & Share of Search Volume (${activeRegionObj.shortLabel})`
                     : chartType === "area"
-                    ? `Cumulative Generative Search Exposure (${timespan.toUpperCase()} Horizon)`
-                    : `Search Interest Over Time (${timespan.toUpperCase()} Horizon)`}
+                    ? `Cumulative Generative Search Exposure (${timespan.toUpperCase()} Horizon • ${activeRegionObj.shortLabel})`
+                    : `Search Interest Over Time (${timespan.toUpperCase()} Horizon • ${activeRegionObj.shortLabel})`}
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   {compareMode === "pop"
-                    ? "Solid lines indicate current period; dashed lines indicate the previous comparative period"
-                    : "Live normalized values from Google Trends API explorer and generative search streams"}
+                    ? `Solid lines indicate current period; dashed lines indicate the previous comparative period across ${activeRegionObj.shortLabel}`
+                    : `Live normalized values from Google Trends API explorer and generative search streams in ${activeRegionObj.label}`}
                 </p>
               </div>
 

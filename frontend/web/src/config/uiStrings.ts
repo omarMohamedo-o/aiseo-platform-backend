@@ -134,6 +134,38 @@ export const uiStrings = {
     signIn: "Sign in",
     getStarted: "Get Started",
   },
+
+  trends: {
+    title: "Trends & Timespan Comparison Explorer",
+    subtitle: "Compare search demand, cumulative velocity, and breakout trajectory across multiple time horizons with period-over-period delta analysis",
+    badge: "Multi-Horizon PoP",
+    modes: {
+      single: "Single Horizon",
+      pop: "Period-over-Period (PoP)",
+    },
+    timespans: {
+      "7d": "7D",
+      "30d": "30D",
+      "90d": "90D",
+      "12m": "12M",
+      "5y": "5Y",
+    },
+    formats: {
+      line: "Line",
+      area: "Area",
+      velocity: "Bar",
+      composed: "Composed",
+    },
+    regionLabel: "Region",
+    regions: [
+      { id: "WORLDWIDE", label: "Worldwide (عالمي)", shortLabel: "Worldwide" },
+      { id: "EUROPE", label: "Europe (أوروبا)", shortLabel: "Europe" },
+      { id: "AFRICA_MENA", label: "Africa & Middle East (إفريقيا والشرق الأوسط)", shortLabel: "Africa & MENA" },
+      { id: "NORTH_AMERICA", label: "North America (أمريكا الشمالية)", shortLabel: "North America" },
+      { id: "APAC", label: "Asia-Pacific (آسيا والمحيط الهادئ)", shortLabel: "Asia-Pacific" },
+      { id: "LATAM", label: "Latin America (أمريكا اللاتينية)", shortLabel: "Latin America" },
+    ],
+  },
 } as const;
 
 export type UiStrings = typeof uiStrings;
