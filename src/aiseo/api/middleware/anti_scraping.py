@@ -112,4 +112,8 @@ class AntiScrapingMiddleware(BaseHTTPMiddleware):
 
                 self.request_history[client_ip].append(now)
 
-        return await call_next(request)
+        response = await call_next(request)
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Robots-Tag"] = "noindex, nofollow"
+        return response

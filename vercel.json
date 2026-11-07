@@ -31,11 +31,23 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "api/index.py"
+      "dest": "api/index.py",
+      "headers": {
+        "X-Robots-Tag": "noindex, nofollow",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff"
+      }
     },
     {
       "src": "/assets/(.*)",
-      "dest": "frontend/web/dist/assets/$1"
+      "dest": "frontend/web/dist/assets/$1",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "frontend/web/dist/robots.txt"
     },
     {
       "src": "/(.*\\.[a-zA-Z0-9]+)$",
@@ -43,7 +55,13 @@
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/web/dist/index.html"
+      "dest": "frontend/web/dist/index.html",
+      "headers": {
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+      }
     }
   ]
 }
