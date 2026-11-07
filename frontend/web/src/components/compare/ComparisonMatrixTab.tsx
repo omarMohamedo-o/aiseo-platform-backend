@@ -31,6 +31,7 @@ import {
   ExternalLink,
   Flame,
   Globe2,
+  Info,
   Layers,
   Lightbulb,
   Plus,
@@ -78,6 +79,40 @@ interface DomainMetrics {
   };
 }
 
+export function extractBrandFromUrl(rawUrl: string): string {
+  if (!rawUrl || !rawUrl.trim()) return "";
+  try {
+    let clean = rawUrl.trim();
+    if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
+      clean = "https://" + clean;
+    }
+    const parsed = new URL(clean);
+    let host = parsed.hostname.replace(/^www\./i, "");
+    const parts = host.split(".");
+    if (parts.length > 0) {
+      host = parts[0];
+    }
+    const knownBrands: Record<string, string> = {
+      playerhub: "PlayerHub",
+      playerauctions: "PlayerAuctions",
+      eldorado: "Eldorado.gg",
+      g2g: "G2G",
+      funpay: "FunPay",
+      epicnpc: "EpicNPC",
+      stripe: "Stripe",
+      github: "GitHub",
+      google: "Google",
+      amazon: "Amazon"
+    };
+    if (knownBrands[host.toLowerCase()]) {
+      return knownBrands[host.toLowerCase()];
+    }
+    return host.charAt(0).toUpperCase() + host.slice(1);
+  } catch {
+    return rawUrl.replace(/^https?:\/\//i, "").replace(/^www\./i, "").split(/[/?#.]/)[0] || "";
+  }
+}
+
 interface ComparisonMatrixTabProps {
   currentLang?: Language;
 }
@@ -87,6 +122,14 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({ curren
 
   const [targetUrl, setTargetUrl] = useState("");
   const [targetBrand, setTargetBrand] = useState("");
+
+  const handleTargetUrlChange = (newUrl: string) => {
+    setTargetUrl(newUrl);
+    const detected = extractBrandFromUrl(newUrl);
+    if (detected) {
+      setTargetBrand(detected);
+    }
+  };
 
   const [competitors, setCompetitors] = useState<CompetitorTarget[]>([]);
 
@@ -98,12 +141,13 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({ curren
   const [discoveredCompetitors, setDiscoveredCompetitors] = useState<{id: string, url: string, brand: string, reason: string, selected: boolean}[]>([]);
 
   const handleDiscover = async () => {
-    if (!targetUrl.trim() || !targetBrand.trim()) return;
+    const effectiveBrand = targetBrand.trim() || extractBrandFromUrl(targetUrl);
+    if (!targetUrl.trim() || !effectiveBrand) return;
     setIsDiscovering(true);
     setDiscoveryDone(false);
     
     try {
-      const response = await apiClient.discoverCompetitors(targetUrl, targetBrand);
+      const response = await apiClient.discoverCompetitors(targetUrl, effectiveBrand);
       
       setDiscoveredCompetitors(response.suggested_competitors.map((c, i) => ({
         id: `d${i}`,
@@ -151,7 +195,14 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({ curren
 
   const updateCompetitor = (id: string, field: "url" | "brand", val: string) => {
     setCompetitors(
-      competitors.map((c) => (c.id === id ? { ...c, [field]: val } : c))
+      competitors.map((c) => {
+        if (c.id !== id) return c;
+        if (field === "url") {
+          const autoBrand = extractBrandFromUrl(val);
+          return { ...c, url: val, brand: autoBrand || c.brand };
+        }
+        return { ...c, [field]: val };
+      })
     );
   };
 
@@ -162,11 +213,12 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({ curren
     setLoading(true);
 
     try {
+      const effectiveTargetBrand = targetBrand.trim() || extractBrandFromUrl(targetUrl);
       const urls_to_test = [
-        { url: targetUrl, brand: targetBrand, isTarget: true, index: 0 },
+        { url: targetUrl, brand: effectiveTargetBrand, isTarget: true, index: 0 },
         ...competitors
           .filter((c) => c.url.trim().length > 8)
-          .map((c, i) => ({ url: c.url, brand: c.brand, isTarget: false, index: i }))
+          .map((c, i) => ({ url: c.url, brand: c.brand.trim() || extractBrandFromUrl(c.url), isTarget: false, index: i }))
       ];
       
       const results: any[] = [];
@@ -313,50 +365,56 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({ curren
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 {isRtl ? "موقعك الأساسي المستهدف" : "Your Primary Target Website"}
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 font-semibold border border-emerald-200">
-                Primary Brand
-              </span>
+              <div className="flex items-center gap-2">
+                {targetBrand && (
+                  <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-blue-500" />
+                    <span>Auto: <strong>{targetBrand}</strong></span>
+                  </span>
+                )}
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 font-semibold border border-emerald-200">
+                  Primary Brand
+                </span>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-              <div className="md:col-span-8">
+            <div className="space-y-2">
+              <div className="relative">
                 <input
                   type="url"
                   value={targetUrl}
-                  onChange={(e) => setTargetUrl(e.target.value)}
-                  placeholder="https://yourwebsite.com/"
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-3.5 py-2 text-xs font-mono text-slate-900 dark:text-slate-50 focus:outline-none focus:border-slate-900"
+                  onChange={(e) => handleTargetUrlChange(e.target.value)}
+                  placeholder="https://yourwebsite.com/ (e.g. https://www.playerhub.gg/en)"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg pl-3.5 pr-28 py-2.5 text-xs font-mono text-slate-900 dark:text-slate-50 focus:outline-none focus:border-slate-900"
                 />
-              </div>
-              <div className="md:col-span-4">
-                <input
-                  type="text"
-                  value={targetBrand}
-                  onChange={(e) => setTargetBrand(e.target.value)}
-                  placeholder="Brand / Entity Name"
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-3.5 py-2 text-xs text-slate-900 dark:text-slate-50 focus:outline-none focus:border-slate-900"
-                />
-              </div>
-            </div>
-            
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={handleDiscover}
-                disabled={!targetUrl.trim() || !targetBrand.trim() || isDiscovering}
-                className="px-4 py-2 bg-slate-900 dark:bg-slate-50 dark:bg-slate-800 hover:bg-slate-800 text-white dark:text-slate-900 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all disabled:bg-slate-400"
-              >
-                {isDiscovering ? (
-                  <>
+                <button
+                  onClick={handleDiscover}
+                  disabled={!targetUrl.trim() || isDiscovering}
+                  className="absolute right-1.5 top-1.5 bottom-1.5 px-3 bg-slate-900 hover:bg-slate-800 text-white rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all disabled:bg-slate-400"
+                >
+                  {isDiscovering ? (
                     <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>{isRtl ? "جارٍ البحث..." : "Researching & Discovering..."}</span>
-                  </>
-                ) : (
-                  <>
+                  ) : (
                     <Search className="w-3.5 h-3.5" />
-                    <span>{isRtl ? "اكتشاف المنافسين" : "Discover Competitors"}</span>
-                  </>
-                )}
-              </button>
+                  )}
+                  <span>{isRtl ? "اكتشاف المنافسين" : "Discover Competitors"}</span>
+                </button>
+              </div>
+
+              {/* Optional Brand Override */}
+              <div className="flex items-center justify-between text-[11px] text-slate-500 px-1">
+                <span>{isRtl ? "يتم التعرف على العلامة التجارية تلقائياً من الرابط" : "Brand name is automatically detected from URL domain."}</span>
+                <details className="cursor-pointer">
+                  <summary className="hover:text-slate-800 text-slate-500 font-medium">Edit Brand Name</summary>
+                  <input
+                    type="text"
+                    value={targetBrand}
+                    onChange={(e) => setTargetBrand(e.target.value)}
+                    placeholder="Custom Brand Name"
+                    className="mt-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-xs text-slate-900 dark:text-slate-50"
+                  />
+                </details>
+              </div>
             </div>
           </div>
 
@@ -483,6 +541,152 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({ curren
 
       {comparedData && (
         <div className="space-y-6">
+          {/* Scrunch-Style Executive Mention Rate & Cited Prompts Showcase */}
+          <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 shadow-sm">
+            {/* Header Badge */}
+            <div className="flex items-center justify-between pb-6 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-slate-900 text-white text-[10px] flex items-center justify-center font-bold">✦</span>
+                <span className="font-bold text-sm tracking-tight text-slate-900 dark:text-slate-100">AI Citation Matrix</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold border border-blue-200">
+                  AEO / GEO Neural Share of Voice
+                </span>
+              </div>
+              <span className="text-xs text-slate-400 font-mono">
+                {new URL(targetUrl.startsWith("http") ? targetUrl : `https://${targetUrl}`).hostname.replace(/^www\./, "")}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-6">
+              {/* Left Column: Brand Identity & Cited Prompts */}
+              <div className="lg:col-span-7 space-y-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+                    {(targetBrand || extractBrandFromUrl(targetUrl)).charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
+                      {targetBrand || extractBrandFromUrl(targetUrl)}
+                    </h2>
+                    <span className="text-xs text-slate-500 font-mono">
+                      {targetUrl}
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+                    {isRtl 
+                      ? `إليك بعض الاستفسارات التي يمكن ذكر ${targetBrand || extractBrandFromUrl(targetUrl)} فيها:` 
+                      : `Here are a few prompts ${new URL(targetUrl.startsWith("http") ? targetUrl : `https://${targetUrl}`).hostname.replace(/^www\./, "")} may be cited in:`}
+                  </p>
+
+                  <div className="space-y-2.5">
+                    {[
+                      `What are some reliable platforms where I can find and transact with ${targetBrand || extractBrandFromUrl(targetUrl)} safely?`,
+                      `Can you recommend a marketplace that offers secure verified options compared to competitors?`,
+                      `Where can I find the highest rated services, top deals, and verified solutions in this niche?`,
+                      `Is there a peer-to-peer or trusted platform with buyer protection and instant customer support?`,
+                      `What platforms provide warranties and dispute support for online digital transactions?`
+                    ].map((prompt, pIdx) => (
+                      <div
+                        key={pIdx}
+                        className="p-3.5 rounded-xl border border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900/50 flex items-center justify-between gap-3 text-xs text-slate-800 dark:text-slate-200 transition-colors shadow-2xs group"
+                      >
+                        <span className="leading-relaxed">{prompt}</span>
+                        <div className="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-slate-400 group-hover:text-slate-600 shrink-0 text-[11px] cursor-help" title="High buyer-intent generative AI query evaluated by LLMs">
+                          i
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Estimated Mention Rate Leaderboard */}
+              <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
+                <div>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-slate-50 mb-3">
+                    {isRtl ? "معدل الذكر المقدر (Mention Rate)" : "Estimated Mention Rate"}
+                  </h3>
+
+                  <div className="space-y-2">
+                    {/* Ranked competitor list */}
+                    {(() => {
+                      const sorted = [...comparedData].sort((a, b) => b.visibilityScore - a.visibilityScore);
+                      return sorted.map((item, rIdx) => {
+                        const rankNumber = rIdx + 1;
+                        const isUserTarget = item.isTarget;
+
+                        if (isUserTarget) {
+                          return (
+                            <div
+                              key={rIdx}
+                              className="p-3 rounded-xl bg-slate-950 dark:bg-slate-800 text-white flex items-center justify-between shadow-md ring-2 ring-blue-500/30"
+                            >
+                              <div className="flex items-center gap-2.5">
+                                <span className="w-6 h-6 rounded-lg bg-slate-800 dark:bg-slate-700 flex items-center justify-center font-bold text-xs">
+                                  {rankNumber}
+                                </span>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-bold text-sm">{item.brand}</span>
+                                  <span className="text-[10px] font-mono uppercase bg-blue-500/20 text-blue-300 px-1.5 py-0.2 rounded border border-blue-400/30">
+                                    YOU
+                                  </span>
+                                </div>
+                              </div>
+                              <span className="font-mono font-bold text-sm text-emerald-400">
+                                {item.visibilityScore}%
+                              </span>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <div
+                            key={rIdx}
+                            className="p-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60 flex items-center justify-between hover:bg-slate-100/70 transition-colors"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <span className="w-6 h-6 rounded-lg bg-white dark:bg-slate-800 text-slate-500 flex items-center justify-center font-bold text-xs border border-slate-200 dark:border-slate-700">
+                                {rankNumber}
+                              </span>
+                              <span className="font-medium text-xs text-slate-800 dark:text-slate-200">{item.brand}</span>
+                            </div>
+                            <span className="font-mono text-xs font-semibold text-slate-600 dark:text-slate-400">
+                              {item.visibilityScore}%
+                            </span>
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                </div>
+
+                {/* Call to Actions matching screenshot */}
+                <div className="space-y-2 pt-2">
+                  <button
+                    onClick={() => {
+                      const crawlBtn = document.querySelector('button[name="crawl-tab"]');
+                      if (crawlBtn) (crawlBtn as any).click();
+                    }}
+                    className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors shadow-xs flex items-center justify-center gap-2"
+                  >
+                    <span>{isRtl ? "بدء تجربة التحسين المجانية" : "Start free trial"}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+
+                  <button
+                    onClick={() => window.print()}
+                    className="w-full py-2.5 px-4 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs transition-colors flex items-center justify-center gap-2"
+                  >
+                    <span>{isRtl ? "طلب استعراض تفصيلي (Book a Demo)" : "Book a demo"}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Head-to-Head Comparison Scorecards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {comparedData.map((item, idx) => (

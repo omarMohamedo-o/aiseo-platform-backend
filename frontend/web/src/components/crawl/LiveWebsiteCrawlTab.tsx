@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import { apiClient, CrawlAndAnalyzeResult, PageAuditItem, StrategicRecommendation } from "@/api/client";
 import { Language, translations } from "@/i18n/translations";
+import { extractBrandFromUrl } from "../compare/ComparisonMatrixTab";
 
 interface LiveWebsiteCrawlTabProps {
   auditTarget?: {url: string, brand: string} | null;
@@ -174,7 +175,14 @@ export const LiveWebsiteCrawlTab: React.FC<LiveWebsiteCrawlTabProps> = ({
             <input
               type="url"
               value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setUrl(val);
+                const auto = extractBrandFromUrl(val);
+                if (auto && (!brandName || brandName === extractBrandFromUrl(url))) {
+                  setBrandName(auto);
+                }
+              }}
               placeholder="e.g. https://www.yourdomain.com"
               className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-50 focus:outline-none focus:border-slate-900 focus:bg-white dark:bg-slate-900 transition-colors"
             />
