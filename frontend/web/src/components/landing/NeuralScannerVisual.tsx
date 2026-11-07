@@ -1,106 +1,69 @@
 import React from "react";
+import { appConfig } from "@/config/appConfig";
 
 export const NeuralScannerVisual: React.FC = () => {
   return (
-    <div className="w-full max-w-xl rounded-2xl bg-slate-900/90 border border-slate-800 shadow-2xl p-5 space-y-4 backdrop-blur-md relative overflow-hidden group">
-      <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
-
-      {/* Browser Frame Controls */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+    <div className="w-full max-w-xl rounded-2xl bg-white border border-slate-200/90 shadow-xl p-5 space-y-4">
+      {/* Browser Frame Top Bar */}
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100">
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+          <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+          <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+          <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
         </div>
-        <div className="px-4 py-1 rounded-md bg-slate-950 border border-slate-800 text-[11px] font-mono text-slate-400 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span>esooai.engine/neural-scanner</span>
+        <div className="px-4 py-1 rounded-md bg-slate-50 border border-slate-200 text-xs font-mono text-slate-500">
+          yourwebsite.com
         </div>
-        <span className="text-[10px] font-mono text-emerald-400 font-semibold tracking-wide">
+        <span className="text-[10px] font-mono font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
           LIVE
         </span>
       </div>
 
-      {/* Live AI Engine Probes Simulation */}
-      <div className="grid grid-cols-2 gap-3 pt-1">
-        {/* Engine 1: Gemini */}
-        <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-white flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-blue-500" />
-              Google Gemini
-            </span>
-            <span className="text-[10px] font-mono text-emerald-400 font-bold">
-              94%
-            </span>
-          </div>
-          <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-500 to-emerald-400 h-full w-[94%]" />
-          </div>
-          <span className="text-[10px] text-slate-400 block">Grounding & Sitelinks</span>
+      {/* Visual Workspace Canvas */}
+      <div className="relative rounded-xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-6 sm:p-8 overflow-hidden text-white min-h-[260px] flex flex-col justify-between shadow-inner">
+        {/* Ambient Subtle Lighting */}
+        <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
+
+        {/* Live Probes Grid */}
+        <div className="grid grid-cols-2 gap-3 relative z-10">
+          {appConfig.engineProbes.map((probe) => (
+            <div
+              key={probe.engineId}
+              className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 space-y-1.5 backdrop-blur-xs"
+            >
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-slate-200 flex items-center gap-1.5">
+                  <span className={`w-2 h-2 rounded-full ${probe.dotColor}`} />
+                  {probe.name}
+                </span>
+                <span className="font-mono text-emerald-400 font-bold text-[11px]">
+                  {probe.rateText}
+                </span>
+              </div>
+              <div className="w-full bg-slate-700/60 h-1 rounded-full overflow-hidden">
+                <div
+                  className={`bg-gradient-to-r ${probe.gradient} h-full`}
+                  style={{ width: probe.fillPercent }}
+                />
+              </div>
+              <span className="text-[10px] text-slate-400 block truncate">
+                {probe.metricLabel}
+              </span>
+            </div>
+          ))}
         </div>
 
-        {/* Engine 2: ChatGPT */}
-        <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-white flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              OpenAI ChatGPT
-            </span>
-            <span className="text-[10px] font-mono text-emerald-400 font-bold">
-              88%
-            </span>
-          </div>
-          <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-            <div className="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-[88%]" />
-          </div>
-          <span className="text-[10px] text-slate-400 block">Citation Share Index</span>
-        </div>
-
-        {/* Engine 3: Claude */}
-        <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-white flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-purple-500" />
-              Anthropic Claude
-            </span>
-            <span className="text-[10px] font-mono text-purple-400 font-bold">
-              91%
-            </span>
-          </div>
-          <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-            <div className="bg-gradient-to-r from-purple-500 to-blue-500 h-full w-[91%]" />
-          </div>
-          <span className="text-[10px] text-slate-400 block">Direct Answer Depth</span>
-        </div>
-
-        {/* Engine 4: Perplexity */}
-        <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-white flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-cyan-500" />
-              Perplexity AI
-            </span>
-            <span className="text-[10px] font-mono text-cyan-400 font-bold">
-              #1 Rank
-            </span>
-          </div>
-          <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-            <div className="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full w-[96%]" />
-          </div>
-          <span className="text-[10px] text-slate-400 block">Footnote Attribution</span>
-        </div>
-      </div>
-
-      {/* Real-time Status Gauge */}
-      <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between text-xs">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span className="font-semibold text-emerald-300">
-            Neural Visibility Scorecard: Active
+        {/* Centered Score Badge */}
+        <div className="pt-4 flex items-center justify-between relative z-10 border-t border-slate-800">
+          <span className="text-xs font-mono text-slate-400 tracking-wide">
+            Neural Visibility Scorecard
           </span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs">
+            <span className="text-slate-300 font-medium">AI Optimized</span>
+            <span className="font-bold text-emerald-400 font-mono">92%</span>
+          </div>
         </div>
-        <span className="font-mono text-slate-300 text-[11px]">Sub-5ms Inference</span>
       </div>
     </div>
   );

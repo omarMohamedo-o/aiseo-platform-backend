@@ -1,167 +1,116 @@
 import React from "react";
-import { Lock, LogIn } from "lucide-react";
+import { Lock, LogIn, ArrowRight } from "lucide-react";
 import { CompetitorMatrixResponse, CompetitorMatrixItem } from "@/api/client";
+import { PlatformBrandLogo } from "../brand/PlatformBrandLogo";
+import { appConfig } from "@/config/appConfig";
 
 interface LiveAuditResultViewProps {
   auditResult: CompetitorMatrixResponse;
-  onReset: () => void;
-  onOpenAuth: () => void;
+  onOpenAuth: (mode?: "login" | "signup") => void;
 }
 
 export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
   auditResult,
-  onReset,
   onOpenAuth,
 }) => {
   return (
-    <div className="space-y-6 pt-2">
-      {/* Navigation Subheader */}
-      <div className="flex items-center justify-between">
-        <button
-          onClick={onReset}
-          className="text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1.5 transition-colors"
-        >
-          ← Test another website URL
-        </button>
-
-        <span className="text-xs font-mono text-emerald-400">
-          Audited via EsooAI Neural Core v1.0
-        </span>
+    <div className="space-y-8 pt-4 pb-12 max-w-5xl mx-auto flex flex-col items-center">
+      {/* Top Brand Logo */}
+      <div className="flex justify-center pb-2">
+        <PlatformBrandLogo
+          size={32}
+          brandText={appConfig.brandName}
+          textClassName="text-2xl font-bold tracking-tight text-slate-900 font-sans"
+        />
       </div>
 
-      {/* Main Audit Card Container */}
-      <div className="rounded-2xl bg-slate-900 border border-slate-800 p-8 sm:p-10 shadow-2xl space-y-8">
-        {/* Target Brand Header */}
-        <div className="flex items-center justify-between pb-6 border-b border-slate-800">
-          <div className="flex items-center gap-4">
-            <img
-              src={auditResult.target.logo_url}
-              alt={auditResult.target.brand}
-              onError={(event) => {
-                (event.target as HTMLElement).style.display = "none";
-              }}
-              className="w-10 h-10 rounded-xl border border-slate-700 object-contain p-1 bg-white"
-            />
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
-                <span>{auditResult.target.brand}</span>
-                <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  📍 {auditResult.detected_region}
-                </span>
-              </h2>
-              <span className="text-xs font-mono text-slate-400 mt-1 block">
-                {auditResult.target.domain}
-              </span>
-            </div>
+      {/* Main Reference White Card */}
+      <div className="w-full rounded-3xl bg-white border border-slate-200/80 p-8 sm:p-12 shadow-sm space-y-8">
+        {/* Brand Header */}
+        <div className="flex items-center gap-4">
+          <img
+            src={auditResult.target.logo_url}
+            alt={auditResult.target.brand}
+            onError={(event) => {
+              (event.target as HTMLElement).style.display = "none";
+            }}
+            className="w-14 h-14 rounded-2xl border border-slate-200 object-contain p-2 bg-white shadow-2xs"
+          />
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 font-sans">
+              {auditResult.target.brand}
+            </h1>
+            <p className="text-sm text-slate-500 mt-1 font-sans">
+              Here are a few prompts <span className="font-mono text-slate-700">{auditResult.target.domain}</span> may be cited in:
+            </p>
           </div>
-
-          <button
-            onClick={onOpenAuth}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold border border-slate-700 transition-all flex items-center gap-2"
-          >
-            <LogIn className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Sign In / Login</span>
-          </button>
         </div>
 
-        {/* Two Column Layout: Prompts & Leaderboard */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        {/* Two Column Layout: Prompts on Left, Leaderboard on Right */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start pt-2">
           {/* Left Column: Prompts where domain may be cited */}
-          <div className="lg:col-span-7 space-y-4">
-            <p className="text-sm font-semibold text-slate-300">
-              Here are queries {auditResult.target.domain} is positioned to be cited in:
-            </p>
-
-            <div className="space-y-3">
-              {auditResult.prompts.map((promptItem, promptIndex) => {
-                if (promptItem.is_blurred) {
-                  return (
-                    <div
-                      key={promptIndex}
-                      className="relative p-4 rounded-xl border border-slate-800 bg-slate-950/60 overflow-hidden"
-                    >
-                      <div className="filter blur-[5px] select-none text-xs text-slate-500 pointer-events-none">
-                        {promptItem.text}
-                      </div>
-                      <div className="absolute inset-0 flex items-center justify-center bg-slate-950/80 gap-2 text-xs font-semibold text-slate-300">
-                        <Lock className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>Sign in to unlock all enterprise queries</span>
-                      </div>
-                    </div>
-                  );
-                }
-
+          <div className="lg:col-span-7 space-y-3">
+            {auditResult.prompts.map((promptItem, promptIndex) => {
+              if (promptItem.is_blurred) {
                 return (
                   <div
                     key={promptIndex}
-                    className="p-4 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-950/60 flex items-center justify-between gap-4 text-xs sm:text-sm text-slate-200 transition-colors group"
+                    className="relative p-4 rounded-xl border border-slate-200 bg-white overflow-hidden flex items-center justify-between"
                   >
-                    <span className="leading-relaxed">{promptItem.text}</span>
-                    <div
-                      className="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center text-slate-400 group-hover:text-slate-200 shrink-0 text-xs cursor-help font-mono"
-                      title={promptItem.rationale}
-                    >
+                    <div className="filter blur-[5px] select-none text-xs sm:text-sm text-slate-400 pointer-events-none leading-relaxed pr-6">
+                      {promptItem.text}
+                    </div>
+                    <div className="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-slate-400 shrink-0 text-xs font-mono">
                       i
                     </div>
                   </div>
                 );
-              })}
-            </div>
+              }
+
+              return (
+                <div
+                  key={promptIndex}
+                  className="p-4 rounded-xl border border-slate-200 hover:border-slate-300 bg-white flex items-center justify-between gap-4 text-xs sm:text-sm text-slate-800 transition-colors group"
+                >
+                  <span className="leading-relaxed font-sans">{promptItem.text}</span>
+                  <div
+                    className="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-slate-400 group-hover:text-slate-700 shrink-0 text-xs cursor-help font-mono font-medium"
+                    title={promptItem.rationale}
+                  >
+                    i
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
-          {/* Right Column: Estimated Mention Rate Leaderboard */}
+          {/* Right Column: Estimated Mention Rate Leaderboard & 2 Action Buttons */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
             <div>
-              <h3 className="text-base font-bold text-white mb-4 flex items-center justify-between">
-                <span>Estimated Mention Rate</span>
-                <span className="text-[10px] font-mono text-slate-400">
-                  {auditResult.detected_region} Market
-                </span>
-              </h3>
+              <h2 className="text-lg font-bold text-slate-900 mb-4 font-sans">
+                Estimated Mention Rate
+              </h2>
 
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {auditResult.leaderboard.map((compItem: CompetitorMatrixItem) => {
-                  if (compItem.is_target) {
-                    return (
-                      <div
-                        key={compItem.rank}
-                        className="p-3.5 rounded-xl bg-slate-950 text-white flex items-center justify-between border-2 border-emerald-500/40 shadow-lg shadow-emerald-500/5"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs border border-emerald-500/30">
-                            {compItem.rank}
-                          </span>
-                          <img
-                            src={compItem.logo_url}
-                            alt={compItem.brand}
-                            onError={(event) => {
-                              (event.target as HTMLElement).style.display = "none";
-                            }}
-                            className="w-5 h-5 rounded-full bg-white object-contain p-0.5"
-                          />
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold text-xs sm:text-sm truncate max-w-[180px]">
-                              {compItem.brand}
-                            </span>
-                            <span className="text-[9px] font-mono uppercase bg-emerald-500/20 text-emerald-300 px-1 py-0.2 rounded border border-emerald-400/30">
-                              YOU
-                            </span>
-                          </div>
-                        </div>
-                        <span className="font-mono font-bold text-sm text-emerald-400">
-                          {compItem.mention_rate}%
-                        </span>
-                      </div>
-                    );
-                  }
-
+                  const isTarget = compItem.is_target;
                   return (
                     <div
                       key={compItem.rank}
-                      className="p-3.5 rounded-xl border border-slate-800 bg-slate-950/40 flex items-center justify-between hover:bg-slate-800/40 transition-colors"
+                      className={`p-3 rounded-xl flex items-center justify-between transition-colors ${
+                        isTarget
+                          ? "bg-[#FAF9F5] border border-slate-200"
+                          : "bg-white"
+                      }`}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="w-6 h-6 rounded-lg bg-slate-900 text-slate-400 flex items-center justify-center font-bold text-xs border border-slate-800">
+                        <span
+                          className={`w-6 h-6 rounded-md flex items-center justify-center font-bold text-xs ${
+                            isTarget
+                              ? "bg-slate-900 text-white"
+                              : "bg-slate-100 text-slate-500"
+                          }`}
+                        >
                           {compItem.rank}
                         </span>
                         <img
@@ -170,13 +119,19 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
                           onError={(event) => {
                             (event.target as HTMLElement).style.display = "none";
                           }}
-                          className="w-5 h-5 rounded-full bg-white object-contain p-0.5 border border-slate-700"
+                          className="w-5 h-5 rounded-full bg-white object-contain p-0.5 border border-slate-200"
                         />
-                        <span className="font-medium text-xs sm:text-sm text-slate-300 truncate max-w-[180px]">
+                        <span
+                          className={`text-sm truncate max-w-[170px] ${
+                            isTarget
+                              ? "font-bold text-slate-900"
+                              : "font-medium text-slate-700"
+                          }`}
+                        >
                           {compItem.brand}
                         </span>
                       </div>
-                      <span className="font-mono text-xs sm:text-sm font-semibold text-slate-400">
+                      <span className="font-mono text-sm text-slate-600 font-medium">
                         {compItem.mention_rate}%
                       </span>
                     </div>
@@ -185,19 +140,32 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
               </div>
             </div>
 
-            {/* Single Prominent Enterprise Action Button */}
-            <div className="pt-4">
+            {/* TWO Distinct Buttons (as requested) */}
+            <div className="space-y-2.5 pt-2">
               <button
-                onClick={onOpenAuth}
-                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-extrabold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
+                onClick={() => onOpenAuth("login")}
+                className="w-full py-3.5 px-6 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-xs flex items-center justify-center gap-2"
               >
-                <LogIn className="w-4 h-4 text-slate-950" />
-                <span>Sign In to Access Full Dashboard</span>
+                <LogIn className="w-4 h-4" />
+                <span>Sign In to Access Dashboard</span>
+              </button>
+
+              <button
+                onClick={() => onOpenAuth("signup")}
+                className="w-full py-3.5 px-6 rounded-full bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-300 transition-all flex items-center justify-center gap-2"
+              >
+                <span>Create Enterprise Account</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Footer Notice */}
+      <footer className="text-center text-xs text-slate-400 font-sans">
+        © 2026 {appConfig.brandName}. All rights reserved.
+      </footer>
     </div>
   );
 };

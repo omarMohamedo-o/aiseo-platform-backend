@@ -375,7 +375,7 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
                       handleFetchMatrix(targetUrl, selectedRegion);
                     }
                   }}
-                  placeholder="https://yourwebsite.com/ (e.g. https://chloromaster.com/ or https://www.playerhub.gg/en)"
+                  placeholder={isRtl ? "أدخل رابط الموقع (https://example.com/)" : "Enter website URL (e.g. https://example.com/)"}
                   className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg pl-3.5 pr-64 py-2.5 text-xs font-mono text-slate-900 dark:text-slate-50 focus:outline-none focus:border-slate-900"
                 />
                 <div className="absolute right-1.5 top-1.5 bottom-1.5 flex items-center gap-1.5">
@@ -559,7 +559,7 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
         </div>
       </div>
 
-      {/* Dedicated Scrunch / ChloroMaster Card Showcase */}
+      {/* Benchmark Matrix Results Card Showcase */}
       {matrixData && (
         <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 shadow-sm space-y-6">
           {/* Header Bar */}

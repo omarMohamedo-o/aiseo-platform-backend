@@ -12,7 +12,7 @@ export const PlatformBrandLogo: React.FC<PlatformBrandLogoProps> = ({
   size = 28,
   showText = true,
   className = "",
-  textClassName = "text-xl font-bold tracking-tight text-white",
+  textClassName = "text-xl font-bold tracking-tight text-slate-900",
   brandText = "esooai",
 }) => {
   return (
