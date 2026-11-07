@@ -134,7 +134,10 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
         {/* Custom Styled Recent Searches Dropdown */}
         {showRecentMenu && recentSearches.length > 0 && (
-          <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+          <div
+            style={{ backgroundColor: "#ffffff" }}
+            className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+          >
             <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
               <span className="flex items-center gap-1.5 font-semibold text-slate-600">
                 <History className="w-3.5 h-3.5 text-blue-600" />

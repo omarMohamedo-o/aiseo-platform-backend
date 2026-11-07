@@ -33,6 +33,7 @@ import { VaultSettingsTab } from "./components/vault/VaultSettingsTab";
 import { Language, translations } from "./i18n/translations";
 import { LoginScreen } from "./components/LoginScreen";
 import { PlatformBrandLogo } from "./components/brand/PlatformBrandLogo";
+import { uiStyles } from "./config/designSystem";
 
 type TabKey =
   | "crawl"
@@ -115,10 +116,10 @@ export default function App() {
         <nav className="hidden lg:flex items-center gap-1 py-0.5">
           <button
             onClick={() => setActiveTab("crawl")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
               activeTab === "crawl"
-                ? "bg-slate-900 text-white font-semibold shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? uiStyles.navTab.active
+                : uiStyles.navTab.inactive
             }`}
           >
             <Globe2 className="w-3.5 h-3.5" />
@@ -127,10 +128,10 @@ export default function App() {
 
           <button
             onClick={() => setActiveTab("leaderboard")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
               activeTab === "leaderboard"
-                ? "bg-slate-900 text-white font-semibold shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? uiStyles.navTab.active
+                : uiStyles.navTab.inactive
             }`}
           >
             <Trophy className="w-3.5 h-3.5 text-amber-500" />
@@ -139,10 +140,10 @@ export default function App() {
 
           <button
             onClick={() => setActiveTab("compare")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
               activeTab === "compare"
-                ? "bg-slate-900 text-white font-semibold shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? uiStyles.navTab.active
+                : uiStyles.navTab.inactive
             }`}
           >
             <Scale className="w-3.5 h-3.5 text-blue-500" />
@@ -151,10 +152,10 @@ export default function App() {
 
           <button
             onClick={() => setActiveTab("intel")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
               activeTab === "intel"
-                ? "bg-slate-900 text-white font-semibold shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? uiStyles.navTab.active
+                : uiStyles.navTab.inactive
             }`}
           >
             <ListFilter className="w-3.5 h-3.5" />
@@ -163,10 +164,10 @@ export default function App() {
 
           <button
             onClick={() => setActiveTab("trends")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
               activeTab === "trends"
-                ? "bg-slate-900 text-white font-semibold shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? uiStyles.navTab.active
+                : uiStyles.navTab.inactive
             }`}
           >
             <Flame className="w-3.5 h-3.5" />
@@ -175,10 +176,10 @@ export default function App() {
 
           <button
             onClick={() => setActiveTab("lab")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
               activeTab === "lab"
-                ? "bg-slate-900 text-white font-semibold shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? uiStyles.navTab.active
+                : uiStyles.navTab.inactive
             }`}
           >
             <MessageSquareQuote className="w-3.5 h-3.5" />
@@ -192,10 +193,10 @@ export default function App() {
                 setMoreMenuOpen(!moreMenuOpen);
                 setLangMenuOpen(false);
               }}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1 transition-all ${
+              className={`px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1 transition-all cursor-pointer ${
                 isSecondaryActive
-                  ? "bg-slate-900 text-white font-semibold shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                  ? uiStyles.navTab.active
+                  : uiStyles.navTab.inactive
               }`}
             >
               <MoreHorizontal className="w-3.5 h-3.5" />
@@ -221,8 +222,8 @@ export default function App() {
                          setActiveTab(item.id);
                          setMoreMenuOpen(false);
                       }}
-                      className={`w-full text-left px-3.5 py-2 text-xs flex items-center gap-2.5 hover:bg-slate-50 transition-colors ${
-                        active ? "font-bold text-slate-900 bg-slate-50" : "text-slate-600"
+                      className={`w-full text-left px-3.5 py-2 text-xs flex items-center gap-2.5 hover:bg-slate-50 transition-colors cursor-pointer ${
+                        active ? "font-bold text-blue-600 bg-blue-50/60" : "text-slate-600"
                       } ${isRtl ? "text-right" : "text-left"}`}
                     >
                       <Icon className="w-3.5 h-3.5 text-slate-400" />
@@ -318,7 +319,7 @@ export default function App() {
                   onClick={() => { setActiveTab("crawl"); setMobileMenuOpen(false); }}
                   className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2.5 transition-all text-left ${
                     activeTab === "crawl"
-                      ? "bg-slate-900 text-white font-semibold shadow-xs"
+                      ? uiStyles.navTab.active
                       : "text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100"
                   }`}
                 >
@@ -330,7 +331,7 @@ export default function App() {
                   onClick={() => { setActiveTab("leaderboard"); setMobileMenuOpen(false); }}
                   className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2.5 transition-all text-left ${
                     activeTab === "leaderboard"
-                      ? "bg-slate-900 text-white font-semibold shadow-xs"
+                      ? uiStyles.navTab.active
                       : "text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100"
                   }`}
                 >
@@ -342,7 +343,7 @@ export default function App() {
                   onClick={() => { setActiveTab("compare"); setMobileMenuOpen(false); }}
                   className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2.5 transition-all text-left ${
                     activeTab === "compare"
-                      ? "bg-slate-900 text-white font-semibold shadow-xs"
+                      ? uiStyles.navTab.active
                       : "text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100"
                   }`}
                 >
@@ -354,7 +355,7 @@ export default function App() {
                   onClick={() => { setActiveTab("intel"); setMobileMenuOpen(false); }}
                   className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2.5 transition-all text-left ${
                     activeTab === "intel"
-                      ? "bg-slate-900 text-white font-semibold shadow-xs"
+                      ? uiStyles.navTab.active
                       : "text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100"
                   }`}
                 >
@@ -366,7 +367,7 @@ export default function App() {
                   onClick={() => { setActiveTab("trends"); setMobileMenuOpen(false); }}
                   className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2.5 transition-all text-left ${
                     activeTab === "trends"
-                      ? "bg-slate-900 text-white font-semibold shadow-xs"
+                      ? uiStyles.navTab.active
                       : "text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100"
                   }`}
                 >
@@ -378,7 +379,7 @@ export default function App() {
                   onClick={() => { setActiveTab("lab"); setMobileMenuOpen(false); }}
                   className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2.5 transition-all text-left ${
                     activeTab === "lab"
-                      ? "bg-slate-900 text-white font-semibold shadow-xs"
+                      ? uiStyles.navTab.active
                       : "text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100"
                   }`}
                 >
@@ -406,7 +407,7 @@ export default function App() {
                       }}
                       className={`p-2.5 rounded-xl text-xs font-medium flex items-center gap-2 transition-all text-left ${
                         active
-                          ? "bg-slate-900 text-white font-semibold shadow-xs"
+                          ? uiStyles.navTab.active
                           : "text-slate-600 dark:text-slate-300 bg-slate-50/70 dark:bg-slate-800/40 hover:bg-slate-100"
                       }`}
                     >

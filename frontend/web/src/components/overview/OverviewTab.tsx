@@ -25,7 +25,7 @@ import { apiClient, TrendSeriesPoint } from "@/api/client";
 import { uiStyles } from "@/config/designSystem";
 
 interface OverviewTabProps {
-  auditTarget?: {url: string, brand: string} | null;
+  auditTarget?: { url: string, brand: string } | null;
   setAuditTarget?: (t: null) => void;
 }
 export const OverviewTab: React.FC<OverviewTabProps> = ({ auditTarget, setAuditTarget }) => {
@@ -40,7 +40,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ auditTarget, setAuditT
       const res = await apiClient.fetchTrendsSeries();
       setTrendData(res.points || []);
       const engineRes = await apiClient.fetchEnginePresence();
-      if(engineRes) setEngineData(engineRes);
+      if (engineRes) setEngineData(engineRes);
     } catch (err) {
       console.error("Failed to load trends", err);
     } finally {
@@ -134,25 +134,22 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ auditTarget, setAuditT
               <div className="bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl flex gap-1 text-xs">
                 <button
                   onClick={() => setActiveFilter("all")}
-                  className={`px-3 py-1 rounded-lg transition-all ${
-                    activeFilter === "all" ? uiStyles.segmented.active : uiStyles.segmented.inactive
-                  }`}
+                  className={`px-3 py-1 rounded-lg transition-all ${activeFilter === "all" ? uiStyles.segmented.active : uiStyles.segmented.inactive
+                    }`}
                 >
                   All (5)
                 </button>
                 <button
                   onClick={() => setActiveFilter("ai")}
-                  className={`px-3 py-1 rounded-lg transition-all ${
-                    activeFilter === "ai" ? uiStyles.segmented.active : uiStyles.segmented.inactive
-                  }`}
+                  className={`px-3 py-1 rounded-lg transition-all ${activeFilter === "ai" ? uiStyles.segmented.active : uiStyles.segmented.inactive
+                    }`}
                 >
                   AI Only
                 </button>
                 <button
                   onClick={() => setActiveFilter("geo")}
-                  className={`px-3 py-1 rounded-lg transition-all ${
-                    activeFilter === "geo" ? uiStyles.segmented.active : uiStyles.segmented.inactive
-                  }`}
+                  className={`px-3 py-1 rounded-lg transition-all ${activeFilter === "geo" ? uiStyles.segmented.active : uiStyles.segmented.inactive
+                    }`}
                 >
                   GEO / AEO
                 </button>

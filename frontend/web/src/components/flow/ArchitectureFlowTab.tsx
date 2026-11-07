@@ -211,51 +211,46 @@ export const ArchitectureFlowTab: React.FC = () => {
         <div className="bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 p-1 rounded-xl flex flex-wrap gap-1 text-xs">
           <button
             onClick={() => setSelectedFlow("pipeline")}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              selectedFlow === "pipeline"
-                ? uiStyles.segmented.active
-                : uiStyles.segmented.inactive
-            }`}
+            className={`px-3 py-1.5 rounded-lg transition-all ${selectedFlow === "pipeline"
+              ? uiStyles.segmented.active
+              : uiStyles.segmented.inactive
+              }`}
           >
             1. Pipeline Lineage
           </button>
           <button
             onClick={() => setSelectedFlow("hexagonal")}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              selectedFlow === "hexagonal"
-                ? uiStyles.segmented.active
-                : uiStyles.segmented.inactive
-            }`}
+            className={`px-3 py-1.5 rounded-lg transition-all ${selectedFlow === "hexagonal"
+              ? uiStyles.segmented.active
+              : uiStyles.segmented.inactive
+              }`}
           >
             2. Hexagonal Clean Arch
           </button>
           <button
             onClick={() => setSelectedFlow("formula")}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              selectedFlow === "formula"
-                ? uiStyles.segmented.active
-                : uiStyles.segmented.inactive
-            }`}
+            className={`px-3 py-1.5 rounded-lg transition-all ${selectedFlow === "formula"
+              ? uiStyles.segmented.active
+              : uiStyles.segmented.inactive
+              }`}
           >
             3. Opportunity Math Flow
           </button>
           <button
             onClick={() => setSelectedFlow("security")}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              selectedFlow === "security"
-                ? uiStyles.segmented.active
-                : uiStyles.segmented.inactive
-            }`}
+            className={`px-3 py-1.5 rounded-lg transition-all ${selectedFlow === "security"
+              ? uiStyles.segmented.active
+              : uiStyles.segmented.inactive
+              }`}
           >
             4. AES-256 Vault Lifecycle
           </button>
           <button
             onClick={() => setSelectedFlow("timespan")}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              selectedFlow === "timespan"
-                ? uiStyles.segmented.active
-                : uiStyles.segmented.inactive
-            }`}
+            className={`px-3 py-1.5 rounded-lg transition-all ${selectedFlow === "timespan"
+              ? uiStyles.segmented.active
+              : uiStyles.segmented.inactive
+              }`}
           >
             5. Timespan Analytics Flow
           </button>
@@ -312,15 +307,14 @@ export const ArchitectureFlowTab: React.FC = () => {
                       setSelectedNode(node);
                       setActiveStepIndex(i);
                     }}
-                    className={`cursor-pointer rounded-xl p-3.5 flex flex-col justify-between transition-all relative border ${
-                      isSelected
-                        ? "bg-white dark:bg-slate-900 border-primary shadow-md scale-[1.02]"
-                        : isCurrentActive
+                    className={`cursor-pointer rounded-xl p-3.5 flex flex-col justify-between transition-all relative border ${isSelected
+                      ? "bg-white dark:bg-slate-900 border-primary shadow-md scale-[1.02]"
+                      : isCurrentActive
                         ? "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-400 animate-pulse scale-[1.03]"
                         : isPast
-                        ? "bg-white dark:bg-slate-900 border-emerald-500/40 opacity-90"
-                        : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-200 dark:border-slate-700"
-                    }`}
+                          ? "bg-white dark:bg-slate-900 border-emerald-500/40 opacity-90"
+                          : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-200 dark:border-slate-700"
+                      }`}
                   >
                     <div>
                       <div className="flex items-center justify-between text-[10px] font-mono text-primary font-bold mb-2">

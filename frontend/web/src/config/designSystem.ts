@@ -61,6 +61,14 @@ export const uiStyles = {
       "text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-medium px-2 py-0.5 rounded-md text-[10px] font-mono",
   },
 
+  // Navigation Tabs (Header & Mobile Drawer)
+  navTab: {
+    active:
+      "bg-blue-600 text-white font-semibold shadow-xs transition-all",
+    inactive:
+      "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-colors",
+  },
+
   // Typography
   text: {
     heading: "text-slate-900 dark:text-slate-50 font-bold tracking-tight",
