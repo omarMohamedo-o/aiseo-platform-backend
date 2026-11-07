@@ -32,6 +32,7 @@ import { ArchitectureFlowTab } from "./components/flow/ArchitectureFlowTab";
 import { VaultSettingsTab } from "./components/vault/VaultSettingsTab";
 import { Language, translations } from "./i18n/translations";
 import { LoginScreen } from "./components/LoginScreen";
+import { PlatformBrandLogo } from "./components/brand/PlatformBrandLogo";
 
 type TabKey =
   | "crawl"
@@ -107,14 +108,7 @@ export default function App() {
       <header className="border-b border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-50 px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4 shadow-2xs transition-colors">
         {/* Left: Brand Identity */}
         <div className="flex items-center gap-2.5 shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-white font-bold text-xs tracking-tight shadow-xs">
-            <span>AI</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold text-sm text-slate-900 tracking-tight leading-tight">
-              {t.appName}
-            </span>
-          </div>
+          <PlatformBrandLogo size={28} textClassName="font-extrabold text-base text-slate-900 dark:text-white tracking-tight" />
         </div>
 
         {/* Center: Primary Core Navigation (Desktop) */}

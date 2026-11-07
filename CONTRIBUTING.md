@@ -46,3 +46,13 @@
   - Enforce `mypy` with `strict = true`. No untyped functions or unannotated parameters.
 - **Linting & Formatting**:
   - Code must pass `ruff check src tests` with zero errors.
+
+---
+
+## 5. Naming & Identification Standards
+
+- **Strict Prohibition on Brand Names in Identifiers & Files**:
+  - Never include brand names in file names, directory paths, component names, classes, interfaces, function names, variable identifiers, or database schemas (e.g. use `PlatformBrandLogo.tsx`, not `EsooLogo.tsx`; use `target_brand`, not `esoo_brand`).
+  - All source files, components, and variables must remain strictly domain-generic and architectural. Brand identities belong exclusively in runtime presentation configuration, i18n localization resources, or environment parameters.
+- **Strict Prohibition on Single-Letter Identifiers**:
+  - Single-letter variables (`i`, `j`, `x`, `e`) are strictly banned across frontend and backend codebases. Always use descriptive, self-documenting identifiers (`index`, `item_index`, `error_context`, `event_target`).

@@ -39,6 +39,9 @@ Built on **Clean / Hexagonal Architecture** with provider-, algorithm-, and mode
 5. **Secrets & Tenant Privacy**:
    - Secrets and external API keys never enter git or logs. All credentials are encrypted via AES-256 in the tenant vault.
    - Every request and repository query enforces explicit `TenantId` isolation.
+6. **Naming & Modularity Standards**:
+   - **Zero Brand Names in Code Constructs**: Never use brand names in file names, directories, component names, function names, variables, constants, or database columns (e.g. `PlatformBrandLogo.tsx`, not `EsooLogo.tsx`). All code must remain domain-generic.
+   - **Zero Single-Letter Variables**: Single-letter variables (`i`, `j`, `x`, `e`) are strictly banned across all layers. Use descriptive, self-documenting identifiers.
 
 ---
 
