@@ -27,6 +27,10 @@
 | **14** | **Stage D: Multilingual & Arabic NLP Normalization** (Ligature preservation, numeral translation, colloquial mapping) | ✅ Done | 100% |
 | **15** | **Zero-Mock Real Dynamic Data Engine** (Purge fake/dummy fallbacks, live API integrations, dynamic benchmark metrics) | ✅ Done | 100% |
 | **16** | **Empirical Ground Truth Verification Engine** (Free Google Suggest + Wikidata + DuckDuckGo + Lighthouse, Verifiable Certificates) | ✅ Done | 100% |
+| **17** | **Lean Modular Microservices Deconstruction (ADR-0004)** (5 deployable microservices + shared-core + web + infra + docs + private org repos) | ✅ Done | 100% |
+| **18** | **Zero Business Logic Invariant (UI & Database)** (UI is pure presentation, DB is pure storage; 100% business logic in Domain Services) | ✅ Done | 100% |
+| **19** | **Enterprise Citation Matrix & Conversion Funnel** (Scrunch-style single-input bar, dynamic domain logo ingestion, local/global mention rate leaderboard) | ✅ Done | 100% |
+| **20** | **Enterprise CI/CD & Organization Governance** (Automated GitHub Actions lint/test workflows, branch protection rules, auto-issue assignment) | 🔄 In Progress | 85% |
 
 ---
 
@@ -264,3 +268,37 @@
 - [x] Classifies brand into Market Leader, Challenger, Emerging, or At Risk tiers with Wilson 95% Confidence Intervals.
 - [x] Dedicated unit test suite with 100% pass rate (`tests/unit/test_geo_audit_engine.py`).
 - [x] Verified complete 30-stage execution in `run_stage_by_stage_pipeline.py` with 100% test pass rate (157/157 tests passing).
+
+---
+
+### 17 - Lean Modular Microservices Deconstruction (ADR-0004)
+- [x] Decomposed monolithic architecture into 5 deployable microservices: `esoo-api`, `esoo-engine`, `esoo-intelligence`, `esoo-recommendation`, `esoo-worker`.
+- [x] Established `esoo-shared-core` as single source of truth for Pydantic v2 schemas, pgvector contracts, and AES-256 Vault.
+- [x] Created `esoo-infrastructure` containing production Docker Compose service mesh and Kubernetes manifests.
+- [x] Converted all 10 code and specification repositories under `https://github.com/EsooAI` to private proprietary status.
+- [x] Preserved clean public `.github` repository to host organization profile overview and community standards.
+
+---
+
+### 18 - Zero Business Logic Invariant (UI & Database)
+- [x] Pure Presentation Frontend (`esoo-web`): UI never computes mention rates, parses regex for brand discovery, or synthesizes prompts. Strictly renders API payloads.
+- [x] Pure Storage Database: PostgreSQL and pgvector strictly store and index vectors. Zero business formulas in SQL triggers or stored procedures.
+- [x] Authoritative Domain Services: All scoring formulas (6-Pillar GEO, AEO, GLLM, Information Gain, Mention Rate distributions) execute inside Python domain services.
+
+---
+
+### 19 - Enterprise Citation Matrix & Conversion Funnel (Scrunch Competitor UX Pattern)
+- [x] Single-URL interactive search input bar with 30-second empirical analysis.
+- [x] Dynamic brand name, legal entity, and region auto-detection (`detect_region_from_text`).
+- [x] Dynamic logo ingestion via high-resolution favicon service (`https://www.google.com/s2/favicons?domain=...&sz=128`).
+- [x] Local vs. Global competitor breakdown and scope filter pills.
+- [x] High buyer-intent prompts display with 5th gated enterprise prompt preview.
+- [x] Seamless modal sign-in and free trial conversion flow.
+
+---
+
+### 20 - Enterprise CI/CD & Organization Governance
+- [x] Organization branch protection guidelines on `main` branch.
+- [x] Automated GitHub Actions workflows for continuous integration (linting with `ruff` & `eslint`, static typing, and tests).
+- [x] Automated issue assignment and community health standards under `@omarMohamedo-o`.
+

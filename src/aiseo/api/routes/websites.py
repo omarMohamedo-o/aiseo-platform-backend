@@ -23,7 +23,10 @@ from aiseo.api.dependencies.container import (
 from aiseo.api.dependencies.tenant import get_current_tenant
 from aiseo.api.schemas.website_schemas import RegisterWebsiteRequest, WebsiteResponse
 from aiseo.application.analysis.answer_analyzer import AnswerAnalyzerService
-from aiseo.application.analysis.competitor_discovery import CompetitorDiscoveryService
+from aiseo.application.analysis.competitor_discovery import (
+    CompetitorDiscoveryService,
+    CompetitorMatrixResponse,
+)
 from aiseo.application.analysis.question_generator import QuestionGeneratorService
 from aiseo.application.analysis.recommendation_generator import RecommendationGeneratorService
 from aiseo.application.analysis.technical_signals import (
@@ -728,3 +731,32 @@ async def discover_competitors(
             for c in result.suggested_competitors
         ]
     }
+
+
+class MatrixBenchmarkRequest(BaseModel):
+    url: str
+    brand_override: str | None = None
+    region_override: str | None = None
+
+
+@router.post("/matrix-benchmark", response_model=CompetitorMatrixResponse)
+async def get_competitor_matrix_benchmark(
+    payload: MatrixBenchmarkRequest,
+    discovery_service: CompetitorDiscoveryService = Depends(get_competitor_discovery_service),
+    scraper: ScraperPort = Depends(get_scraper),
+) -> CompetitorMatrixResponse:
+    """Delivers empirical multi-domain AI citation matrix, regional analysis, and high-resolution domain logos."""
+    try:
+        url_obj = Url(value=payload.url)
+        scraped_content = await scraper.extract_content(url_obj)
+        raw_text = scraped_content.raw_text if scraped_content else ""
+    except Exception:
+        raw_text = ""
+
+    return await discovery_service.build_competitor_matrix(
+        url=payload.url,
+        brand_override=payload.brand_override,
+        region_override=payload.region_override,
+        website_text=raw_text,
+    )
+

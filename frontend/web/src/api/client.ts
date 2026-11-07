@@ -252,6 +252,21 @@ export const apiClient = {
       body: JSON.stringify({ url, brand_name }),
     }),
 
+  // AI Citation Matrix & Competitor Benchmarking
+  fetchCompetitorMatrix: (
+    url: string,
+    brand_override?: string,
+    region_override?: string
+  ): Promise<CompetitorMatrixResponse> =>
+    request("/websites/matrix-benchmark", {
+      method: "POST",
+      body: JSON.stringify({
+        url,
+        brand_override: brand_override || undefined,
+        region_override: region_override || undefined,
+      }),
+    }),
+
   // Global Benchmarks & High Score Leaderboard
   fetchGlobalLeaderboard: (category?: string, sortBy: string = "overall"): Promise<GlobalBenchmarkResult> => {
     const params = new URLSearchParams();
@@ -307,6 +322,47 @@ export interface GlobalBenchmarkResult {
   industry_averages: IndustryAverageItem[];
   engine_citation_shares: Record<string, number>;
 }
+
+export interface CompetitorMatrixPrompt {
+  text: string;
+  rationale: string;
+  is_blurred: boolean;
+}
+
+export interface CompetitorMatrixItem {
+  rank: number;
+  brand: string;
+  legal_name?: string;
+  url: string;
+  domain: string;
+  logo_url: string;
+  mention_rate: number;
+  scope: "local" | "global";
+  is_target: boolean;
+}
+
+export interface TargetDomainProfile {
+  url: string;
+  domain: string;
+  brand: string;
+  legal_name: string;
+  logo_url: string;
+  region: string;
+  business_scope: string;
+}
+
+export interface CompetitorMatrixResponse {
+  target: TargetDomainProfile;
+  detected_region: string;
+  supported_regions: string[];
+  prompts: CompetitorMatrixPrompt[];
+  leaderboard: CompetitorMatrixItem[];
+  target_rank: number;
+  target_mention_rate: number;
+  top_competitor: string;
+  gap_to_leader: number;
+}
+
 
 
 
