@@ -11,6 +11,7 @@ import {
   Lightbulb,
 } from "lucide-react";
 import { PageAuditItem } from "@/api/client";
+import { uiStyles } from "@/config/designSystem";
 
 interface PageInspectorModalProps {
   page: PageAuditItem | null;
@@ -77,7 +78,7 @@ export const PageInspectorModal: React.FC<PageInspectorModalProps> = ({
               href={page.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
+              className={uiStyles.button.primary}
             >
               <ExternalLink className="w-3 h-3" />
               <span>Visit Page</span>

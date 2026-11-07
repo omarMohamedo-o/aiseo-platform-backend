@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Globe2, RefreshCw, ArrowRight, History, X, Sparkles } from "lucide-react";
-import { brandColors } from "@/config/designSystem";
+import { brandColors, uiStyles } from "@/config/designSystem";
 import { uiStrings } from "@/config/uiStrings";
 import { CompetitorMatrixResponse } from "@/api/client";
 
@@ -125,7 +125,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               onRunAudit();
             }}
             disabled={isAuditing || !urlInput.trim()}
-            className="px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all shadow-xs disabled:opacity-50 shrink-0 cursor-pointer"
+            className={uiStyles.button.pillPrimary}
           >
             {isAuditing ? (
               <>

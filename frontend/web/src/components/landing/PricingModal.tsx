@@ -53,7 +53,7 @@ export const PricingModal: React.FC<PricingModalProps> = ({
               }`}
             >
               {tier.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-blue-600 text-white font-bold text-[10px] uppercase tracking-wider shadow-xs">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-black text-white font-bold text-[10px] uppercase tracking-wider shadow-xs">
                   Most Popular
                 </div>
               )}
@@ -85,11 +85,7 @@ export const PricingModal: React.FC<PricingModalProps> = ({
                     onClose();
                     onSelectTier("signup");
                   }}
-                  className={`w-full py-2.5 rounded-full font-bold text-xs transition-all cursor-pointer ${
-                    tier.highlight
-                      ? "bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
-                      : "bg-slate-900 hover:bg-slate-800 text-white"
-                  }`}
+                  className={`w-full ${uiStyles.button.pillPrimary}`}
                 >
                   {tier.name === "Enterprise" ? "Contact Architecture Team" : "Get Started"}
                 </button>

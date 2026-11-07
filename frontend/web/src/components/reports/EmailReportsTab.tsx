@@ -15,6 +15,7 @@ import {
   ReportBranding,
   ReportSchedule,
 } from "@/api/client";
+import { uiStyles } from "@/config/designSystem";
 
 export const EmailReportsTab: React.FC = () => {
   const [schedules, setSchedules] = useState<ReportSchedule[]>([]);
@@ -144,7 +145,7 @@ export const EmailReportsTab: React.FC = () => {
           <button
             onClick={handleSendTestEmail}
             disabled={sendingTest || !testEmail}
-            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-2 transition-all disabled:opacity-50"
+            className={uiStyles.button.primary}
           >
             <Send className="w-3.5 h-3.5" />
             {sendingTest ? "Sending..." : "Send Test Report"}
@@ -232,7 +233,7 @@ export const EmailReportsTab: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors"
+                    className={uiStyles.button.primary}
                   >
                     Create Distribution Schedule
                   </button>
@@ -353,7 +354,7 @@ export const EmailReportsTab: React.FC = () => {
               <button
                 type="submit"
                 disabled={savingBranding}
-                className="w-full py-2.5 mt-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all disabled:opacity-50"
+                className={`w-full ${uiStyles.button.primary}`}
               >
                 {savingBranding ? "Saving..." : "Save Branding Configuration"}
               </button>

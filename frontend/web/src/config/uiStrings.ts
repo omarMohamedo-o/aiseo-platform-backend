@@ -159,11 +159,27 @@ export const uiStrings = {
     regionLabel: "Region",
     regions: [
       { id: "WORLDWIDE", label: "Worldwide (عالمي)", shortLabel: "Worldwide" },
-      { id: "EUROPE", label: "Europe (أوروبا)", shortLabel: "Europe" },
+      { id: "EGYPT", label: "Egypt (مصر)", shortLabel: "Egypt" },
+      { id: "GULF", label: "GCC & Gulf (الخليج العربي)", shortLabel: "Gulf" },
       { id: "AFRICA_MENA", label: "Africa & Middle East (إفريقيا والشرق الأوسط)", shortLabel: "Africa & MENA" },
+      { id: "EUROPE", label: "Europe (أوروبا)", shortLabel: "Europe" },
       { id: "NORTH_AMERICA", label: "North America (أمريكا الشمالية)", shortLabel: "North America" },
       { id: "APAC", label: "Asia-Pacific (آسيا والمحيط الهادئ)", shortLabel: "Asia-Pacific" },
       { id: "LATAM", label: "Latin America (أمريكا اللاتينية)", shortLabel: "Latin America" },
+    ],
+  },
+  comparison: {
+    regionLabel: "Region",
+    regionLabelAr: "المنطقة",
+    regions: [
+      { value: "auto", labelEn: "Auto-Detect", labelAr: "تحديد تلقائي" },
+      { value: "Egypt", labelEn: "Egypt (مصر)", labelAr: "مصر" },
+      { value: "Saudi Arabia", labelEn: "Saudi Arabia (المملكة العربية السعودية)", labelAr: "المملكة العربية السعودية" },
+      { value: "United Arab Emirates", labelEn: "United Arab Emirates (الإمارات)", labelAr: "الإمارات العربية المتحدة" },
+      { value: "United States", labelEn: "United States", labelAr: "الولايات المتحدة" },
+      { value: "United Kingdom", labelEn: "United Kingdom", labelAr: "المملكة المتحدة" },
+      { value: "Thailand", labelEn: "Thailand (ประเทศไทย)", labelAr: "تايلاند" },
+      { value: "Global", labelEn: "Global / Worldwide", labelAr: "عالمي" },
     ],
   },
 } as const;

@@ -3,7 +3,7 @@ import { X, LogIn, Lock, Mail, User, Globe2, ArrowRight } from "lucide-react";
 import { apiClient } from "@/api/client";
 import { PlatformBrandLogo } from "../brand/PlatformBrandLogo";
 import { appConfig } from "@/config/appConfig";
-import { brandColors } from "@/config/designSystem";
+import { brandColors, uiStyles } from "@/config/designSystem";
 import { uiStrings } from "@/config/uiStrings";
 
 export type AuthMode = "login" | "signup";
@@ -100,7 +100,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             }}
             className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
               mode === "login"
-                ? "bg-[#FAF9F5] text-slate-900 shadow-xs border border-[#E8E6E1]"
+                ? uiStyles.segmented.primaryActive
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
@@ -114,7 +114,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             }}
             className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
               mode === "signup"
-                ? "bg-[#FAF9F5] text-slate-900 shadow-xs border border-[#E8E6E1]"
+                ? uiStyles.segmented.primaryActive
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
@@ -208,7 +208,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="submit"
               disabled={authLoading || !username.trim() || !password}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all shadow-xs disabled:opacity-50 flex items-center justify-center gap-2"
+              className={`w-full ${uiStyles.button.primary}`}
             >
               {authLoading ? (
                 <span>{uiStrings.auth.buttons.submitting}</span>

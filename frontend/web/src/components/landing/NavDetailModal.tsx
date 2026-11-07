@@ -1,7 +1,7 @@
 import React from "react";
 import { X, CheckCircle2 } from "lucide-react";
 import { NavigationFeatureItem } from "@/config/navigationContent";
-import { brandColors } from "@/config/designSystem";
+import { brandColors, uiStyles } from "@/config/designSystem";
 
 interface NavDetailModalProps {
   item: NavigationFeatureItem | null;
@@ -59,7 +59,7 @@ export const NavDetailModal: React.FC<NavDetailModalProps> = ({
               onClose();
               onSelectAction("signup");
             }}
-            className="w-full py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-all shadow-xs cursor-pointer"
+            className={`w-full ${uiStyles.button.pillPrimary}`}
           >
             Sign In to Test {item.title}
           </button>

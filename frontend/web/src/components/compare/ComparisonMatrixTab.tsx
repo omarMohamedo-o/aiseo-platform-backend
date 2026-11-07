@@ -37,6 +37,8 @@ import {
   CompetitorMatrixResponse,
   CompetitorMatrixItem,
 } from "@/api/client";
+import { uiStyles } from "@/config/designSystem";
+import { uiStrings } from "@/config/uiStrings";
 import { Language } from "@/i18n/translations";
 
 export function extractBrandFromUrl(rawUrl: string): string {
@@ -383,18 +385,17 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
                   onChange={(event) => handleRegionChange(event.target.value)}
                   className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs rounded-md px-2.5 py-1 font-medium focus:outline-none focus:border-blue-500"
                 >
-                  <option value="auto">
-                    {isRtl
-                      ? `تحديد تلقائي ${detectedRegion ? `(${detectedRegion})` : "حسب النطاق"}`
-                      : `Auto-Detect ${detectedRegion ? `(${detectedRegion})` : "(From Domain)"}`}
-                  </option>
-                  <option value="Egypt">Egypt (مصر)</option>
-                  <option value="Saudi Arabia">Saudi Arabia (المملكة العربية السعودية)</option>
-                  <option value="United Arab Emirates">United Arab Emirates (الإمارات)</option>
-                  <option value="United States">United States</option>
-                  <option value="United Kingdom">United Kingdom</option>
-                  <option value="Thailand">Thailand (ประเทศไทย)</option>
-                  <option value="Global">Global / Worldwide</option>
+                  {uiStrings.comparison.regions.map((reg) => (
+                    <option key={reg.value} value={reg.value}>
+                      {reg.value === "auto"
+                        ? isRtl
+                          ? `${reg.labelAr} ${detectedRegion ? `(${detectedRegion})` : "حسب النطاق"}`
+                          : `${reg.labelEn} ${detectedRegion ? `(${detectedRegion})` : "(From Domain)"}`
+                        : isRtl
+                        ? reg.labelAr
+                        : reg.labelEn}
+                    </option>
+                  ))}
                 </select>
 
                 {selectedRegion === "auto" && detectedRegion && (
@@ -423,7 +424,7 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
                   <button
                     onClick={() => handleFetchMatrix(targetUrl, selectedRegion)}
                     disabled={!targetUrl.trim() || matrixLoading}
-                    className="px-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all disabled:bg-slate-400"
+                    className={uiStyles.button.primary}
                   >
                     {matrixLoading ? (
                       <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -508,7 +509,7 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
               <div className="flex justify-end">
                 <button
                   onClick={handleAddSelected}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center gap-2 transition-all"
+                  className={uiStyles.button.primary}
                 >
                   <CheckCircle2 className="w-4 h-4" />
                   <span>{isRtl ? "إضافة المحدد للمقارنة" : "Add Selected to Comparison"}</span>
@@ -583,7 +584,7 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
           <button
             onClick={handleRunComparison}
             disabled={loading || !targetUrl.trim()}
-            className="w-full sm:w-auto px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white disabled:text-slate-500 text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-xs"
+            className={`w-full sm:w-auto px-5 py-2.5 ${uiStyles.button.primary}`}
           >
             {loading ? (
               <>
@@ -654,7 +655,7 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
                   onClick={() => setScopeFilter("global")}
                   className={`px-3 py-1 rounded-md transition-all ${
                     scopeFilter === "global"
-                      ? "bg-blue-600 text-white shadow-xs"
+                      ? uiStyles.segmented.primaryActive
                       : "text-slate-500 hover:text-slate-900"
                   }`}
                 >
@@ -806,7 +807,7 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
                     const crawlBtn = document.querySelector('button[name="crawl-tab"]');
                     if (crawlBtn) (crawlBtn as any).click();
                   }}
-                  className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors shadow-xs flex items-center justify-center gap-2"
+                  className={`w-full py-3 px-4 ${uiStyles.button.primary}`}
                 >
                   <span>{isRtl ? "بدء تجربة التحسين المجانية" : "Start free trial"}</span>
                   <ArrowRight className="w-3.5 h-3.5" />

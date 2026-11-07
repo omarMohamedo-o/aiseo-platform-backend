@@ -8,6 +8,7 @@ import {
   Eye,
 } from "lucide-react";
 import { MonitoredDomainRecord } from "./HistoryLeaderboardTab";
+import { uiStyles } from "@/config/designSystem";
 
 interface MonitoredDomainsSectionProps {
   monitoredSites: MonitoredDomainRecord[];
@@ -194,7 +195,7 @@ export const MonitoredDomainsSection: React.FC<MonitoredDomainsSectionProps> = (
                     <div className="flex items-center justify-end gap-1.5">
                       <button
                         onClick={() => onViewSnapshot?.(item)}
-                        className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-[11px] inline-flex items-center gap-1 shadow-2xs transition-colors cursor-pointer group"
+                        className={`px-2.5 py-1 text-[11px] ${uiStyles.button.primary}`}
                         title="View Full Preserved Dashboard Snapshot"
                       >
                         <Eye className="w-3 h-3 text-slate-300 group-hover:scale-110 transition-transform" />
@@ -203,7 +204,7 @@ export const MonitoredDomainsSection: React.FC<MonitoredDomainsSectionProps> = (
 
                       <button
                         onClick={() => onLiveAudit?.(item.url, item.brand)}
-                        className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-[11px] inline-flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
+                        className={`px-2.5 py-1 text-[11px] ${uiStyles.button.primary}`}
                         title="Re-run Live Audit"
                       >
                         <RefreshCw className="w-3 h-3" />

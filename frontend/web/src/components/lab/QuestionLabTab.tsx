@@ -18,6 +18,7 @@ import {
   ProviderExecutionResult,
   AnswerAnalysisResult,
 } from "@/api/client";
+import { uiStyles } from "@/config/designSystem";
 
 const PROVIDERS = [
   { id: "chatgpt", label: "ChatGPT (GPT-4o)", color: "emerald" },
@@ -111,7 +112,7 @@ export const QuestionLabTab: React.FC = () => {
             <button
               onClick={handleRunSimulation}
               disabled={isExecuting || questions.length === 0}
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md shadow-blue-500/20 disabled:opacity-50"
+              className={uiStyles.button.primary}
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               {isExecuting ? "Executing Simulation..." : "Run Multi-Engine Simulation"}

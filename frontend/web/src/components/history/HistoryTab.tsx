@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Clock, ExternalLink, Globe2, Trophy, TrendingUp, Sparkles, Eye, History as HistoryIcon } from "lucide-react";
 import { apiClient, CompetitorMatrixResponse } from "../../api/client";
+import { uiStyles } from "@/config/designSystem";
 import { HistorySnapshotModal } from "./HistorySnapshotModal";
 
 interface HistoryItem {
@@ -267,7 +268,7 @@ export const HistoryTab: React.FC = () => {
                 <td className="px-6 py-4 text-right">
                   <button
                     onClick={() => handleOpenSnapshot(item)}
-                    className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold inline-flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer group"
+                    className={uiStyles.button.primary}
                   >
                     <Eye className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
                     <span>View Dashboard</span>

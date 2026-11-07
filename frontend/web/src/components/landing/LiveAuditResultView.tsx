@@ -3,7 +3,7 @@ import { LogIn, ArrowRight, X, Share2, Download, Check, Sparkles, BookOpen } fro
 import { CompetitorMatrixResponse, CompetitorMatrixItem } from "@/api/client";
 import { PlatformBrandLogo } from "../brand/PlatformBrandLogo";
 import { appConfig } from "@/config/appConfig";
-import { brandColors } from "@/config/designSystem";
+import { brandColors, uiStyles } from "@/config/designSystem";
 import { uiStrings } from "@/config/uiStrings";
 import { EngineBreakdownCard } from "../audit/EngineBreakdownCard";
 import { CitationSourcesCard } from "../audit/CitationSourcesCard";
@@ -300,7 +300,7 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
             <div className="space-y-2.5 pt-2">
               <button
                 onClick={() => onOpenAuth("login")}
-                className="w-full py-3.5 px-6 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+                className={`w-full ${uiStyles.button.pillPrimary}`}
               >
                 <LogIn className="w-4 h-4" />
                 <span>{uiStrings.landing.auditModal.signInButton}</span>
@@ -308,7 +308,7 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
 
               <button
                 onClick={() => onOpenAuth("signup")}
-                className="w-full py-3.5 px-6 rounded-full bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-300 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className={`w-full ${uiStyles.button.pillPrimary}`}
               >
                 <span>{uiStrings.landing.auditModal.createAccountButton}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -318,7 +318,7 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
         </div>
 
         {/* Actionable GEO Playbook Banner */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+        <div className="p-4 sm:p-5 rounded-2xl bg-slate-950 border border-slate-800 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
           <div className="space-y-1 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-2">
               <Sparkles className="w-4 h-4 text-amber-300" />
@@ -326,15 +326,15 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
                 {uiStrings.geoPlaybook.title}
               </h4>
             </div>
-            <p className="text-xs text-blue-100 max-w-xl">
+            <p className="text-xs text-slate-300 max-w-xl">
               {uiStrings.geoPlaybook.subtitle}
             </p>
           </div>
           <button
             onClick={() => setIsPlaybookOpen(true)}
-            className="px-5 py-2.5 rounded-full bg-white text-slate-900 hover:bg-slate-100 text-xs font-bold transition-all shadow-sm shrink-0 cursor-pointer flex items-center gap-1.5"
+            className="px-5 py-2.5 rounded-full bg-black text-white hover:bg-slate-900 text-xs font-bold transition-all shadow-sm shrink-0 cursor-pointer flex items-center gap-1.5 border border-slate-700"
           >
-            <BookOpen className="w-3.5 h-3.5 text-blue-600" />
+            <BookOpen className="w-3.5 h-3.5 text-white" />
             <span>{uiStrings.landing.auditModal.playbookButton}</span>
           </button>
         </div>

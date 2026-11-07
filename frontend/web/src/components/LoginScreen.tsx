@@ -133,7 +133,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   }, [handleRunAudit]);
 
   return (
-    <div className="min-h-screen bg-[#FAF9F5] text-slate-900 font-sans flex flex-col selection:bg-blue-600 selection:text-white relative">
+    <div className="min-h-screen bg-[#FAF9F5] text-slate-900 font-sans flex flex-col selection:bg-black selection:text-white relative">
       {/* Header with 2 Distinct Buttons */}
       <LandingHeader
         onOpenAuth={handleOpenAuth}

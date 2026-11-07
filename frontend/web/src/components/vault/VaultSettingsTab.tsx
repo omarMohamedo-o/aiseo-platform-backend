@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { apiClient, ProviderStatus } from "@/api/client";
+import { uiStyles } from "@/config/designSystem";
 
 export const VaultSettingsTab: React.FC = () => {
   const [providers, setProviders] = useState<ProviderStatus[]>([]);
@@ -216,7 +217,7 @@ export const VaultSettingsTab: React.FC = () => {
               <button
                 type="submit"
                 disabled={saving || !apiKey}
-                className="w-full py-2.5 mt-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all disabled:opacity-50"
+                className={`w-full ${uiStyles.button.primary}`}
               >
                 {saving ? "Sealing..." : "Seal in AES-256-GCM Vault"}
               </button>

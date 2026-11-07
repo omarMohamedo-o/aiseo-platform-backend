@@ -44,6 +44,7 @@ import {
   Zap,
 } from "lucide-react";
 import { apiClient, CrawlAndAnalyzeResult, PageAuditItem, StrategicRecommendation } from "@/api/client";
+import { uiStyles } from "@/config/designSystem";
 import { Language, translations } from "@/i18n/translations";
 import { PageInspectorModal } from "./PageInspectorModal";
 import { extractBrandFromUrl } from "../compare/ComparisonMatrixTab";
@@ -222,7 +223,7 @@ export const LiveWebsiteCrawlTab: React.FC<LiveWebsiteCrawlTabProps> = ({
             <button
               onClick={() => handleCrawl()}
               disabled={loading || !url.trim()}
-              className="bg-slate-900 dark:bg-slate-50 hover:bg-slate-800 text-white dark:text-slate-900 text-xs font-semibold rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
+              className={uiStyles.button.primary}
             >
               {loading ? (
                 <>

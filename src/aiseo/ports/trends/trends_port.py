@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class TrendPoint(BaseModel):
     """Historical data point for search terms."""
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="allow")
 
     date: str
     values: dict[str, float] = Field(default_factory=dict)

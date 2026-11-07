@@ -26,6 +26,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { apiClient, GlobalBenchmarkResult, LeaderboardEntryItem, CompetitorMatrixResponse } from "@/api/client";
+import { uiStyles } from "@/config/designSystem";
 import { Language } from "@/i18n/translations";
 import { MonitoredDomainsSection } from "./MonitoredDomainsSection";
 import { HistorySnapshotModal } from "./HistorySnapshotModal";
@@ -420,8 +421,8 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
                   selectedCategory === cat
-                    ? "bg-blue-600 text-white font-semibold shadow-xs"
-                    : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-slate-50 dark:bg-slate-800"
+                    ? uiStyles.segmented.primaryActive
+                    : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-50 dark:bg-slate-800"
                 }`}
               >
                 {cat}

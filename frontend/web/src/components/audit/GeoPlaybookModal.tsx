@@ -141,7 +141,7 @@ A: Full enterprise multi-tenant cloud or dedicated private VPC deployment with S
 
         {/* Code Content Preview */}
         <div className="relative">
-          <pre className="p-4 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto max-h-72 leading-relaxed selection:bg-blue-600">
+          <pre className="p-4 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto max-h-72 leading-relaxed selection:bg-slate-700">
             {activeContent}
           </pre>
           <button

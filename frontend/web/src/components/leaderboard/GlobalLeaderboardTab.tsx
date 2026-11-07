@@ -22,6 +22,7 @@ import {
   Zap,
 } from "lucide-react";
 import { apiClient, GlobalBenchmarkResult, LeaderboardEntryItem } from "@/api/client";
+import { uiStyles } from "@/config/designSystem";
 import { Language } from "@/i18n/translations";
 
 interface GlobalLeaderboardTabProps {
@@ -225,8 +226,8 @@ export const GlobalLeaderboardTab: React.FC<GlobalLeaderboardTabProps> = ({ curr
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                     selectedCategory === cat
-                      ? "bg-blue-600 text-white dark:text-slate-900 font-semibold shadow-sm"
-                      : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-slate-50 dark:bg-slate-800"
+                      ? uiStyles.segmented.primaryActive
+                      : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-50 dark:bg-slate-800"
                   }`}
                 >
                   {cat}
@@ -430,7 +431,7 @@ export const GlobalLeaderboardTab: React.FC<GlobalLeaderboardTabProps> = ({ curr
                   <td className="px-3 py-3 text-right">
                     <button
                       onClick={() => onLiveAudit?.(`https://${item.domain}`, item.brand_name)}
-                      className="px-2.5 py-1 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-slate-900 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:text-slate-50 text-xs font-medium transition-colors flex items-center gap-1 ml-auto"
+                      className={`px-2.5 py-1 text-xs ml-auto ${uiStyles.button.primary}`}
                     >
                       <Play className="w-3 h-3 fill-current" />
                       <span>{isRtl ? "تدقيق الآن" : "Live Audit"}</span>

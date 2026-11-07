@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BarChart, Search, ExternalLink, LineChart as ChartLine } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { uiStyles } from "@/config/designSystem";
 
 export const GscDashboardTab = () => {
   const [token, setToken] = useState("");
@@ -67,7 +68,7 @@ export const GscDashboardTab = () => {
             <button 
               onClick={handleFetch}
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white dark:text-slate-900 font-semibold py-2 rounded-lg text-sm transition-colors"
+              className={`w-full ${uiStyles.button.primary}`}
             >
               {loading ? "Fetching..." : "Fetch Data"}
             </button>

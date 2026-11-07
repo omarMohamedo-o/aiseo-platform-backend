@@ -38,21 +38,23 @@ export const uiStyles = {
     container:
       "bg-slate-100/90 border border-slate-200/90 p-1 rounded-xl flex items-center gap-1 text-xs",
     active:
-      "bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/90 transition-all",
+      "bg-black text-white font-semibold shadow-xs border border-black transition-all",
     inactive:
       "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-medium transition-colors",
     primaryActive:
-      "bg-blue-600 text-white font-semibold shadow-xs transition-all",
+      "bg-black text-white font-semibold shadow-xs transition-all",
   },
 
   // Buttons
   button: {
     primary:
-      "bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl px-4 py-2 text-xs transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50",
+      "bg-black hover:bg-slate-900 text-white font-semibold rounded-xl px-4 py-2 text-xs transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50",
+    pillPrimary:
+      "bg-black hover:bg-slate-900 text-white font-semibold rounded-full px-6 py-3 text-xs sm:text-sm transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50",
     dark:
-      "bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl px-4 py-2 text-xs transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50",
+      "bg-black hover:bg-slate-900 text-white font-semibold rounded-xl px-4 py-2 text-xs transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50",
     secondary:
-      "bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium rounded-xl px-4 py-2 text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50",
+      "bg-black hover:bg-slate-900 text-white font-medium rounded-xl px-4 py-2 text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50",
     ghost:
       "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50",
   },
@@ -90,7 +92,7 @@ export const uiStyles = {
   // Navigation Tabs (Header & Mobile Drawer)
   navTab: {
     active:
-      "bg-blue-600 text-white font-semibold shadow-xs transition-all",
+      "bg-black dark:bg-black text-white font-semibold shadow-xs transition-all",
     inactive:
       "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium transition-colors",
   },
