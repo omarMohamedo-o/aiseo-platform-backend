@@ -6,6 +6,7 @@ interface PlatformBrandLogoProps {
   className?: string;
   textClassName?: string;
   brandText?: string;
+  onClick?: () => void;
 }
 
 export const PlatformBrandLogo: React.FC<PlatformBrandLogoProps> = ({
@@ -14,9 +15,29 @@ export const PlatformBrandLogo: React.FC<PlatformBrandLogoProps> = ({
   className = "",
   textClassName = "text-xl font-bold tracking-tight text-slate-900",
   brandText = "esooai",
+  onClick,
 }) => {
   return (
-    <div className={`flex items-center gap-2.5 ${className}`}>
+    <div
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={
+        onClick
+          ? (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
+      className={`flex items-center gap-2.5 ${
+        onClick
+          ? "cursor-pointer hover:opacity-85 transition-opacity select-none"
+          : ""
+      } ${className}`}
+    >
       {/* Circular solid badge with 4-pointed white sparkle star */}
       <svg
         width={size}

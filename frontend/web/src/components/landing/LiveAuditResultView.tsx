@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { LogIn, ArrowRight } from "lucide-react";
 import { CompetitorMatrixResponse, CompetitorMatrixItem } from "@/api/client";
 import { PlatformBrandLogo } from "../brand/PlatformBrandLogo";
@@ -7,6 +7,7 @@ import { appConfig } from "@/config/appConfig";
 interface LiveAuditResultViewProps {
   auditResult: CompetitorMatrixResponse;
   onOpenAuth: (mode?: "login" | "signup") => void;
+  onNavigateHome: () => void;
 }
 
 interface BrandLogoBadgeProps {
@@ -59,20 +60,62 @@ const BrandLogoBadge: React.FC<BrandLogoBadgeProps> = ({
 export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
   auditResult,
   onOpenAuth,
+  onNavigateHome,
 }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      // Do not trigger if clicking inside header or modal overlay
+      if (
+        target?.closest(".auth-modal-backdrop") ||
+        target?.closest(".auth-modal-content") ||
+        target?.closest("header")
+      ) {
+        return;
+      }
+
+      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
+        onNavigateHome();
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onNavigateHome();
+      }
+    };
+
+    const timer = setTimeout(() => {
+      document.addEventListener("mousedown", handleOutsideClick);
+      document.addEventListener("keydown", handleKeyDown);
+    }, 150);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onNavigateHome]);
+
   return (
     <div className="space-y-8 pt-4 pb-12 max-w-5xl mx-auto flex flex-col items-center">
-      {/* Top Brand Logo */}
+      {/* Top Brand Logo - clicking returns to main page */}
       <div className="flex justify-center pb-2">
         <PlatformBrandLogo
           size={32}
           brandText={appConfig.brandName}
           textClassName="text-2xl font-bold tracking-tight text-slate-900 font-sans"
+          onClick={onNavigateHome}
         />
       </div>
 
       {/* Main Reference White Card */}
-      <div className="w-full rounded-3xl bg-white border border-slate-200/80 p-8 sm:p-12 shadow-sm space-y-8">
+      <div
+        ref={cardRef}
+        className="w-full rounded-3xl bg-white border border-slate-200/80 p-8 sm:p-12 shadow-sm space-y-8"
+      >
         {/* Brand Header */}
         <div className="flex items-center gap-4">
           <BrandLogoBadge

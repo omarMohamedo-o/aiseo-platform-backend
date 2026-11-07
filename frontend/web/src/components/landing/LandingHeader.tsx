@@ -12,9 +12,10 @@ import {
 
 interface LandingHeaderProps {
   onOpenAuth: (mode?: "login" | "signup") => void;
+  onNavigateHome?: () => void;
 }
 
-export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
+export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth, onNavigateHome }) => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [showPricingModal, setShowPricingModal] = useState(false);
   const [activeDetailModal, setActiveDetailModal] = useState<NavigationFeatureItem | null>(null);
@@ -38,6 +39,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onOpenAuth }) => {
         size={30}
         brandText={appConfig.brandName}
         textClassName="text-xl font-bold tracking-tight text-slate-900 font-sans"
+        onClick={onNavigateHome}
       />
 
       {/* Center Interactive Navigation */}

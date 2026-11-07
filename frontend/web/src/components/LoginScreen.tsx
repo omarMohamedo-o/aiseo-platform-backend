@@ -23,6 +23,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     setShowAuthModal(true);
   };
 
+  const handleNavigateHome = () => {
+    setAuditResult(null);
+    setAuditError(null);
+    setUrlInput("");
+  };
+
   const handleRunAudit = async () => {
     const targetUrl = urlInput.trim();
     if (!targetUrl) return;
@@ -44,7 +50,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   return (
     <div className="min-h-screen bg-[#FAF9F5] text-slate-900 font-sans flex flex-col selection:bg-blue-600 selection:text-white relative">
       {/* Header with 2 Distinct Buttons */}
-      <LandingHeader onOpenAuth={handleOpenAuth} />
+      <LandingHeader
+        onOpenAuth={handleOpenAuth}
+        onNavigateHome={handleNavigateHome}
+      />
 
       {/* Main Viewport Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-14 py-12 lg:py-16 relative z-10">
@@ -65,10 +74,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             </div>
           </div>
         ) : (
-          /* Live Dynamic Audit View (No 'Test another URL' link, matching reference) */
+          /* Live Dynamic Audit View */
           <LiveAuditResultView
             auditResult={auditResult}
             onOpenAuth={handleOpenAuth}
+            onNavigateHome={handleNavigateHome}
           />
         )}
       </main>
