@@ -10,13 +10,13 @@ export const uiStyles = {
   // Pill / Segmented Controls & Multi-option Switchers
   segmented: {
     container:
-      "bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-1 rounded-xl flex items-center gap-1 text-xs",
+      "bg-slate-100/90 border border-slate-200/90 p-1 rounded-xl flex items-center gap-1 text-xs",
     active:
-      "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-semibold shadow-xs border border-slate-200/80 dark:border-slate-700",
+      "bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/90 transition-all",
     inactive:
-      "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 font-medium transition-colors",
+      "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-medium transition-colors",
     primaryActive:
-      "bg-blue-600 text-white font-semibold shadow-xs",
+      "bg-blue-600 text-white font-semibold shadow-xs transition-all",
   },
 
   // Buttons
