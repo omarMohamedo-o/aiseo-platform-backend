@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
+from aiseo.api.middleware.anti_scraping import AntiScrapingMiddleware
 from aiseo.api.routes.auth import router as auth_router
 from aiseo.api.routes.benchmarks import router as benchmarks_router
 from aiseo.api.routes.intelligence import router as intelligence_router
@@ -54,6 +55,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # Enforce Anti-Scraping, Bot Defense, and Audit Rate Limiting
+    app.add_middleware(AntiScrapingMiddleware)
 
     # Include routers
     app.include_router(websites_router)

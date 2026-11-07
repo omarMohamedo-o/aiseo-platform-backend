@@ -117,30 +117,10 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
     { id: string; url: string; brand: string; reason: string; selected: boolean }[]
   >([]);
 
-  // Auto-sync from recent audits on landing/main page
+  // Pure state initialization: never auto-load dump URLs or previous audit snapshots
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("aiseo_recent_searches");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed.length > 0 && !targetUrl) {
-          const latest = parsed[0];
-          const url = latest.url || `https://${latest.domain}`;
-          setTargetUrl(url);
-          setTargetBrand(latest.brand || "");
-          if (latest.snapshot?.detected_region) {
-            setDetectedRegion(latest.snapshot.detected_region);
-          }
-          if (latest.snapshot) {
-            setMatrixData(latest.snapshot);
-          } else {
-            handleFetchMatrix(url, "auto");
-          }
-        }
-      }
-    } catch (err) {
-      console.error("Failed to auto-load recent search into matrix:", err);
-    }
+    // Keep targetUrl and matrixData empty on initial load
+    // Comparison cards appear strictly when user inputs a URL and requests analysis
   }, []);
 
   const handleFetchMatrix = async (urlToFetch: string, regionOverride?: string) => {
@@ -411,7 +391,13 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
                 <input
                   type="url"
                   value={targetUrl}
-                  onChange={(event) => setTargetUrl(event.target.value)}
+                  onChange={(event) => {
+                    const val = event.target.value;
+                    setTargetUrl(val);
+                    if (!val.trim()) {
+                      setMatrixData(null);
+                    }
+                  }}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" && targetUrl.trim()) {
                       handleFetchMatrix(targetUrl, selectedRegion);
@@ -800,28 +786,57 @@ export const ComparisonMatrixTab: React.FC<ComparisonMatrixTabProps> = ({
                 </div>
               </div>
 
-              {/* Action Buttons matching screenshot */}
+              {/* Fully functional operational controls */}
               <div className="space-y-2 pt-2">
                 <button
                   onClick={() => {
-                    const crawlBtn = document.querySelector('button[name="crawl-tab"]');
-                    if (crawlBtn) (crawlBtn as any).click();
+                    if (matrixData && matrixData.leaderboard.length > 0) {
+                      const newComps: CompetitorTarget[] = matrixData.leaderboard
+                        .filter((item) => !item.is_target)
+                        .slice(0, 4)
+                        .map((item, idx) => ({
+                          id: `comp-${idx}-${Date.now()}`,
+                          url: `https://${item.domain}`,
+                          brand: item.brand,
+                        }));
+                      setCompetitors(newComps);
+                      setTimeout(() => handleRunComparison(), 100);
+                    }
                   }}
                   className={`w-full py-3 px-4 ${uiStyles.button.primary}`}
                 >
-                  <span>{isRtl ? "بدء تجربة التحسين المجانية" : "Start free trial"}</span>
+                  <Scale className="w-4 h-4" />
+                  <span>{isRtl ? "مقارنة تفصيلية لجميع المنافسين" : "Compare All Competitors Head-to-Head"}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
 
                 <button
                   onClick={() => window.print()}
-                  className="w-full py-2.5 px-4 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-2.5 px-4 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>{isRtl ? "طلب استعراض تفصيلي (Book a Demo)" : "Book a demo"}</span>
+                  <BarChart3 className="w-3.5 h-3.5" />
+                  <span>{isRtl ? "تصدير تقرير المقارنة" : "Export Comparison Report"}</span>
                 </button>
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Clean initial empty-state when no URL has been analyzed yet */}
+      {!matrixData && !comparedData && !matrixLoading && (
+        <div className="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-8 sm:p-12 text-center bg-slate-50/50 dark:bg-slate-800/30 space-y-3">
+          <div className="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center mx-auto shadow-sm">
+            <Scale className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
+            {isRtl ? "ابدأ مقارنة موقعك ضد المنافسين" : "Ready to Compare Your Brand vs. Rivals"}
+          </h3>
+          <p className="text-xs text-slate-500 max-w-md mx-auto">
+            {isRtl
+              ? "أدخل رابط موقعك أعلاه للبدء في تحليل معدلات الذكر التنافسية واستفسارات محركات الذكاء الاصطناعي."
+              : "Enter your target website URL above to analyze competitive mention rates, citation displacement, and AI prompts across global engines."}
+          </p>
         </div>
       )}
 

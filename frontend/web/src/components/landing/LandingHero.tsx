@@ -97,6 +97,20 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           <div className="pl-4 text-slate-400">
             <Globe2 className="w-4 h-4" />
           </div>
+          {/* Honeypot anti-scraping trap field (hidden from human users, traps automated scrapers) */}
+          <input
+            type="text"
+            name="_sec_audit_trap"
+            tabIndex={-1}
+            aria-hidden="true"
+            autoComplete="off"
+            className="hidden opacity-0 absolute w-0 h-0 pointer-events-none"
+            onChange={(e) => {
+              if (e.target.value) {
+                fetch("/api/v1/security/honeypot", { method: "POST" });
+              }
+            }}
+          />
           <input
             type="url"
             value={urlInput}

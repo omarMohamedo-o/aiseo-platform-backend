@@ -31,6 +31,7 @@
 | **18** | **Zero Business Logic Invariant (UI & Database)** (UI is pure presentation, DB is pure storage; 100% business logic in Domain Services) | ✅ Done | 100% |
 | **19** | **Enterprise Citation Matrix & Conversion Funnel** (Scrunch-style single-input bar, dynamic domain logo ingestion, local/global mention rate leaderboard) | ✅ Done | 100% |
 | **20** | **Enterprise CI/CD & Organization Governance** (Automated GitHub Actions lint/test workflows, branch protection rules, auto-issue assignment) | 🔄 In Progress | 85% |
+| **31** | **Enterprise Anti-Scraping Service & Edge Protection & Clean Compare State** (Defense-in-depth bot shield, robots.txt, rate limits, zero dummy data in compare) | 🔄 In Progress | 0% |
 
 ---
 
@@ -301,4 +302,23 @@
 - [x] Organization branch protection guidelines on `main` branch.
 - [x] Automated GitHub Actions workflows for continuous integration (linting with `ruff` & `eslint`, static typing, and tests).
 - [x] Automated issue assignment and community health standards under `@omarMohamedo-o`.
+
+---
+
+### 31 - Enterprise Anti-Scraping Service & Edge Protection & Clean Compare State
+- [ ] Layer 1: Edge Security & Crawler Rules:
+  - Add `frontend/web/public/robots.txt` disallowing `/api/`, `/dashboard/`, `/matrix/`, and blocking aggressive AI harvesting bots (`GPTBot`, `ClaudeBot`, `Bytespider`, `CCBot`).
+  - Add strict enterprise security headers in `vercel.json` (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=()`, `X-Robots-Tag: noindex, nofollow` on `/api/*`).
+- [ ] Layer 2: Pluggable Backend Anti-Scraping & Bot Mitigation Service:
+  - Create `src/aiseo/api/middleware/anti_scraping.py` implementing `AntiScrapingMiddleware`.
+  - Bad Bot User-Agent detection (blocks `Scrapy`, `curl`, `python-requests`, `aiohttp`, `Wget`, `Go-http-client`, headless scrapers).
+  - Sliding-window rate limiter per client IP for public audit endpoints (max 10 requests / 60 seconds).
+  - Honeypot trap route (`/api/v1/security/honeypot`) that automatically flags offending client IPs.
+  - Register middleware in `src/aiseo/api/app.py`.
+- [ ] Layer 3: Clean Compare Tab UX Invariant:
+  - Remove auto-sync of previous audit snapshots (`localStorage`) into `ComparisonMatrixTab`.
+  - Ensure Compare tab loads with clean empty input state without rendering hardcoded or previous cards.
+  - Benchmark card renders strictly when the user enters a valid URL and triggers analysis.
+  - Remove marketing CTA buttons ("Start free trial" and "Book a demo") from the authenticated Compare dashboard.
+  - Replace them with fully working operational controls: "Run Multi-Domain Head-to-Head Comparison" and "Export Comparison Report".
 
