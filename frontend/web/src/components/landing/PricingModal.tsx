@@ -1,6 +1,7 @@
 import React from "react";
 import { X, CheckCircle2 } from "lucide-react";
 import { platformPricingTiers } from "@/config/navigationContent";
+import { brandColors, uiStyles } from "@/config/designSystem";
 
 interface PricingModalProps {
   isOpen: boolean;
@@ -17,10 +18,13 @@ export const PricingModal: React.FC<PricingModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto">
-      <div className="relative my-auto bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 max-w-4xl w-full shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto animate-in fade-in duration-200">
+      <div
+        style={{ backgroundColor: brandColors.windowBg }}
+        className="relative my-auto bg-[#FAF9F5] border border-[#E8E6E1] rounded-3xl p-6 sm:p-10 max-w-4xl w-full shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto animate-in fade-in duration-200"
+      >
         <button
           onClick={onClose}
-          className="absolute right-5 top-5 p-1 rounded-full text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-all cursor-pointer"
+          className="absolute right-5 top-5 p-1 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#EFECE4] transition-all cursor-pointer"
           aria-label="Close pricing"
         >
           <X className="w-5 h-5" />
@@ -44,8 +48,8 @@ export const PricingModal: React.FC<PricingModalProps> = ({
               key={tier.name}
               className={`rounded-2xl p-5 sm:p-6 flex flex-col justify-between border ${
                 tier.highlight
-                  ? "bg-slate-50/70 border-blue-500 shadow-md relative ring-1 ring-blue-500"
-                  : "bg-white border-slate-200"
+                  ? "bg-white border-blue-500 shadow-md relative ring-1 ring-blue-500"
+                  : "bg-[#F5F2EB] border-[#E8E6E1]"
               }`}
             >
               {tier.highlight && (
@@ -65,7 +69,7 @@ export const PricingModal: React.FC<PricingModalProps> = ({
                   <span className="text-xs font-mono text-slate-500">{tier.period}</span>
                 </div>
 
-                <div className="space-y-2 pt-3 border-t border-slate-100">
+                <div className="space-y-2 pt-3 border-t border-[#E8E6E1]">
                   {tier.features.map((feature, featureIndex) => (
                     <div key={featureIndex} className="flex items-start gap-2 text-xs text-slate-700">
                       <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />

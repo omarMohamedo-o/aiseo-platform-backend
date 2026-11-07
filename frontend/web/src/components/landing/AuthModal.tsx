@@ -3,6 +3,7 @@ import { X, LogIn, Lock, Mail, User, Globe2, ArrowRight } from "lucide-react";
 import { apiClient } from "@/api/client";
 import { PlatformBrandLogo } from "../brand/PlatformBrandLogo";
 import { appConfig } from "@/config/appConfig";
+import { brandColors } from "@/config/designSystem";
 
 export type AuthMode = "login" | "signup";
 
@@ -57,10 +58,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 backdrop-blur-sm p-4 animate-in fade-in duration-150 auth-modal-backdrop">
-      <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-2xl max-w-md w-full relative space-y-6 auth-modal-content">
+      <div
+        style={{ backgroundColor: brandColors.windowBg }}
+        className="bg-[#FAF9F5] rounded-3xl border border-[#E8E6E1] p-8 shadow-2xl max-w-md w-full relative space-y-6 auth-modal-content"
+      >
         <button
           onClick={onClose}
-          className="absolute right-5 top-5 text-slate-400 hover:text-slate-700 transition-colors"
+          className="absolute right-5 top-5 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
           aria-label="Close modal"
         >
           <X className="w-5 h-5" />
@@ -86,17 +90,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </div>
 
         {/* Tab Switcher: 2 Distinct Modes */}
-        <div className="flex p-1 bg-slate-100 rounded-xl">
+        <div className="flex p-1 bg-[#EFECE4] rounded-xl border border-[#E8E6E1]">
           <button
             type="button"
             onClick={() => {
               setMode("login");
               setAuthError("");
             }}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
               mode === "login"
-                ? "bg-white text-slate-900 shadow-xs"
-                : "text-slate-500 hover:text-slate-800"
+                ? "bg-[#FAF9F5] text-slate-900 shadow-xs border border-[#E8E6E1]"
+                : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Sign In
@@ -107,10 +111,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               setMode("signup");
               setAuthError("");
             }}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
               mode === "signup"
-                ? "bg-white text-slate-900 shadow-xs"
-                : "text-slate-500 hover:text-slate-800"
+                ? "bg-[#FAF9F5] text-slate-900 shadow-xs border border-[#E8E6E1]"
+                : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Sign Up

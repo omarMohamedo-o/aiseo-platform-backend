@@ -1,6 +1,7 @@
 import React from "react";
 import { X, CheckCircle2 } from "lucide-react";
 import { NavigationFeatureItem } from "@/config/navigationContent";
+import { brandColors } from "@/config/designSystem";
 
 interface NavDetailModalProps {
   item: NavigationFeatureItem | null;
@@ -17,7 +18,10 @@ export const NavDetailModal: React.FC<NavDetailModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 backdrop-blur-sm p-4">
-      <div className="bg-white border border-slate-200 rounded-3xl p-7 max-w-lg w-full relative shadow-2xl space-y-5 animate-in fade-in duration-150">
+      <div
+        style={{ backgroundColor: brandColors.windowBg }}
+        className="bg-[#FAF9F5] border border-[#E8E6E1] rounded-3xl p-7 max-w-lg w-full relative shadow-2xl space-y-5 animate-in fade-in duration-150"
+      >
         <button
           onClick={onClose}
           className="absolute right-5 top-5 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
@@ -37,7 +41,7 @@ export const NavDetailModal: React.FC<NavDetailModalProps> = ({
           </p>
         </div>
 
-        <div className="space-y-2 pt-2 border-t border-slate-100">
+        <div className="space-y-2 pt-2 border-t border-[#E8E6E1]">
           <span className="text-xs font-semibold text-slate-700">
             Key Technical Deliverables:
           </span>

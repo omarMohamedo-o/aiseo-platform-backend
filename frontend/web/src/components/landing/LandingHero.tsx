@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Globe2, RefreshCw, ArrowRight, History, X, Sparkles } from "lucide-react";
+import { brandColors } from "@/config/designSystem";
 
 export interface RecentSearchItem {
   domain: string;
@@ -135,10 +136,10 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         {/* Custom Styled Recent Searches Dropdown */}
         {showRecentMenu && recentSearches.length > 0 && (
           <div
-            style={{ backgroundColor: "#ffffff" }}
-            className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+            style={{ backgroundColor: brandColors.windowBg }}
+            className="absolute left-0 right-0 top-full mt-2 bg-[#FAF9F5] border border-[#E8E6E1] rounded-2xl shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
           >
-            <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
+            <div className="px-4 py-2 border-b border-[#E8E6E1] flex items-center justify-between text-xs text-slate-400 font-medium">
               <span className="flex items-center gap-1.5 font-semibold text-slate-600">
                 <History className="w-3.5 h-3.5 text-blue-600" />
                 Recent Websites Audited
@@ -151,12 +152,12 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               </button>
             </div>
 
-            <div className="max-h-60 overflow-y-auto divide-y divide-slate-50">
+            <div className="max-h-60 overflow-y-auto divide-y divide-[#E8E6E1]/50">
               {recentSearches.map((item, index) => (
                 <button
                   key={`${item.domain}-${index}`}
                   onClick={() => handleSelectRecent(item)}
-                  className="w-full text-left px-4 py-2.5 hover:bg-blue-50/60 transition-colors flex items-center justify-between group cursor-pointer"
+                  className="w-full text-left px-4 py-2.5 hover:bg-[#F2EFE9] transition-colors flex items-center justify-between group cursor-pointer"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     {item.logoUrl ? (

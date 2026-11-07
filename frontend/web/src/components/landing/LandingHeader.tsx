@@ -10,6 +10,7 @@ import { PlatformBrandLogo } from "../brand/PlatformBrandLogo";
 import { appConfig } from "@/config/appConfig";
 import { PricingModal } from "./PricingModal";
 import { NavDetailModal } from "./NavDetailModal";
+import { brandColors } from "@/config/designSystem";
 
 interface LandingHeaderProps {
   onOpenAuth: (mode?: "login" | "signup") => void;
@@ -75,10 +76,10 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
 
           {activeMenu === "product" && (
             <div
-              style={{ backgroundColor: "#ffffff" }}
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-2.5 w-[580px] max-w-[calc(100vw-2rem)] bg-white border border-slate-200 rounded-3xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+              style={{ backgroundColor: brandColors.windowBg }}
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-2.5 w-[580px] max-w-[calc(100vw-2rem)] bg-[#FAF9F5] border border-[#E8E6E1] rounded-3xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
             >
-              <div className="px-3 pb-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold border-b border-slate-100 flex items-center justify-between">
+              <div className="px-3 pb-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold border-b border-[#E8E6E1] flex items-center justify-between">
                 <span>Platform Capabilities</span>
                 <span className="text-blue-600 font-sans font-semibold text-[11px] normal-case">
                   4 AI Engines Supported
@@ -94,9 +95,9 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
                         setActiveMenu(null);
                         setActiveDetailModal(item);
                       }}
-                      className="w-full text-left p-3 rounded-2xl hover:bg-slate-50 transition-all flex items-start gap-3 group border border-transparent hover:border-slate-100 cursor-pointer"
+                      className="w-full text-left p-3 rounded-2xl hover:bg-[#F2EFE9] transition-all flex items-start gap-3 group border border-transparent hover:border-[#E8E6E1]/60 cursor-pointer"
                     >
-                      <div className="p-2 rounded-xl bg-slate-100 text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                      <div className="p-2 rounded-xl bg-[#EFECE4] text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
                         <IconComponent className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">
@@ -133,10 +134,10 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
 
           {activeMenu === "usecases" && (
             <div
-              style={{ backgroundColor: "#ffffff" }}
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-2.5 w-[580px] max-w-[calc(100vw-2rem)] bg-white border border-slate-200 rounded-3xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+              style={{ backgroundColor: brandColors.windowBg }}
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-2.5 w-[580px] max-w-[calc(100vw-2rem)] bg-[#FAF9F5] border border-[#E8E6E1] rounded-3xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
             >
-              <div className="px-3 pb-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold border-b border-slate-100 flex items-center justify-between">
+              <div className="px-3 pb-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold border-b border-[#E8E6E1] flex items-center justify-between">
                 <span>Industry Solutions</span>
                 <span className="text-blue-600 font-sans font-semibold text-[11px] normal-case">
                   Enterprise Ready
@@ -152,9 +153,9 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
                         setActiveMenu(null);
                         setActiveDetailModal(item);
                       }}
-                      className="w-full text-left p-3 rounded-2xl hover:bg-slate-50 transition-all flex items-start gap-3 group border border-transparent hover:border-slate-100 cursor-pointer"
+                      className="w-full text-left p-3 rounded-2xl hover:bg-[#F2EFE9] transition-all flex items-start gap-3 group border border-transparent hover:border-[#E8E6E1]/60 cursor-pointer"
                     >
-                      <div className="p-2 rounded-xl bg-slate-100 text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                      <div className="p-2 rounded-xl bg-[#EFECE4] text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
                         <IconComponent className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">
@@ -191,10 +192,10 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
 
           {activeMenu === "resources" && (
             <div
-              style={{ backgroundColor: "#ffffff" }}
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-2.5 w-[560px] max-w-[calc(100vw-2rem)] bg-white border border-slate-200 rounded-3xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+              style={{ backgroundColor: brandColors.windowBg }}
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-2.5 w-[560px] max-w-[calc(100vw-2rem)] bg-[#FAF9F5] border border-[#E8E6E1] rounded-3xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
             >
-              <div className="px-3 pb-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold border-b border-slate-100 flex items-center justify-between">
+              <div className="px-3 pb-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold border-b border-[#E8E6E1] flex items-center justify-between">
                 <span>Documentation & Research</span>
                 <span className="text-blue-600 font-sans font-semibold text-[11px] normal-case">
                   v1.0 Specifications
@@ -210,9 +211,9 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({
                         setActiveMenu(null);
                         setActiveDetailModal(item);
                       }}
-                      className="w-full text-left p-3 rounded-2xl hover:bg-slate-50 transition-all flex items-start gap-3 group border border-transparent hover:border-slate-100 cursor-pointer"
+                      className="w-full text-left p-3 rounded-2xl hover:bg-[#F2EFE9] transition-all flex items-start gap-3 group border border-transparent hover:border-[#E8E6E1]/60 cursor-pointer"
                     >
-                      <div className="p-2 rounded-xl bg-slate-100 text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                      <div className="p-2 rounded-xl bg-[#EFECE4] text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
                         <IconComponent className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">

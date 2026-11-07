@@ -6,7 +6,33 @@
  * Copyright (c) 2026 Omar Mohamed (@omarMohamedo-o). All Rights Reserved.
  */
 
+export const brandColors = {
+  pageBg: "#FAF9F5",
+  pageBorder: "#E8E6E1",
+  windowBg: "#FAF9F5",
+  windowBorder: "#E8E6E1",
+  itemHover: "#F2EFE9",
+  iconBg: "#EFECE4",
+  textPrimary: "#0f172a",
+  textSecondary: "#475569",
+  textMuted: "#64748b",
+  accentBlue: "#2563eb",
+} as const;
+
 export const uiStyles = {
+  // Landing Windows & Popovers (Guaranteed exact page background match)
+  window: {
+    popover:
+      "bg-[#FAF9F5] border border-[#E8E6E1] rounded-3xl shadow-2xl p-4 z-50",
+    modal:
+      "bg-[#FAF9F5] border border-[#E8E6E1] rounded-3xl shadow-2xl",
+    item:
+      "w-full text-left p-3 rounded-2xl hover:bg-[#F2EFE9] transition-all flex items-start gap-3 group border border-transparent hover:border-[#E8E6E1]/60 cursor-pointer",
+    iconBox:
+      "p-2 rounded-xl bg-[#EFECE4] text-slate-700 shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors",
+    divider:
+      "border-b border-[#E8E6E1]",
+  },
   // Pill / Segmented Controls & Multi-option Switchers
   segmented: {
     container:

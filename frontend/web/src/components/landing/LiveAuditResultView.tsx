@@ -3,6 +3,7 @@ import { LogIn, ArrowRight } from "lucide-react";
 import { CompetitorMatrixResponse, CompetitorMatrixItem } from "@/api/client";
 import { PlatformBrandLogo } from "../brand/PlatformBrandLogo";
 import { appConfig } from "@/config/appConfig";
+import { brandColors } from "@/config/designSystem";
 
 interface LiveAuditResultViewProps {
   auditResult: CompetitorMatrixResponse;
@@ -114,7 +115,8 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
       {/* Main Reference White Card */}
       <div
         ref={cardRef}
-        className="w-full rounded-3xl bg-white border border-slate-200/80 p-8 sm:p-12 shadow-sm space-y-8"
+        style={{ backgroundColor: brandColors.windowBg }}
+        className="w-full rounded-3xl bg-[#FAF9F5] border border-[#E8E6E1] p-8 sm:p-12 shadow-sm space-y-8"
       >
         {/* Brand Header */}
         <div className="flex items-center gap-4">
