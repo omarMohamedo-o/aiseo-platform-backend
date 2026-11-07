@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { apiClient, CompetitorMatrixResponse } from "@/api/client";
 import { LandingHeader } from "./landing/LandingHeader";
 import { LandingHero } from "./landing/LandingHero";
 import { LiveAuditResultView } from "./landing/LiveAuditResultView";
 import { AuthModal, AuthMode } from "./landing/AuthModal";
+import { uiStrings } from "@/config/uiStrings";
 
 interface LoginScreenProps {
   onLogin: () => void;
@@ -26,9 +27,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     setAuditResult(null);
     setAuditError(null);
     setUrlInput("");
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("domain");
+      window.history.replaceState({}, "", url.toString());
+    } catch {}
   };
 
-  const handleRunAudit = async (overrideUrl?: string) => {
+  const handleRunAudit = useCallback(async (overrideUrl?: string) => {
     const rawUrl = overrideUrl || urlInput;
     const targetUrl = rawUrl.trim();
     if (!targetUrl) return;
@@ -44,10 +50,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
       const response = await apiClient.fetchCompetitorMatrix(targetUrl);
       setAuditResult(response);
 
+      // Sync persistent shareable URL query param
+      const domain = response.target?.domain || targetUrl.replace(/^https?:\/\//i, "").split("/")[0];
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set("domain", domain);
+        window.history.replaceState({}, "", url.toString());
+      } catch {}
+
       // Save to recent searches for history and quick-fill
       try {
         const saved = JSON.parse(localStorage.getItem("aiseo_recent_searches") || "[]");
-        const domain = response.target?.domain || targetUrl.replace(/^https?:\/\//i, "").split("/")[0];
         const brand = response.target?.brand || domain;
         const logoUrl = response.target?.logo_url;
         const filtered = saved.filter((item: any) => item.domain.toLowerCase() !== domain.toLowerCase());
@@ -65,7 +78,22 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     } finally {
       setIsAuditing(false);
     }
-  };
+  }, [urlInput]);
+
+  // Handle persistent shareable audit links (?domain=example.com) on initial mount
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const domainParam = params.get("domain") || params.get("url") || params.get("audit");
+      if (domainParam && domainParam.trim()) {
+        const cleaned = domainParam.trim();
+        setUrlInput(cleaned);
+        handleRunAudit(cleaned);
+      }
+    } catch (err) {
+      console.error("Failed to parse shareable URL param", err);
+    }
+  }, [handleRunAudit]);
 
   return (
     <div className="min-h-screen bg-[#FAF9F5] text-slate-900 font-sans flex flex-col selection:bg-blue-600 selection:text-white relative">

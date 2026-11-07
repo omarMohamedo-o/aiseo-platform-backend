@@ -70,8 +70,13 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
   return (
     <div className="space-y-8 text-center max-w-2xl mx-auto flex flex-col items-center">
-      {/* Editorial Headline */}
-      <div className="space-y-4">
+      {/* Editorial Headline with Unified Stack Pill */}
+      <div className="space-y-4 flex flex-col items-center">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold shadow-2xs">
+          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+          <span>{uiStrings.landing.hero.pillText}</span>
+        </div>
+
         <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-serif tracking-tight text-slate-900 leading-[1.12]">
           {uiStrings.landing.hero.titlePrefix}
           <span className="italic block font-normal text-slate-800 mt-1">
@@ -194,6 +199,11 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         {auditError && (
           <p className="text-xs text-rose-600 font-medium px-4 text-center">{auditError}</p>
         )}
+
+        {/* Speed & Trust Indicator */}
+        <p className="text-center text-[11px] text-slate-500 font-sans select-none pt-2">
+          {uiStrings.landing.hero.trustBadge}
+        </p>
       </div>
     </div>
   );

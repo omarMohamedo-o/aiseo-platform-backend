@@ -36,8 +36,8 @@ export interface PricingTierItem {
 
 export const platformProductItems: NavigationFeatureItem[] = [
   {
-    title: "Multi-Engine Audit",
-    description: "Empirical benchmarking across ChatGPT, Gemini, Claude, and Perplexity.",
+    title: "Generative Engine Optimization (GEO)",
+    description: "Empirical benchmarking & citation share across ChatGPT, Gemini, Claude, and Perplexity.",
     icon: Cpu,
     color: "text-emerald-400",
     features: [
@@ -58,25 +58,25 @@ export const platformProductItems: NavigationFeatureItem[] = [
     ],
   },
   {
-    title: "Competitor Benchmark Matrix",
-    description: "Discover true industry rivals extracted from live AI search queries.",
+    title: "GLLM Latent Intent & Decomposer",
+    description: "Multi-turn neural query decomposition and semantic associative PageRank mining.",
     icon: Zap,
     color: "text-purple-400",
     features: [
-      "Dynamic competitor extraction via multi-engine consensus",
-      "Comparative mention rate leaderboard",
-      "Category dominance and displacement alerts",
+      "Latent intent cluster expansion and entity graphs",
+      "Dynamic association mining across consumer query vectors",
+      "Stochastic prompt variation testing and hallucination shields",
     ],
   },
   {
-    title: "Grounding Guard & Content Crawler",
-    description: "Autonomous crawler identifying content gaps and AI crawler barriers.",
+    title: "Technical SEO & Site Health Crawler",
+    description: "Autonomous multi-segment crawler verifying AI crawler barriers and organic indexing.",
     icon: ShieldCheck,
     color: "text-teal-400",
     features: [
-      "Robots.txt & bot-user-agent accessibility verification",
-      "Schema markup validation for AI crawlers (GPTBot, ClaudeBot)",
-      "Hallucination resistance auditing",
+      "Crawler segment matrix (PDP, No-JS Mobile, Desktop JS)",
+      "Robots.txt & bot-user-agent accessibility (GPTBot, ClaudeBot)",
+      "Google Search Console click & impression correlation",
     ],
   },
 ];
