@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import { apiClient, CrawlAndAnalyzeResult, PageAuditItem, StrategicRecommendation } from "@/api/client";
 import { Language, translations } from "@/i18n/translations";
+import { PageInspectorModal } from "./PageInspectorModal";
 import { extractBrandFromUrl } from "../compare/ComparisonMatrixTab";
 
 interface LiveWebsiteCrawlTabProps {
@@ -590,137 +591,12 @@ export const LiveWebsiteCrawlTab: React.FC<LiveWebsiteCrawlTabProps> = ({
           </div>
 
           {/* Interactive Inspect Modal */}
-          {inspectedPage && (
-            <div
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white dark:bg-slate-900 backdrop-blur-xs animate-in fade-in duration-150"
-              onClick={() => setInspectedPage(null)}
-            >
-              <div
-                className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 flex items-center justify-center text-blue-600">
-                      <FileSearch className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-slate-900 dark:text-slate-50 font-mono">{inspectedPage.path}</h3>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-md">{inspectedPage.title}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <a
-                      href={inspectedPage.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
-                    >
-                      <ExternalLink className="w-3 h-3" />
-                      <span>Visit Page</span>
-                    </a>
-                    <button
-                      onClick={() => setInspectedPage(null)}
-                      className="w-8 h-8 rounded-lg hover:bg-slate-200 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300 flex items-center justify-center transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-6 space-y-4 overflow-y-auto">
-                  {/* Quick Badges */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                      <span className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 block">Visibility</span>
-                      <span className="text-lg font-bold text-emerald-700 font-mono">{inspectedPage.visibility_score}%</span>
-                    </div>
-                    <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                      <span className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 block">Opportunity</span>
-                      <span className="text-lg font-bold text-blue-700 font-mono">{inspectedPage.opportunity_score}/100</span>
-                    </div>
-                    <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                      <span className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 block">Characters</span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-slate-50 font-mono">{inspectedPage.characters_count.toLocaleString()}</span>
-                    </div>
-                    <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                      <span className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 block">Word Count</span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-slate-50 font-mono">{(inspectedPage.technical_signals?.word_count || 0).toLocaleString()}</span>
-                    </div>
-                  </div>
-
-                  {/* Page Technical Signals */}
-                  {inspectedPage.technical_signals && (
-                    <div className="space-y-2">
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-slate-50 uppercase font-mono flex items-center gap-1.5">
-                        <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
-                        Technical Signals
-                      </h4>
-                      <div className="grid grid-cols-2 gap-2">
-                        <SignalBadge ok={!!inspectedPage.technical_signals.has_schema_org} label="Schema.org" />
-                        <SignalBadge ok={!!inspectedPage.technical_signals.has_opengraph} label="OpenGraph" />
-                        <SignalBadge ok={!!inspectedPage.technical_signals.has_meta_description} label="Meta Description" />
-                        <SignalBadge ok={!!inspectedPage.technical_signals.has_h1} label="H1 Heading" />
-                        <SignalBadge ok={!!inspectedPage.technical_signals.has_heading_hierarchy} label="Heading Hierarchy" />
-                        <SignalBadge ok={!!inspectedPage.technical_signals.has_faq_content} label="FAQ Content" />
-                        <SignalBadge ok={!!inspectedPage.technical_signals.has_canonical} label="Canonical URL" />
-                        <SignalBadge ok={!!inspectedPage.technical_signals.has_alt_text} label="Image Alt Text" />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Page Recommendations */}
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-slate-50 uppercase font-mono flex items-center gap-1.5">
-                      <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
-                      {t.perPage.specificRecsTitle}
-                    </h4>
-                    <div className="space-y-1.5">
-                      {inspectedPage.recommendations.map((rec, rIdx) => (
-                        <div key={rIdx} className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 flex items-start gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                          <span>{rec}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Extracted Text */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-slate-50 uppercase font-mono flex items-center gap-1.5">
-                        <FileText className="w-3.5 h-3.5 text-blue-600" />
-                        {t.perPage.extractedTextTitle}
-                      </h4>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(inspectedPage.sample_text);
-                          setCopiedText(true);
-                          setTimeout(() => setCopiedText(false), 2000);
-                        }}
-                        className="text-[11px] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50 flex items-center gap-1 transition-colors"
-                      >
-                        {copiedText ? (
-                          <>
-                            <Check className="w-3 h-3 text-emerald-600" />
-                            <span className="text-emerald-600">Copied</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-3 h-3" />
-                            <span>Copy Text</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                    <div className="p-3.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 font-mono max-h-56 overflow-y-auto whitespace-pre-wrap leading-relaxed">
-                      {inspectedPage.sample_text}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          <PageInspectorModal
+            page={inspectedPage}
+            onClose={() => setInspectedPage(null)}
+            specificRecsTitle={t.perPage.specificRecsTitle}
+            extractedTextTitle={t.perPage.extractedTextTitle}
+          />
 
           {/* Generated Questions */}
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xs overflow-hidden">
