@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { apiClient, CompetitorMatrixResponse } from "@/api/client";
 import { LandingHeader } from "./landing/LandingHeader";
 import { LandingHero } from "./landing/LandingHero";
-import { NeuralScannerVisual } from "./landing/NeuralScannerVisual";
 import { LiveAuditResultView } from "./landing/LiveAuditResultView";
 import { AuthModal, AuthMode } from "./landing/AuthModal";
 
@@ -29,9 +28,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     setUrlInput("");
   };
 
-  const handleRunAudit = async () => {
-    const targetUrl = urlInput.trim();
+  const handleRunAudit = async (overrideUrl?: string) => {
+    const rawUrl = overrideUrl || urlInput;
+    const targetUrl = rawUrl.trim();
     if (!targetUrl) return;
+
+    if (overrideUrl) {
+      setUrlInput(overrideUrl);
+    }
 
     setIsAuditing(true);
     setAuditError(null);
@@ -39,6 +43,22 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     try {
       const response = await apiClient.fetchCompetitorMatrix(targetUrl);
       setAuditResult(response);
+
+      // Save to recent searches for history and quick-fill
+      try {
+        const saved = JSON.parse(localStorage.getItem("aiseo_recent_searches") || "[]");
+        const domain = response.target?.domain || targetUrl.replace(/^https?:\/\//i, "").split("/")[0];
+        const brand = response.target?.brand || domain;
+        const logoUrl = response.target?.logo_url;
+        const filtered = saved.filter((item: any) => item.domain.toLowerCase() !== domain.toLowerCase());
+        const updated = [
+          { domain, brand, logoUrl, timestamp: new Date().toISOString(), url: targetUrl },
+          ...filtered,
+        ].slice(0, 10);
+        localStorage.setItem("aiseo_recent_searches", JSON.stringify(updated));
+      } catch (storageErr) {
+        console.error("Failed to update recent searches", storageErr);
+      }
     } catch (errorContext) {
       console.error("Audit benchmark error:", errorContext);
       setAuditError("Unable to complete live audit for this domain. Please verify the URL.");
@@ -56,22 +76,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
       />
 
       {/* Main Viewport Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-14 py-12 lg:py-16 relative z-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-14 py-12 lg:py-20 relative z-10">
         {!auditResult ? (
-          /* Landing Hero State with Right Browser Mockup */
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center pt-2">
-            <div className="lg:col-span-6">
-              <LandingHero
-                urlInput={urlInput}
-                setUrlInput={setUrlInput}
-                isAuditing={isAuditing}
-                auditError={auditError}
-                onRunAudit={handleRunAudit}
-              />
-            </div>
-            <div className="lg:col-span-6 flex justify-center">
-              <NeuralScannerVisual />
-            </div>
+          /* Centered Editorial Landing Hero */
+          <div className="max-w-3xl mx-auto pt-4 sm:pt-8 pb-12 flex flex-col items-center">
+            <LandingHero
+              urlInput={urlInput}
+              setUrlInput={setUrlInput}
+              isAuditing={isAuditing}
+              auditError={auditError}
+              onRunAudit={handleRunAudit}
+            />
           </div>
         ) : (
           /* Live Dynamic Audit View */
