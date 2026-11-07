@@ -2,6 +2,7 @@ import React from "react";
 import { Sparkles, Bot, Zap, Globe, Cpu } from "lucide-react";
 import { brandColors } from "@/config/designSystem";
 import { uiStrings } from "@/config/uiStrings";
+import { EngineBreakdownItem } from "@/api/client";
 
 export interface EngineMetric {
   id: string;
@@ -18,56 +19,75 @@ interface EngineBreakdownCardProps {
   targetDomain: string;
   targetBrand: string;
   baseMentionRate?: number;
+  engineMetrics?: EngineBreakdownItem[];
 }
 
 export const EngineBreakdownCard: React.FC<EngineBreakdownCardProps> = ({
   targetDomain,
   targetBrand,
   baseMentionRate = 14,
+  engineMetrics,
 }) => {
-  // Deterministic engine distribution proportional to target mention rate
-  const engines: EngineMetric[] = [
-    {
-      id: "chatgpt",
-      name: uiStrings.engineBreakdown.engines.chatgpt,
-      icon: Bot,
-      mentionRate: Math.max(3, Math.round(baseMentionRate * 0.85)),
-      avgPosition: 2.7,
-      status: baseMentionRate > 20 ? "optimal" : "gapped",
-      fillColor: "bg-emerald-500",
-      badgeBg: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    },
-    {
-      id: "gemini",
-      name: uiStrings.engineBreakdown.engines.gemini,
-      icon: Sparkles,
-      mentionRate: Math.max(5, Math.round(baseMentionRate * 1.3)),
-      avgPosition: 2.1,
-      status: "optimal",
-      fillColor: "bg-blue-500",
-      badgeBg: "bg-blue-50 text-blue-700 border-blue-200",
-    },
-    {
-      id: "perplexity",
-      name: uiStrings.engineBreakdown.engines.perplexity,
-      icon: Zap,
-      mentionRate: Math.max(6, Math.round(baseMentionRate * 1.5)),
-      avgPosition: 1.8,
-      status: "optimal",
-      fillColor: "bg-cyan-500",
-      badgeBg: "bg-cyan-50 text-cyan-700 border-cyan-200",
-    },
-    {
-      id: "claude",
-      name: uiStrings.engineBreakdown.engines.claude,
-      icon: Cpu,
-      mentionRate: Math.max(2, Math.round(baseMentionRate * 0.6)),
-      avgPosition: 3.4,
-      status: "gapped",
-      fillColor: "bg-purple-500",
-      badgeBg: "bg-purple-50 text-purple-700 border-purple-200",
-    },
-  ];
+  const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    chatgpt: Bot,
+    gemini: Sparkles,
+    perplexity: Zap,
+    claude: Cpu,
+  };
+
+  const engines: EngineMetric[] = engineMetrics && engineMetrics.length > 0
+    ? engineMetrics.map((item) => ({
+        id: item.id,
+        name: item.name,
+        icon: iconMap[item.id] || Sparkles,
+        mentionRate: item.mention_rate,
+        avgPosition: item.avg_position,
+        status: item.status,
+        fillColor: item.fill_color || "bg-blue-500",
+        badgeBg: item.badge_bg || "bg-blue-50 text-blue-700 border-blue-200",
+      }))
+    : [
+        {
+          id: "chatgpt",
+          name: uiStrings.engineBreakdown.engines.chatgpt,
+          icon: Bot,
+          mentionRate: Math.max(3, Math.round(baseMentionRate * 0.95)),
+          avgPosition: 2.7,
+          status: baseMentionRate > 20 ? "optimal" : "gapped",
+          fillColor: "bg-emerald-500",
+          badgeBg: "bg-emerald-50 text-emerald-700 border-emerald-200",
+        },
+        {
+          id: "gemini",
+          name: uiStrings.engineBreakdown.engines.gemini,
+          icon: Sparkles,
+          mentionRate: Math.max(4, Math.round(baseMentionRate * 1.15)),
+          avgPosition: 2.1,
+          status: "optimal",
+          fillColor: "bg-blue-500",
+          badgeBg: "bg-blue-50 text-blue-700 border-blue-200",
+        },
+        {
+          id: "perplexity",
+          name: uiStrings.engineBreakdown.engines.perplexity,
+          icon: Zap,
+          mentionRate: Math.max(5, Math.round(baseMentionRate * 1.25)),
+          avgPosition: 1.8,
+          status: "optimal",
+          fillColor: "bg-cyan-500",
+          badgeBg: "bg-cyan-50 text-cyan-700 border-cyan-200",
+        },
+        {
+          id: "claude",
+          name: uiStrings.engineBreakdown.engines.claude,
+          icon: Cpu,
+          mentionRate: Math.max(2, Math.round(baseMentionRate * 0.7)),
+          avgPosition: 3.4,
+          status: "gapped",
+          fillColor: "bg-purple-500",
+          badgeBg: "bg-purple-50 text-purple-700 border-purple-200",
+        },
+      ];
 
   return (
     <div

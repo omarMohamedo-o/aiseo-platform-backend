@@ -346,14 +346,16 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
             targetDomain={auditResult.target.domain}
             targetBrand={auditResult.target.brand}
             baseMentionRate={auditResult.target_mention_rate}
+            engineMetrics={auditResult.engine_breakdown}
           />
 
           {/* Citation Sources Footnote Attribution Matrix */}
-          <CitationSourcesCard />
+          <CitationSourcesCard sources={auditResult.citation_sources} />
 
           {/* AI Sentiment & Hallucination Sentinel */}
           <SentimentSentinelCard
             targetBrand={auditResult.target.brand}
+            sentimentData={auditResult.sentiment_analysis}
             onOpenPlaybook={() => setIsPlaybookOpen(true)}
           />
         </div>

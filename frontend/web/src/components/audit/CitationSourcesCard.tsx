@@ -6,9 +6,12 @@ import { uiStrings } from "@/config/uiStrings";
 export interface CitationSourceItem {
   domain: string;
   type: "ugc" | "editorial" | "reference" | "corporate";
-  usedShare: number;
-  avgCitations: number;
+  usedShare?: number;
+  used_share?: number;
+  avgCitations?: number;
+  avg_citations?: number;
   iconUrl?: string;
+  icon_url?: string;
 }
 
 interface CitationSourcesCardProps {
@@ -19,30 +22,30 @@ const defaultSources: CitationSourceItem[] = [
   {
     domain: "reddit.com",
     type: "ugc",
-    usedShare: 32,
-    avgCitations: 4.1,
-    iconUrl: "https://www.google.com/s2/favicons?domain=reddit.com&sz=64",
+    used_share: 32,
+    avg_citations: 4.1,
+    icon_url: "https://www.google.com/s2/favicons?domain=reddit.com&sz=64",
   },
   {
     domain: "techradar.com",
     type: "editorial",
-    usedShare: 43,
-    avgCitations: 4.6,
-    iconUrl: "https://www.google.com/s2/favicons?domain=techradar.com&sz=64",
+    used_share: 43,
+    avg_citations: 4.6,
+    icon_url: "https://www.google.com/s2/favicons?domain=techradar.com&sz=64",
   },
   {
     domain: "wikipedia.org",
     type: "reference",
-    usedShare: 18,
-    avgCitations: 2.8,
-    iconUrl: "https://www.google.com/s2/favicons?domain=wikipedia.org&sz=64",
+    used_share: 18,
+    avg_citations: 2.8,
+    icon_url: "https://www.google.com/s2/favicons?domain=wikipedia.org&sz=64",
   },
   {
     domain: "youtube.com",
     type: "ugc",
-    usedShare: 12,
-    avgCitations: 1.9,
-    iconUrl: "https://www.google.com/s2/favicons?domain=youtube.com&sz=64",
+    used_share: 12,
+    avg_citations: 1.9,
+    icon_url: "https://www.google.com/s2/favicons?domain=youtube.com&sz=64",
   },
 ];
 
@@ -106,37 +109,43 @@ export const CitationSourcesCard: React.FC<CitationSourcesCardProps> = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-[#E8E6E1]/60 text-xs">
-            {sources.map((item, idx) => (
-              <tr key={idx} className="hover:bg-white/60 transition-colors">
-                <td className="py-2.5 px-2">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={item.iconUrl}
-                      alt={item.domain}
-                      className="w-4 h-4 rounded-full object-contain shrink-0"
-                    />
-                    <span className="font-mono font-medium text-slate-900">
-                      {item.domain}
+            {sources.map((item, idx) => {
+              const icon = item.icon_url || item.iconUrl || `https://www.google.com/s2/favicons?domain=${item.domain}&sz=64`;
+              const share = item.used_share ?? item.usedShare ?? 25;
+              const avg = (item.avg_citations ?? item.avgCitations ?? 3.5).toFixed(1);
+
+              return (
+                <tr key={idx} className="hover:bg-white/60 transition-colors">
+                  <td className="py-2.5 px-2">
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={icon}
+                        alt={item.domain}
+                        className="w-4 h-4 rounded-full object-contain shrink-0"
+                      />
+                      <span className="font-mono font-medium text-slate-900">
+                        {item.domain}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="py-2.5 px-2">
+                    <span
+                      className={`px-2 py-0.5 rounded-md border text-[10px] font-medium ${getTypeBadge(
+                        item.type
+                      )}`}
+                    >
+                      {getTypeText(item.type)}
                     </span>
-                  </div>
-                </td>
-                <td className="py-2.5 px-2">
-                  <span
-                    className={`px-2 py-0.5 rounded-md border text-[10px] font-medium ${getTypeBadge(
-                      item.type
-                    )}`}
-                  >
-                    {getTypeText(item.type)}
-                  </span>
-                </td>
-                <td className="py-2.5 px-2 text-right font-mono font-bold text-slate-900">
-                  {item.usedShare}%
-                </td>
-                <td className="py-2.5 px-2 text-right font-mono text-slate-600">
-                  {item.avgCitations.toFixed(1)}
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td className="py-2.5 px-2 text-right font-mono font-bold text-slate-900">
+                    {share}%
+                  </td>
+                  <td className="py-2.5 px-2 text-right font-mono text-slate-600">
+                    {avg}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

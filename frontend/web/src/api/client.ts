@@ -354,6 +354,33 @@ export interface TargetDomainProfile {
   business_scope: string;
 }
 
+export interface EngineBreakdownItem {
+  id: string;
+  name: string;
+  mention_rate: number;
+  avg_position: number;
+  status: "optimal" | "gapped";
+  fill_color?: string;
+  badge_bg?: string;
+}
+
+export interface CitationSourceItem {
+  domain: string;
+  type: "ugc" | "editorial" | "reference" | "corporate";
+  used_share: number;
+  avg_citations: number;
+  icon_url?: string;
+}
+
+export interface SentimentAnalysisResult {
+  favorable_pct: number;
+  neutral_pct: number;
+  critical_pct: number;
+  hallucination_detected: boolean;
+  severity: "High" | "Medium" | "Low";
+  issue_description: string;
+}
+
 export interface CompetitorMatrixResponse {
   target: TargetDomainProfile;
   detected_region: string;
@@ -364,6 +391,9 @@ export interface CompetitorMatrixResponse {
   target_mention_rate: number;
   top_competitor: string;
   gap_to_leader: number;
+  engine_breakdown?: EngineBreakdownItem[];
+  citation_sources?: CitationSourceItem[];
+  sentiment_analysis?: SentimentAnalysisResult;
 }
 
 
