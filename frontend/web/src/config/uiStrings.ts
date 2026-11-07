@@ -17,7 +17,7 @@ export const uiStrings = {
       password: "Password",
     },
     placeholders: {
-      fullName: "",
+      fullName: "Your name",
       companyWebsite: "https://company.com",
       workEmail: "name@company.com",
       password: "••••••••",
