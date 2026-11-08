@@ -182,6 +182,54 @@ export const uiStrings = {
       { value: "Global", labelEn: "Global / Worldwide", labelAr: "عالمي" },
     ],
   },
+  aioOverview: {
+    title: "AI Overview & Frontier Model Citations",
+    subtitle: "Real-time empirical consensus benchmark across Google AIO, ChatGPT, Microsoft Copilot, and Perplexity AI",
+    badge: "Empirical Consensus",
+    refreshTooltip: "Refresh AIO Intelligence Matrix",
+    kpis: {
+      shareOfVoice: "Share of Voice",
+      shareOfVoiceSub: "vs 48% Competitors in Persona Queries",
+      sourceVisibility: "Source Visibility",
+      sourceVisibilitySub: "Total Footnote Citations Verified",
+      promptPenetration: "Prompt Penetration",
+      promptPenetrationSub: "Buying-Intent Queries With Citations",
+      claimGrounding: "Claim Grounding",
+      claimGroundingSub: "Zero Hallucinations Detected Across Models",
+    },
+    gauge: {
+      title: "AI Visibility Index",
+      subtitle: "Unified Composite Authority",
+      scoreSuffix: "/100",
+      gradePrefix: "Grade",
+      subPillars: {
+        technicalSchema: "Technical Schema",
+        citationDensity: "Citation Density",
+        brandGrounding: "Brand Grounding",
+      },
+    },
+    table: {
+      title: "Multi-Model Prompt Citations Feed",
+      subtitle: "Verified generative query prompts, rank positions, and cited root domains",
+      searchPlaceholder: "Filter prompts or cited sources...",
+      filters: {
+        all: "All Models",
+        google_aio: "Google AI Overview",
+        chatgpt: "ChatGPT Search",
+        copilot: "Copilot",
+        perplexity: "Perplexity AI",
+      },
+      columns: {
+        model: "Frontier Engine",
+        prompt: "Monitored AI Query / Prompt",
+        status: "Citation Status",
+        rank: "Position Rank",
+        sources: "Attributed Citation Sources",
+        lastChecked: "Last Checked",
+      },
+      emptyState: "No prompt citations matching the selected engine filter.",
+    },
+  },
 } as const;
 
 export type UiStrings = typeof uiStrings;

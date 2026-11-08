@@ -120,6 +120,58 @@ export interface ProviderStatus {
   created_at?: string;
 }
 
+export interface ModelCitationItem {
+  id: string;
+  model: "google_aio" | "chatgpt" | "copilot" | "perplexity";
+  model_name: string;
+  prompt: string;
+  citation_status: string;
+  rank: string;
+  status_variant: "success" | "primary" | "info" | "warning";
+  sources: string[];
+  last_monitored: string;
+}
+
+export interface AioOverviewData {
+  target: string;
+  brand_name: string;
+  share_of_voice: {
+    score: number;
+    delta: string;
+    benchmark: string;
+  };
+  source_visibility: {
+    score: number;
+    delta: string;
+    total_citations: number;
+  };
+  ai_visibility_index: {
+    score: number;
+    max_score: number;
+    grade: string;
+    sub_pillars: {
+      technical_schema: number;
+      citation_density: number;
+      brand_grounding: number;
+    };
+  };
+  prompt_penetration: {
+    score: number;
+    delta: string;
+  };
+  claim_grounding: {
+    score: number;
+    disputes_count: number;
+  };
+  engines: {
+    google_aio: number;
+    chatgpt: number;
+    copilot: number;
+    perplexity: number;
+  };
+  model_citations: ModelCitationItem[];
+}
+
 import { appConfig } from "@/config/appConfig";
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -150,6 +202,8 @@ export const apiClient = {
     }),
   fetchHistory: (): Promise<any> => request("/websites/history"),
   fetchEnginePresence: (): Promise<any> => request("/websites/engine-presence"),
+  fetchAioOverview: (url?: string): Promise<AioOverviewData> =>
+    request(url ? `/websites/aio-overview?url=${encodeURIComponent(url)}` : "/websites/aio-overview"),
 
   // Trends
   fetchTrendsSeries: (

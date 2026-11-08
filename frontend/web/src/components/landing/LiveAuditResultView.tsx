@@ -255,19 +255,17 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
                   return (
                     <div
                       key={compItem.rank}
-                      className={`p-3 rounded-xl flex items-center justify-between transition-colors ${
-                        isTarget
-                          ? "bg-[#FAF9F5] border border-slate-200"
-                          : "bg-white"
-                      }`}
+                      className={`p-3 rounded-xl flex items-center justify-between transition-colors ${isTarget
+                        ? "bg-[#FAF9F5] border border-slate-200"
+                        : "bg-white"
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <span
-                          className={`w-6 h-6 rounded-md flex items-center justify-center font-bold text-xs ${
-                            isTarget
-                              ? "bg-slate-900 text-white"
-                              : "bg-slate-100 text-slate-500"
-                          }`}
+                          className={`w-6 h-6 rounded-md flex items-center justify-center font-bold text-xs ${isTarget
+                            ? "bg-slate-900 text-white"
+                            : "bg-slate-100 text-slate-500"
+                            }`}
                         >
                           {compItem.rank}
                         </span>
@@ -278,11 +276,10 @@ export const LiveAuditResultView: React.FC<LiveAuditResultViewProps> = ({
                           badgeClassName="text-[10px]"
                         />
                         <span
-                          className={`text-sm truncate max-w-[170px] ${
-                            isTarget
-                              ? "font-bold text-slate-900"
-                              : "font-medium text-slate-700"
-                          }`}
+                          className={`text-sm truncate max-w-[170px] ${isTarget
+                            ? "font-bold text-slate-900"
+                            : "font-medium text-slate-700"
+                            }`}
                         >
                           {compItem.brand}
                         </span>

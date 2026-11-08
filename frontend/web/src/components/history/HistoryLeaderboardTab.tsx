@@ -419,11 +419,10 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-                  selectedCategory === cat
-                    ? uiStyles.segmented.primaryActive
-                    : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-50 dark:bg-slate-800"
-                }`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${selectedCategory === cat
+                  ? uiStyles.segmented.primaryActive
+                  : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-50 dark:bg-slate-800"
+                  }`}
               >
                 {cat}
               </button>
@@ -435,13 +434,13 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-                onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
-                onBlur={() => setTimeout(() => setShowSuggestions(false), 250)}
+              onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 250)}
               placeholder={isRtl ? "بحث عن موقع أو نطاق أو تقنية..." : "Search domain, brand, or query..."}
               className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-900 dark:text-slate-50 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 pl-8 font-sans w-full md:w-64"
             />
             <Search className={`w-3.5 h-3.5 text-slate-500 dark:text-slate-400 absolute ${isRtl ? "right-2.5" : "left-2.5"} top-2.5`} />
-            
+
             {/* Smart Suggestions Dropdown */}
             {showSuggestions && suggestions.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg z-50 overflow-hidden max-h-80 overflow-y-auto">
@@ -462,9 +461,8 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
                     {/* Rank badge or type icon */}
                     <div className="flex-shrink-0">
                       {s.type === "leaderboard" && s.rank ? (
-                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold border ${
-                          s.rank <= 3 ? "bg-amber-50 text-amber-800 border-amber-300" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
-                        }`}>
+                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold border ${s.rank <= 3 ? "bg-amber-50 text-amber-800 border-amber-300" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                          }`}>
                           {s.rank}
                         </span>
                       ) : s.type === "history" ? (
@@ -503,11 +501,10 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
                     {/* Score badge */}
                     {s.visibility_score != null && (
                       <div className="flex-shrink-0 text-right">
-                        <span className={`text-xs font-mono font-bold px-1.5 py-0.5 rounded ${
-                          s.visibility_score >= 90 ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700"
+                        <span className={`text-xs font-mono font-bold px-1.5 py-0.5 rounded ${s.visibility_score >= 90 ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700"
                           : s.visibility_score >= 70 ? "bg-blue-50 dark:bg-blue-950/30 text-blue-700"
-                          : "bg-amber-50 text-amber-700"
-                        }`}>
+                            : "bg-amber-50 text-amber-700"
+                          }`}>
                           {s.visibility_score}%
                         </span>
                       </div>
@@ -632,13 +629,12 @@ export const HistoryLeaderboardTab: React.FC<HistoryLeaderboardTabProps> = ({ cu
                 </div>
                 <div className="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
                   <div
-                    className={`h-full rounded-full ${
-                      ind.avg_visibility >= 90
-                        ? "bg-emerald-500"
-                        : ind.avg_visibility >= 80
+                    className={`h-full rounded-full ${ind.avg_visibility >= 90
+                      ? "bg-emerald-500"
+                      : ind.avg_visibility >= 80
                         ? "bg-blue-500"
                         : "bg-amber-500"
-                    }`}
+                      }`}
                     style={{ width: `${ind.avg_visibility}%` }}
                   />
                 </div>

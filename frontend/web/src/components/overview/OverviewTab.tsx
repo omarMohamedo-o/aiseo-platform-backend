@@ -21,18 +21,34 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { apiClient, TrendSeriesPoint } from "@/api/client";
+import { apiClient, AioOverviewData, TrendSeriesPoint } from "@/api/client";
 import { uiStyles } from "@/config/designSystem";
+import { AioOverviewSection } from "./AioOverviewSection";
 
 interface OverviewTabProps {
-  auditTarget?: { url: string, brand: string } | null;
+  auditTarget?: { url: string; brand: string } | null;
   setAuditTarget?: (t: null) => void;
 }
-export const OverviewTab: React.FC<OverviewTabProps> = ({ auditTarget, setAuditTarget }) => {
+export const OverviewTab: React.FC<OverviewTabProps> = ({ auditTarget }) => {
   const [trendData, setTrendData] = useState<TrendSeriesPoint[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeFilter, setActiveFilter] = useState<"all" | "ai" | "geo">("all");
   const [engineData, setEngineData] = useState<any>(null);
+
+  const [aioData, setAioData] = useState<AioOverviewData | null>(null);
+  const [aioLoading, setAioLoading] = useState(false);
+
+  const loadAioOverview = async () => {
+    setAioLoading(true);
+    try {
+      const data = await apiClient.fetchAioOverview(auditTarget?.url);
+      setAioData(data);
+    } catch (err) {
+      console.error("Failed to load AIO overview", err);
+    } finally {
+      setAioLoading(false);
+    }
+  };
 
   const loadTrends = async () => {
     setLoading(true);
@@ -50,74 +66,19 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ auditTarget, setAuditT
 
   useEffect(() => {
     loadTrends();
-  }, []);
+    loadAioOverview();
+  }, [auditTarget?.url]);
 
   return (
-    <div className="space-y-6">
-      {/* Top Pulse Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="glass-panel p-5 rounded-2xl relative overflow-hidden">
-          <div className="flex items-center justify-between text-muted-foreground text-xs uppercase font-mono tracking-wider">
-            <span>Overall AI Visibility</span>
-            <Sparkles className="w-4 h-4 text-primary" />
-          </div>
-          <div className="mt-3 flex items-baseline gap-3">
-            <span className="text-4xl font-bold font-display text-slate-900 dark:text-slate-50 tracking-tight">78.4%</span>
-            <span className="text-xs font-semibold text-emerald-400 flex items-center">
-              +12.6% <ArrowUpRight className="w-3.5 h-3.5" />
-            </span>
-          </div>
-          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-            Computed across 4 major neural answering engines.
-          </p>
-        </div>
+    <div className="space-y-8">
+      {/* Phase 1: Master AIO Overview & Model Citations Suite */}
+      <AioOverviewSection
+        data={aioData}
+        loading={aioLoading}
+        onRefresh={loadAioOverview}
+      />
 
-        <div className="glass-panel p-5 rounded-2xl relative overflow-hidden">
-          <div className="flex items-center justify-between text-muted-foreground text-xs uppercase font-mono tracking-wider">
-            <span>Extracted Citations</span>
-            <ExternalLink className="w-4 h-4 text-blue-400" />
-          </div>
-          <div className="mt-3 flex items-baseline gap-3">
-            <span className="text-4xl font-bold font-display text-slate-900 dark:text-slate-50 tracking-tight">142</span>
-            <span className="text-xs font-semibold text-emerald-400 flex items-center">
-              +28 this wk
-            </span>
-          </div>
-          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-            Source references verified by backend extractor.
-          </p>
-        </div>
-
-        <div className="glass-panel p-5 rounded-2xl relative overflow-hidden">
-          <div className="flex items-center justify-between text-muted-foreground text-xs uppercase font-mono tracking-wider">
-            <span>Brand Share of Voice</span>
-            <Layers className="w-4 h-4 text-purple-400" />
-          </div>
-          <div className="mt-3 flex items-baseline gap-3">
-            <span className="text-4xl font-bold font-display text-slate-900 dark:text-slate-50 tracking-tight">64.2%</span>
-            <span className="text-xs font-semibold text-purple-300">vs 35.8% Competitors</span>
-          </div>
-          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-            Weighted presence in target buying persona queries.
-          </p>
-        </div>
-
-        <div className="glass-panel p-5 rounded-2xl relative overflow-hidden">
-          <div className="flex items-center justify-between text-muted-foreground text-xs uppercase font-mono tracking-wider">
-            <span>System Integrity</span>
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-          </div>
-          <div className="mt-3 flex items-baseline gap-3">
-            <span className="text-4xl font-bold font-display text-slate-900 dark:text-slate-50 tracking-tight">Optimal</span>
-            <span className="text-xs font-semibold text-emerald-400">Encrypted AES-GCM</span>
-          </div>
-          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-            All credentials isolated in secure tenant vault.
-          </p>
-        </div>
-      </div>
-
-      {/* Main Interactive Chart & Engine Health Grid */}
+      {/* Comparative Search & AI Demand Trends Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 glass-panel p-6 rounded-2xl">
           <div className="flex items-center justify-between mb-4">

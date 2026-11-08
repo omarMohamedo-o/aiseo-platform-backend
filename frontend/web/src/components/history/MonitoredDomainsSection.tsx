@@ -154,11 +154,10 @@ export const MonitoredDomainsSection: React.FC<MonitoredDomainsSectionProps> = (
 
                   <td className="px-5 py-3.5">
                     <span
-                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono font-bold ${
-                        isPositive
-                          ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800"
-                          : "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-800"
-                      }`}
+                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono font-bold ${isPositive
+                        ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800"
+                        : "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-800"
+                        }`}
                     >
                       {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                       {isPositive ? `+${item.delta}%` : `${item.delta}%`}
@@ -174,20 +173,19 @@ export const MonitoredDomainsSection: React.FC<MonitoredDomainsSectionProps> = (
 
                   <td className="px-5 py-3.5">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
-                        item.status === "optimized"
-                          ? "bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300"
-                          : item.status === "improving"
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${item.status === "optimized"
+                        ? "bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300"
+                        : item.status === "improving"
                           ? "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300"
                           : "bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300"
-                      }`}
+                        }`}
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-current" />
                       {item.status === "optimized"
                         ? "AI Optimized"
                         : item.status === "improving"
-                        ? "Enhancing"
-                        : "Action Required"}
+                          ? "Enhancing"
+                          : "Action Required"}
                     </span>
                   </td>
 

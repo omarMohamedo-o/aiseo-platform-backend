@@ -47,8 +47,8 @@ export const GscDashboardTab = () => {
           <div className="max-w-md mx-auto space-y-4">
             <div>
               <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Access Token</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={token}
                 onChange={e => setToken(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm"
@@ -57,15 +57,15 @@ export const GscDashboardTab = () => {
             </div>
             <div>
               <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Site URL (Property)</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={url}
                 onChange={e => setUrl(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm"
                 placeholder="sc-domain:example.com or https://example.com"
               />
             </div>
-            <button 
+            <button
               onClick={handleFetch}
               disabled={loading}
               className={`w-full ${uiStyles.button.primary}`}
@@ -93,7 +93,7 @@ export const GscDashboardTab = () => {
               <div className="text-2xl font-bold text-slate-900 dark:text-slate-50 mt-1">{data.avg_position?.toFixed(1)}</div>
             </div>
           </div>
-          
+
           <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
             <h3 className="text-sm font-bold text-slate-900 dark:text-slate-50 mb-4 flex items-center gap-2">
               <ChartLine className="w-4 h-4 text-blue-500" />
